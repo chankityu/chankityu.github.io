@@ -4859,33 +4859,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     }
                     elementContainer = elementContainer.parentElement;
                 }
-            },
-            getStyleSheets: function() {
-                var styleSheets = this.data.styleSheets;
-                if (!styleSheets) {
-                    var fileNames = ["required_css_file.css"];
-                    styleSheets = document.styleSheets.filter(function(sheet) {
-                        var fileLocation = sheet.href;
-                        if (fileLocation) {
-                            return !fileNames.every(function(fileName) {
-                                return !fileLocation.endsWith(fileName);
-                            })
-                        }
-                    })
-                    this.data.styleSheets = styleSheets;
-                }
-                return styleSheets;
-            },
-            copyStyles: function(destDocument) {
-                var styleElement = destDocument.createElement("style");
-                destDocument.body.appendChild(styleElement);
-                var styleElementSheet = styleElement.sheet;
-
-                this.getStyleSheets().forEach(function(styleSheet) {
-                    styleSheet.rules.forEach(function(rule) {
-                        styleElementSheet.insertRule(rule.cssText);
-                    })
-                })
             }
         }
 
