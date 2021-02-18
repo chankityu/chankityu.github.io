@@ -4805,7 +4805,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 console.error(err);
             }
             const data_str = JSON.stringify(this.recordedData);
-			console.log(this.recData.xpath);
+			//console.log(this.recData.xpath);
             const d = WU.es(data_str);
             zQuery.ajax({
                 type: 'POST',
