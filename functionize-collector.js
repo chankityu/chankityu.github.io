@@ -4776,7 +4776,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             }
             this.sendSize = 0;
         }
-		
+
 		this.counters = function (){
                 if ( typeof this.count === 'undefined' ) {
                     // It has not... perform the initialization
@@ -4788,9 +4788,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 }
                 this.count++;
                 return 0;
-                          
+
             }
-			
+
         this.recordWbDataSend = function() {
             if (this.isSending || !this.on) {
                 return;
@@ -4806,7 +4806,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             }
             const data_str = JSON.stringify(this.recordedData);
 			console.log(this.recData.xpath);
-            const d = WU.es(data_str);			
+            const d = WU.es(data_str);
             zQuery.ajax({
                 type: 'POST',
                 url: functionizeIngestURL + 'api/' + functionizeHttpToken + '/ingest/Functionize',
@@ -4838,107 +4838,107 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             this.isSending = true;
 			var count = this.counters();
             console.log(count);
-			var instance = {
-	addClassRecursively: function(element, className) {
-		if (element.classList ) {
-			element.classList.add(className);
-			// to prevent exception for canvas element
-			if (element.children.forEach) {
-				element.children.forEach(function(childElement) {
-					this.addClassRecursively(childElement, className);
-				}, this);
-			}
-		}
-	},
-	addWhiteListClas: function() {
-		var elementContainer = document.body;
-		this.addClassRecursively(elementContainer, "export_whitelist_class");
-		while (elementContainer) {
-			if (elementContainer.classList) {
-				elementContainer.classList.add("export_whitelist_class");
-			}
-			elementContainer = elementContainer.parentElement;
-		}
-	},
-	getStyleSheets: function() {
-		var styleSheets = this.data.styleSheets;
-		if (!styleSheets) {
-			var fileNames = ["required_css_file.css"];
-			styleSheets = document.styleSheets.filter(function(sheet) {
-				var fileLocation = sheet.href;
-				if (fileLocation) {
-					return !fileNames.every(function(fileName) {
-						return !fileLocation.endsWith(fileName);
-					})
-				}
-			})
-			this.data.styleSheets = styleSheets;
-		}
-		return styleSheets;
-	},
-	copyStyles: function(destDocument) {
-		var styleElement = destDocument.createElement("style");
-		destDocument.body.appendChild(styleElement);
-		var styleElementSheet = styleElement.sheet;
+// 			var instance = {
+// 	addClassRecursively: function(element, className) {
+// 		if (element.classList ) {
+// 			element.classList.add(className);
+// 			// to prevent exception for canvas element
+// 			if (element.children.forEach) {
+// 				element.children.forEach(function(childElement) {
+// 					this.addClassRecursively(childElement, className);
+// 				}, this);
+// 			}
+// 		}
+// 	},
+// 	addWhiteListClas: function() {
+// 		var elementContainer = document.body;
+// 		this.addClassRecursively(elementContainer, "export_whitelist_class");
+// 		while (elementContainer) {
+// 			if (elementContainer.classList) {
+// 				elementContainer.classList.add("export_whitelist_class");
+// 			}
+// 			elementContainer = elementContainer.parentElement;
+// 		}
+// 	},
+// 	getStyleSheets: function() {
+// 		var styleSheets = this.data.styleSheets;
+// 		if (!styleSheets) {
+// 			var fileNames = ["required_css_file.css"];
+// 			styleSheets = document.styleSheets.filter(function(sheet) {
+// 				var fileLocation = sheet.href;
+// 				if (fileLocation) {
+// 					return !fileNames.every(function(fileName) {
+// 						return !fileLocation.endsWith(fileName);
+// 					})
+// 				}
+// 			})
+// 			this.data.styleSheets = styleSheets;
+// 		}
+// 		return styleSheets;
+// 	},
+// 	copyStyles: function(destDocument) {
+// 		var styleElement = destDocument.createElement("style");
+// 		destDocument.body.appendChild(styleElement);
+// 		var styleElementSheet = styleElement.sheet;
 
-		this.getStyleSheets().forEach(function(styleSheet) {
-			styleSheet.rules.forEach(function(rule) {
-				styleElementSheet.insertRule(rule.cssText);
-			})
-		})
-	}
-}
+// 		this.getStyleSheets().forEach(function(styleSheet) {
+// 			styleSheet.rules.forEach(function(rule) {
+// 				styleElementSheet.insertRule(rule.cssText);
+// 			})
+// 		})
+// 	}
+// }
 
-instance.addWhiteListClas();
-html2canvas(document.evaluate(this.recData.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, {
-	ignoreElements: function(element) {
-		if (element.classList) {
-			return !element.classList.contains('export_whitelist_class');
-		}
-		return false;
-	},
-	onclone: function(clonnedDocument) {
-		instance.copyStyles(clonnedDocument);
-	}
-}).then(function(canvas) {
-	//exportCanvas(canvas)
-	console.log("hello")
-	 WS.screenshot = canvas.toDataURL();
-					zQuery.ajax({
-                type: 'POST',
-                url: 'https://ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/image-Functionize',
-                crossDomain: true,
-                data: {
-                    apiKey: functionizeHttpToken,
-                    image: WS.screenshot,
-                    sessionId: functionizeUID
-                },
-                async: true,
-                timeout: 20000,
-                success: function(responseData, textStatus, jqXHR) {
-                    WS.screenshot = "";
-                    WS.isSending = false;
-                },
-                error: function(responseData, textStatus, errorThrown) {
-                    WS.screenshot = "";
-                    WS.isSending = false;
-                    console.log(responseData);
-                }
-            }).done(function(msg) {
-                if (!WS.isUnload) {
-                    WS.screenshot = "";
-                    WS.isSending = false;
-                }
-            }).fail(function(jqXHR, textStatus) {
-                if (!WS.isUnload) {
-                    WS.screenshot = "";
-                    WS.isSending = false;
-                }
-            });
-});
-			/*if(count == 1 && this.recordedXPath !== this.recData.xpath){
+// instance.addWhiteListClas();
+// html2canvas(document.evaluate(this.recData.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, {
+// 	ignoreElements: function(element) {
+// 		if (element.classList) {
+// 			return !element.classList.contains('export_whitelist_class');
+// 		}
+// 		return false;
+// 	},
+// 	onclone: function(clonnedDocument) {
+// 		instance.copyStyles(clonnedDocument);
+// 	}
+// }).then(function(canvas) {
+// 	//exportCanvas(canvas)
+// 	console.log("hello")
+// 	 WS.screenshot = canvas.toDataURL();
+// 					zQuery.ajax({
+//                 type: 'POST',
+//                 url: 'https://ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/image-Functionize',
+//                 crossDomain: true,
+//                 data: {
+//                     apiKey: functionizeHttpToken,
+//                     image: WS.screenshot,
+//                     sessionId: functionizeUID
+//                 },
+//                 async: true,
+//                 timeout: 20000,
+//                 success: function(responseData, textStatus, jqXHR) {
+//                     WS.screenshot = "";
+//                     WS.isSending = false;
+//                 },
+//                 error: function(responseData, textStatus, errorThrown) {
+//                     WS.screenshot = "";
+//                     WS.isSending = false;
+//                     console.log(responseData);
+//                 }
+//             }).done(function(msg) {
+//                 if (!WS.isUnload) {
+//                     WS.screenshot = "";
+//                     WS.isSending = false;
+//                 }
+//             }).fail(function(jqXHR, textStatus) {
+//                 if (!WS.isUnload) {
+//                     WS.screenshot = "";
+//                     WS.isSending = false;
+//                 }
+//             });
+// });
+			if(count == 1 && this.recordedXPath !== this.recData.xpath){
 				try {
-                html2canvas(document.evaluate(this.recData.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue).then(function(canvas) {					
+                html2canvas(document.evaluate(this.recData.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue).then(function(canvas) {
 					//var imageContentRaw = canvas.getContext('2d').getImageData(e.getBoundingClientRect().left,e.getBoundingClientRect().top,e.getBoundingClientRect().width*2,e.getBoundingClientRect().height*2);
 					// create new canvas
 					//var canvas1 = document.createElement('canvas');
@@ -4988,8 +4988,8 @@ html2canvas(document.evaluate(this.recData.xpath, document, null, XPathResult.FI
             }
 			// Record the last xpath
 			this.recordedXPath = this.recData.xpath;
-			}*/
-            
+			}
+
         }
         this.createAction = function(e, atype) {
             if (!WS.on) return;
@@ -5243,7 +5243,7 @@ html2canvas(document.evaluate(this.recData.xpath, document, null, XPathResult.FI
             */} catch (e) {
                 console.error('Exception: ' + e);
             }
-			
+
             return element;
         }
         this.evaluateAjaxCall = function(method, url, timestamp) {
