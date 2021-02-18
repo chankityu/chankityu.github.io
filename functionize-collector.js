@@ -4865,6 +4865,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         instance.addWhiteListClas();
         html2canvas(document.evaluate(this.recData.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, {
             ignoreElements: function(element) {
+                if (element.nodeName === 'IFRAME') return false;
                 if (element.classList) {
                     return !element.classList.contains('export_whitelist_class');
                 }
