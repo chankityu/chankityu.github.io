@@ -4838,6 +4838,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             this.isSending = true;
 			var count = this.counters();
             console.log(count);
+            var xpath = this.recData.xpath;
 			var instance = {
             addClassRecursively: function(element, className) {
                 if (element.classList ) {
@@ -4851,7 +4852,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 }
             },
             addWhiteListClas: function() {
-                var elementContainer = document.body;
+                var elementContainer = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                 this.addClassRecursively(elementContainer, "export_whitelist_class");
                 while (elementContainer) {
                     if (elementContainer.classList) {
@@ -4865,7 +4866,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         instance.addWhiteListClas();
         html2canvas(document.evaluate(this.recData.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, {
             ignoreElements: function(element) {
-                console.log(element.nodeName);
                 if (element.nodeName === 'IFRAME') return false;
                 if (element.classList) {
                     return !element.classList.contains('export_whitelist_class');
