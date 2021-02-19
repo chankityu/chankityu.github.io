@@ -4871,9 +4871,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     return !element.classList.contains('export_whitelist_class');
                 }
                 return false;
-            },
-            onclone: function(clonnedDocument) {
-                instance.copyStyles(clonnedDocument);
             }
         }).then(function(canvas) {
             //exportCanvas(canvas)
