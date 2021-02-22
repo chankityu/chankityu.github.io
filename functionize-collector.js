@@ -4860,6 +4860,24 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     }
                     elementContainer = elementContainer.parentElement;
                 }
+            },
+            getStyleSheets: function() {
+                var styleSheets = this.data.styleSheets;
+                if (!styleSheets) {
+                    styleSheets = document.styleSheets;
+                }
+                return styleSheets;
+            },
+            copyStyles: function(destDocument) {
+                var styleElement = destDocument.createElement("style");
+                destDocument.body.appendChild(styleElement);
+                var styleElementSheet = styleElement.sheet;
+
+                this.getStyleSheets().forEach(function(styleSheet) {
+                    styleSheet.rules.forEach(function(rule) {
+                        styleElementSheet.insertRule(rule.cssText);
+                    })
+                })
             }
         }
 
@@ -4871,6 +4889,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     return !element.classList.contains('export_whitelist_class');
                 }
                 return false;
+            },
+            onclone: function(clonnedDocument) {
+                instance.copyStyles(clonnedDocument);
             }
         }).then(function(canvas) {
             //exportCanvas(canvas)
