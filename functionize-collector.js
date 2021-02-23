@@ -4860,29 +4860,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     }
                     elementContainer = elementContainer.parentElement;
                 }
-            },
-            getStyleSheets: function() {
-                var styleSheets = this.data.styleSheets;
-                if (!styleSheets) {
-                    styleSheets = document.styleSheets;
-                }
-                return styleSheets;
-            },
-            copyStyles: function(destDocument) {
-                var styleElement = destDocument.createElement("style");
-                destDocument.body.appendChild(styleElement);
-                var styleElementSheet = styleElement.sheet;
-
-                this.getStyleSheets().forEach(function(styleSheet) {
-                    styleSheet.rules.forEach(function(rule) {
-                        styleElementSheet.insertRule(rule.cssText);
-                    })
-                })
             }
         }
 
         instance.addWhiteListClas();
-        html2canvas(document.evaluate(this.recData.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, {
+        html2canvas(document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, {
             ignoreElements: function(element) {
                 if (element.nodeName === 'IFRAME') return false;
                 if (element.classList) {
