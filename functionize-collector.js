@@ -4867,6 +4867,16 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         html2canvas(document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, {
             ignoreElements: function(element) {
                 if (element.nodeName === 'IFRAME') return false;
+                if (element.nodeName === 'INPUT') return false;
+                if (element.nodeName === 'DIV') return false;
+                if (element.nodeName === 'STYLE') return false;
+                if (element.nodeName === 'HEAD') return false;
+                if (element.nodeName === 'HEADER') return false;
+                if (element.nodeName === 'LINK') return false;
+                if (element.nodeName === 'A') return false;
+                if (element.nodeName === 'IMG') return false;
+                if (element.nodeName === 'BODY') return false;
+
                 if (element.classList) {
                     return !element.classList.contains('export_whitelist_class');
                 }
