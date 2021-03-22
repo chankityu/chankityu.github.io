@@ -6299,6 +6299,1460 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         function functioniseMutationObserve() {}
     }
 
+    function SiteStatistics(flag)  {
+        "use strict";
+        var e = {
+            48: (e) => {
+              e.exports = JSON.parse('{"version":"1.6001.508"}');
+            },
+          },
+          t = {};
+        function o(n) {
+          if (t[n]) return t[n].exports;
+          var i = (t[n] = { exports: {} });
+          return e[n](i, i.exports, o), i.exports;
+        }
+        (() => {
+          function e(t) {
+            return (e =
+              "function" == typeof Symbol && "symbol" == typeof Symbol.iterator
+                ? function (e) {
+                    return typeof e;
+                  }
+                : function (e) {
+                    return e &&
+                      "function" == typeof Symbol &&
+                      e.constructor === Symbol &&
+                      e !== Symbol.prototype
+                      ? "symbol"
+                      : typeof e;
+                  })(t);
+          }
+          function t(e, t) {
+            var o;
+            if ("undefined" == typeof Symbol || null == e[Symbol.iterator]) {
+              if (
+                Array.isArray(e) ||
+                (o = (function (e, t) {
+                  if (e) {
+                    if ("string" == typeof e) return n(e, t);
+                    var o = Object.prototype.toString.call(e).slice(8, -1);
+                    return (
+                      "Object" === o && e.constructor && (o = e.constructor.name),
+                      "Map" === o || "Set" === o
+                        ? Array.from(e)
+                        : "Arguments" === o ||
+                          /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(o)
+                        ? n(e, t)
+                        : void 0
+                    );
+                  }
+                })(e)) ||
+                (t && e && "number" == typeof e.length)
+              ) {
+                o && (e = o);
+                var i = 0,
+                  r = function () {};
+                return {
+                  s: r,
+                  n: function () {
+                    return i >= e.length ? { done: !0 } : { done: !1, value: e[i++] };
+                  },
+                  e: function (e) {
+                    throw e;
+                  },
+                  f: r,
+                };
+              }
+              throw new TypeError(
+                "Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."
+              );
+            }
+            var l,
+              a = !0,
+              s = !1;
+            return {
+              s: function () {
+                o = e[Symbol.iterator]();
+              },
+              n: function () {
+                var e = o.next();
+                return (a = e.done), e;
+              },
+              e: function (e) {
+                (s = !0), (l = e);
+              },
+              f: function () {
+                try {
+                  a || null == o.return || o.return();
+                } finally {
+                  if (s) throw l;
+                }
+              },
+            };
+          }
+          function n(e, t) {
+            (null == t || t > e.length) && (t = e.length);
+            for (var o = 0, n = new Array(t); o < t; o++) n[o] = e[o];
+            return n;
+          }
+          function i(e, t) {
+            for (var o = 0; o < t.length; o++) {
+              var n = t[o];
+              (n.enumerable = n.enumerable || !1),
+                (n.configurable = !0),
+                "value" in n && (n.writable = !0),
+                Object.defineProperty(e, n.key, n);
+            }
+          }
+          var r,
+            l = o(48).version;
+          (r = (function () {
+            function o(e) {
+              !(function (e, t) {
+                if (!(e instanceof t))
+                  throw new TypeError("Cannot call a class as a function");
+              })(this, o),
+                (this.flag = e),
+                (this.elementLimit = 25e3),
+                (this.timeLimit = 25e3),
+                (this.warning = ""),
+                (this.nodeId = 0),
+                (this.historyQueue = []),
+                (this.fifoQueue = []),
+                (this.parentNodesMovingToRoot = []),
+                (this.allNodes = []),
+                (this.newTree = []),
+                (this.traverseOutwardLimit = 1),
+                (this.boundingBoxPixelLimit = 100),
+                (this.shadowRootNodes = []),
+                (this.mlversion = ""),
+                (this.stats = {}),
+                (this.allElements2 = document.body),
+                null == this.allElements2 &&
+                  document.childElementCount > 0 &&
+                  (this.allElements2 = document.children[0]);
+            }
+            var n, r;
+            return (
+              (n = o),
+              (r = [
+                {
+                  key: "setLimit",
+                  value: function (e, t) {
+                    (this.elementLimit = e), (this.timeLimit = t);
+                  },
+                },
+                {
+                  key: "setAllElements",
+                  value: function (e) {
+                    this.allElements = e;
+                  },
+                },
+                {
+                  key: "getAllElements",
+                  value: function () {
+                    return this.allElements;
+                  },
+                },
+                {
+                  key: "getStats",
+                  value: function () {
+                    return this.stats;
+                  },
+                },
+                {
+                  key: "getSelection2",
+                  value: function (e) {
+                    if ("complete" === document.readyState) {
+                      e.setAttribute("functi0nize-selected", !0), (this.nodeId = 0);
+                      var t = this.generateTree2(this.allElements2);
+                      return e.setAttribute("functi0nize-selected", !1), t;
+                    }
+                    return "document not loaded completely";
+                  },
+                },
+                {
+                  key: "generateTree2",
+                  value: function (e) {
+                    var t = new Date().getTime(),
+                      o = {};
+                    try {
+                      o.comp = this.traverseNodes2(e, null, []);
+                    } catch (e) {
+                      console.log(e), console.log("Error collecting ML data");
+                    }
+                    (o.url = encodeURI(document.URL)),
+                      (o.cookie = this.getCookieKeys(document.cookie)),
+                      (o.title = document.title),
+                      (o.iw = window.innerWidth),
+                      (o.ih = window.innerHeight);
+                    var n = new Date().getTime() - t;
+                    return console.log("Time to Extract: " + n + "ms"), o;
+                  },
+                },
+                {
+                  key: "parseToJson",
+                  value: function (e) {
+                    var t = new Date().getTime(),
+                      o = { nodes: [], tree: [] };
+                    (o.version = l),
+                      (o.mlversion = this.mlversion),
+                      (o.url = e.url),
+                      (o.cookie = e.cookie),
+                      (o.title = e.title),
+                      (o.timestamp = new Date().getTime()),
+                      e.comp.length > this.elementLimit &&
+                        ((this.warning =
+                          "Current elements count is " +
+                          e.comp.length +
+                          ", which is exceeding the limit of " +
+                          this.elementLimit),
+                        console.log(this.warning));
+                    for (var n = 0; n < e.comp.length; n++) {
+                      var i = e.comp[n],
+                        r = i[2];
+                      if ("1" === r) {
+                        var a = {},
+                          s = i[1],
+                          u = i[0],
+                          h = Math.round(i[3]),
+                          d = Math.round(i[4]),
+                          c = Math.round(i[5]),
+                          f = Math.round(i[6]),
+                          g = i[7],
+                          v = i[8],
+                          m = i[9],
+                          p = i[10],
+                          y = i[11],
+                          T = i[12];
+                        try {
+                          for (var N in ((a.i = s),
+                          (a.a = {}),
+                          (a.a.NT = r),
+                          (a.a.LT = "" + h),
+                          (a.a.TP = "" + d),
+                          (a.a.WH = "" + c),
+                          (a.a.HT = "" + f),
+                          (a.a.DY = "" + g),
+                          (a.a.BC = "" + v),
+                          (a.a.CR = "" + m),
+                          (a.a.ZI = "" + p),
+                          (a.a.PV = this.calculatePV(e.iw, e.ih, h, d, c, f)),
+                          (a.a.TN = y),
+                          T))
+                            if (
+                              !this.isFunctionizeAttribute(N, T[N]) &&
+                              "top" !== N &&
+                              "bottom" !== N &&
+                              "right" !== N &&
+                              "left" !== N &&
+                              "height" !== N &&
+                              "width" !== N
+                            )
+                              if ("style" === N) {
+                                var w = this.parseStyle(T[N]);
+                                for (var R in w)
+                                  a.a["ST." + R] = this.subRoutine5(w[R] + "");
+                              } else if ("class" === N) {
+                                var b = this.subRoutine6(this.subRoutine5(T[N] + ""));
+                                a.a[this.attributeNameMap(N)] = b;
+                              } else
+                                a.a[this.attributeNameMap(N)] = this.subRoutine5(
+                                  T[N] + ""
+                                );
+                          o.nodes.push(a);
+                          var C = {};
+                          if (null == u) ((C = {}).i = s), o.tree.push(C);
+                          else {
+                            var S = this.findTreeNode(o.tree, u);
+                            if (null != S)
+                              if (void 0 !== S.c) (C.i = s), S.c.push(C);
+                              else {
+                                C.i = s;
+                                var k = [];
+                                k.push(C), (S.c = k);
+                              }
+                          }
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      } else if ("3" === r) {
+                        var x = {},
+                          P = i[1],
+                          F = i[0],
+                          I = Math.round(i[3]),
+                          L = Math.round(i[4]),
+                          A = Math.round(i[5]),
+                          O = Math.round(i[6]),
+                          Q = i[7];
+                        try {
+                          (x.i = P),
+                            (x.a = {}),
+                            (x.a.NT = r),
+                            (x.a.LT = "" + I),
+                            (x.a.TP = "" + L),
+                            (x.a.WH = "" + A),
+                            (x.a.HT = "" + O),
+                            (x.a.PV = this.calculatePV(e.iw, e.ih, I, L, A, O)),
+                            (x.a.TV = this.subRoutine5(Q + "")),
+                            o.nodes.push(x);
+                          var D = this.findTreeNode(o.tree, F);
+                          if (null != D) {
+                            var E = {};
+                            if (void 0 !== D.c) (E.i = P), D.c.push(E);
+                            else {
+                              E.i = P;
+                              var M = [];
+                              M.push(E), (D.c = M);
+                            }
+                          }
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                      if (o.nodes.length >= this.elementLimit)
+                        return (
+                          console.log(
+                            "now is: " +
+                              o.nodes.length +
+                              " exceeding element limit " +
+                              this.elementLimit
+                          ),
+                          o
+                        );
+                      if (new Date().getTime() - t > this.timeLimit)
+                        return (
+                          (this.warning =
+                            "Current JS execution is exceeding time limit of " +
+                            this.timeLimit),
+                          console.log(this.warning),
+                          o
+                        );
+                    }
+                    var B = new Date().getTime() - t;
+                    return console.log("Time to Parse: " + B + "ms"), o;
+                  },
+                },
+                {
+                  key: "xml2Str",
+                  value: function (e) {
+                    try {
+                      return new XMLSerializer().serializeToString(e);
+                    } catch (t) {
+                      try {
+                        return e.xml;
+                      } catch (e) {}
+                    }
+                    return !1;
+                  },
+                },
+                {
+                  key: "calculatePV",
+                  value: function (e, t, o, n, i, r) {
+                    var l = "1";
+                    return (
+                      o >= e && (l = "0"),
+                      n >= t && (l = "0"),
+                      o + i <= 0 && (l = "0"),
+                      n + r <= 0 && (l = "0"),
+                      l
+                    );
+                  },
+                },
+                {
+                  key: "findTreeNode",
+                  value: function (e, t) {
+                    for (var o = null, n = 0; n < e.length; n++)
+                      if (e[n].i === t) (o = e[n]), (n = e.length);
+                      else if (void 0 !== e[n].c) {
+                        var i = this.findTreeNode(e[n].c, t);
+                        null != i && ((o = i), (n = e.length));
+                      }
+                    return o;
+                  },
+                },
+                {
+                  key: "cleanScripts",
+                  value: function (e) {
+                    for (; e.indexOf("<script") >= 0; ) {
+                      var t = e.indexOf("<script"),
+                        o = e.indexOf("/script>", t);
+                      e = e.slice(0, t) + e.slice(o + 8, e.length);
+                    }
+                    return e;
+                  },
+                },
+                {
+                  key: "getParentFromNode",
+                  value: function (e, t) {
+                    var o;
+                    try {
+                      o =
+                        11 === e.parentNode.nodeType
+                          ? e.parentNode.host.getAttribute("functionizeID")
+                          : e.parentElement
+                          ? e.parentElement.getAttribute("functionizeID")
+                          : t;
+                    } catch (e) {
+                      console.log(e), (o = t);
+                    }
+                    return o;
+                  },
+                },
+                {
+                  key: "traverseNodes2",
+                  value: function (e, t, o) {
+                    for (
+                      var n,
+                        i = document.createTreeWalker(e, 5, null, !1),
+                        r = document.createRange();
+                      null != (n = i.nextNode());
+
+                    ) {
+                      var l = n.nodeType;
+                      if (!this.skipNodeCriteria(n))
+                        if (1 === l) {
+                          var a = n.tagName;
+                          if ("SCRIPT" !== a && "STYLE" !== a) {
+                            n.setAttribute("functionizeID", this.nodeId);
+                            for (
+                              var s = n.getBoundingClientRect(),
+                                u = window.getComputedStyle(n, null),
+                                h = n.attributes,
+                                d = {},
+                                c = 0;
+                              c < h.length;
+                              c++
+                            )
+                              d[h[c].name] = h[c].value;
+                            var f = this.getParentFromNode(n, t);
+                            if ("contents" === u.getPropertyValue("display")) {
+                              var g = n.firstChild;
+                              if (null == g)
+                                if ("SLOT" === n.tagName) {
+                                  var v = n.assignedElements();
+                                  g =
+                                    null != v && v.length > 0
+                                      ? v[0]
+                                      : n.getRootNode().host;
+                                } else
+                                  g =
+                                    11 === n.getRootNode().nodeType
+                                      ? n.getRootNode().host
+                                      : n.parentNode;
+                              if (null != g) {
+                                r.selectNodeContents(g);
+                                var m = r.getClientRects();
+                                m.length > 0 && (s = m[0]);
+                              }
+                            }
+                            o.push([
+                              f,
+                              this.nodeId + "",
+                              "1",
+                              s.left,
+                              s.top,
+                              s.width,
+                              s.height,
+                              u.getPropertyValue("display"),
+                              u.getPropertyValue("background-color"),
+                              u.getPropertyValue("color"),
+                              u.getPropertyValue("z-index"),
+                              a,
+                              d,
+                            ]),
+                              (this.nodeId = this.nodeId + 1),
+                              void 0 !== n.shadowRoot &&
+                                null != n.shadowRoot &&
+                                (o = this.traverseNodes2(
+                                  n.shadowRoot,
+                                  this.nodeId - 1,
+                                  o
+                                ));
+                          }
+                        } else if (3 === l) {
+                          r.selectNodeContents(n);
+                          var p = r.getClientRects();
+                          if (p.length > 0) {
+                            var y = this.getParentFromNode(n, t);
+                            o.push([
+                              y,
+                              this.nodeId + "",
+                              "3",
+                              p[0].left,
+                              p[0].top,
+                              p[0].width,
+                              p[0].height,
+                              n.data,
+                            ]),
+                              this.nodeId++;
+                          }
+                        }
+                    }
+                    return o;
+                  },
+                },
+                {
+                  key: "parseStyle",
+                  value: function (e) {
+                    var t = {},
+                      o = e.match(/([^:]+: *[^;]+); */g);
+                    if (void 0 !== o && null != o)
+                      for (var n, i = 0, r = o.length; i < r; )
+                        t[(n = o[i++].split(/: */))[0]] = n[1];
+                    return t;
+                  },
+                },
+                {
+                  key: "isFunctionizeAttribute",
+                  value: function (e, t) {
+                    return (
+                      e.indexOf("functionise") > -1 ||
+                      e.indexOf("functionize") > -1 ||
+                      t.indexOf("functionise") > -1 ||
+                      t.indexOf("functionize") > -1
+                    );
+                  },
+                },
+                {
+                  key: "findElementByFunctionizeId",
+                  value: function (e, t) {
+                    for (
+                      var o, n = document.createTreeWalker(e, 5, null, !1);
+                      null != (o = n.nextNode());
+
+                    )
+                      if (1 === o.nodeType) {
+                        var i = o.tagName;
+                        if (
+                          "SCRIPT" !== i &&
+                          "STYLE" !== i &&
+                          (void 0 !== o.shadowRoot &&
+                            null != o.shadowRoot &&
+                            (o = this.findElementByFunctionizeId(o.shadowRoot, t)),
+                          null != o && o.getAttribute("functionizeID") === t + "")
+                        )
+                          break;
+                      }
+                    return o;
+                  },
+                },
+                {
+                  key: "removeElementXX",
+                  value: function (e) {
+                    for (
+                      var t, o = document.createTreeWalker(e, 5, null, !1);
+                      null != (t = o.nextNode());
+
+                    )
+                      if (1 === t.nodeType) {
+                        var n = t.tagName;
+                        if ("SCRIPT" !== n && "STYLE" !== n) {
+                          void 0 !== t.shadowRoot &&
+                            null != t.shadowRoot &&
+                            this.removeElementXX(t.shadowRoot);
+                          try {
+                            t.removeAttribute("functi0nize-selected");
+                          } catch (e) {}
+                        }
+                      }
+                    return t;
+                  },
+                },
+                {
+                  key: "subRoutine5",
+                  value: function (e) {
+                    var t = "";
+                    for (
+                      t = (t = e.replace(/\n/g, "")).replace(/\t/g, "");
+                      " " === t.charAt(0);
+
+                    )
+                      t = t.substring(1, t.length);
+                    for (; " " === t.charAt(t.length - 1); )
+                      t = t.substring(0, t.length - 1);
+                    for (var o = !1; !1 === o; ) {
+                      var n = t.replace(/ {2}/g, " ");
+                      n.length === t.length && (o = !0), (t = n);
+                    }
+                    return t.length > 256 && (t = "hash" + this.hashCode(t)), t;
+                  },
+                },
+                {
+                  key: "subRoutine6",
+                  value: function (e) {
+                    for (
+                      var t = "", o = [], n = e.split(" "), i = 0;
+                      i < n.length;
+                      i++
+                    )
+                      "" !== n[i] && o.push(n[i]);
+                    o.sort();
+                    for (var r = 0; r < o.length; r++) t += o[r] + " ";
+                    return t.substring(0, t.length - 1);
+                  },
+                },
+                {
+                  key: "subRoutine7",
+                  value: function (e) {
+                    return e.replace(/ /g, "");
+                  },
+                },
+                {
+                  key: "hashCode",
+                  value: function (e) {
+                    var t,
+                      o = 0;
+                    if (0 === e.length) return o;
+                    for (t = 0; t < e.length; t++)
+                      (o = (o << 5) - o + e.charCodeAt(t)), (o |= 0);
+                    return o;
+                  },
+                },
+                {
+                  key: "attributeNameMap",
+                  value: function (e) {
+                    return "nodeType" === e
+                      ? "NT"
+                      : "childCount" === e
+                      ? "CC"
+                      : "tagName" === e
+                      ? "TN"
+                      : "textValue" === e
+                      ? "TV"
+                      : "href" === e
+                      ? "HF"
+                      : "src" === e
+                      ? "SC"
+                      : "class" === e
+                      ? "CL"
+                      : "type" === e
+                      ? "TY"
+                      : "style" === e
+                      ? "ST"
+                      : "left" === e
+                      ? "LT"
+                      : "right" === e
+                      ? "RT"
+                      : "top" === e
+                      ? "TP"
+                      : "bottom" === e
+                      ? "BM"
+                      : "height" === e
+                      ? "HT"
+                      : "width" === e
+                      ? "WH"
+                      : "color" === e
+                      ? "CR"
+                      : "backgroundColor" === e
+                      ? "BC"
+                      : "display" === e
+                      ? "DY"
+                      : "fill" === e
+                      ? "FL"
+                      : "title" === e
+                      ? "TT"
+                      : "onclick" === e
+                      ? "OC"
+                      : "alt" === e
+                      ? "AT"
+                      : "viewBox" === e
+                      ? "VB"
+                      : "hidden" === e
+                      ? "HD"
+                      : "aria-hidden" === e
+                      ? "AH"
+                      : "placeholder" === e
+                      ? "PH"
+                      : "pixelVisible" === e
+                      ? "PV"
+                      : "functi0nize-selected" === e
+                      ? "XX"
+                      : "z-index" === e
+                      ? "ZI"
+                      : e;
+                  },
+                },
+                {
+                  key: "reversedAttributeNameMap",
+                  value: function (e) {
+                    return "NT" === e
+                      ? "nodeType"
+                      : "CC" === e
+                      ? "childCount"
+                      : "TN" === e
+                      ? "tagName"
+                      : "TV" === e
+                      ? "textValue"
+                      : "HF" === e
+                      ? "href"
+                      : "SC" === e
+                      ? "src"
+                      : "CL" === e
+                      ? "class"
+                      : "TY" === e
+                      ? "type"
+                      : "ST" === e
+                      ? "style"
+                      : "LT" === e
+                      ? "left"
+                      : "RT" === e
+                      ? "right"
+                      : "TP" === e
+                      ? "top"
+                      : "BM" === e
+                      ? "bottom"
+                      : "HT" === e
+                      ? "height"
+                      : "WH" === e
+                      ? "width"
+                      : "CR" === e
+                      ? "color"
+                      : "BC" === e
+                      ? "backgroundColor"
+                      : "DY" === e
+                      ? "display"
+                      : "FL" === e
+                      ? "fill"
+                      : "TT" === e
+                      ? "title"
+                      : "OC" === e
+                      ? "onclick"
+                      : "AT" === e
+                      ? "alt"
+                      : "VB" === e
+                      ? "viewBox"
+                      : "HD" === e
+                      ? "hidden"
+                      : "AH" === e
+                      ? "aria-hidden"
+                      : "PH" === e
+                      ? "placeholder"
+                      : "PV" === e
+                      ? "pixelVisible"
+                      : "XX" === e
+                      ? "functi0nize-selected"
+                      : "ZI" === e
+                      ? "z-index"
+                      : e;
+                  },
+                },
+                {
+                  key: "skipNodeCriteria",
+                  value: function (e) {
+                    var t = !1;
+                    if ("3" === e.nodeType) {
+                      var o = this.subRoutine5(e.data + "");
+                      "" === (o = o.replace(/\s/g, "")) && (t = !0);
+                    }
+                    return t;
+                  },
+                },
+                {
+                  key: "getCookieKeys",
+                  value: function (e) {
+                    try {
+                      if (null == e || void 0 === e || "" === e) return [];
+                      var o,
+                        n = [],
+                        i = t(e.replace(/ /g, "").split(";"));
+                      try {
+                        for (i.s(); !(o = i.n()).done; ) {
+                          var r = o.value;
+                          n.push(r.split("=")[0]);
+                        }
+                      } catch (e) {
+                        i.e(e);
+                      } finally {
+                        i.f();
+                      }
+                      return n;
+                    } catch (e) {
+                      return console.log(e), [];
+                    }
+                  },
+                },
+                {
+                  key: "getSelection3",
+                  value: function (e) {
+                    if ("complete" === document.readyState) {
+                      e.setAttribute("functi0nize-selected", !0), (this.nodeId = 0);
+                      var t = this.generateTree3(e);
+                      return e.setAttribute("functi0nize-selected", !1), t;
+                    }
+                    return "document not loaded completely";
+                  },
+                },
+                {
+                  key: "generateTree3",
+                  value: function (e) {
+                    var t = new Date().getTime(),
+                      o = {};
+                    try {
+                      var n;
+                      (n =
+                        null == e || void 0 === e.nodeType
+                          ? this.getSimilarNodesFromAttributes(e)
+                          : this.getSimilarNodes(e)),
+                        console.log("Number of similarNodes:" + n.length),
+                        this.traverseFromSimilarNodes(n),
+                        this.buildSmallTree(),
+                        (o.comp = this.allNodes);
+                    } catch (e) {
+                      console.log(e), console.log("Error collecting ML data");
+                    }
+                    (o.url = encodeURI(document.URL)),
+                      (o.cookie = this.getCookieKeys(document.cookie)),
+                      (o.title = document.title),
+                      (o.iw = window.innerWidth),
+                      (o.ih = window.innerHeight);
+                    var i = new Date().getTime() - t;
+                    return (
+                      console.log("Smart Traversal Time to Extract: " + i + "ms"), o
+                    );
+                  },
+                },
+                {
+                  key: "collectShadowNodes",
+                  value: function (e) {
+                    for (
+                      var t,
+                        o = document.createTreeWalker(
+                          e,
+                          NodeFilter.SHOW_ELEMENT,
+                          this.ignoreFilter,
+                          !1
+                        );
+                      null != (t = o.nextNode());
+
+                    )
+                      void 0 !== t.shadowRoot &&
+                        null != t.shadowRoot &&
+                        (this.shadowRootNodes.push(t.shadowRoot),
+                        this.collectShadowNodes(t.shadowRoot));
+                    console.log(
+                      "collected " +
+                        this.shadowRootNodes.length +
+                        " shadowRoot so far...."
+                    );
+                  },
+                },
+                {
+                  key: "querySelectorAll",
+                  value: function (e) {
+                    var o = [];
+                    try {
+                      if (
+                        ((o = o.concat(
+                          Array.prototype.slice.call(document.querySelectorAll(e))
+                        )),
+                        this.shadowRootNodes.length > 0)
+                      ) {
+                        console.log(
+                          "shadow root count in this DOM: " +
+                            this.shadowRootNodes.length
+                        );
+                        var n,
+                          i = t(this.shadowRootNodes);
+                        try {
+                          for (i.s(); !(n = i.n()).done; ) {
+                            var r = n.value.querySelectorAll(e);
+                            0 !== r.length &&
+                              (o = o.concat(Array.prototype.slice.call(r)));
+                          }
+                        } catch (e) {
+                          i.e(e);
+                        } finally {
+                          i.f();
+                        }
+                      }
+                    } catch (e) {
+                      console.log(e);
+                    }
+                    return console.log("Found elements: " + o.length), o;
+                  },
+                },
+                {
+                  key: "getSimilarNodesFromAttributes",
+                  value: function (e) {
+                    for (
+                      var o = new Date().getTime(), n = [], i = 0, r = ["PV"];
+                      i < r.length;
+                      i++
+                    )
+                      delete e[r[i]];
+                    if ("1" === e.NT) {
+                      delete e.TN;
+                      var l = document.createTreeWalker(
+                        document,
+                        NodeFilter.SHOW_ELEMENT
+                      );
+                      if (
+                        ((n = n.concat(this.getSimilarNodesWithNodeTypeOne(l, e))),
+                        this.shadowRootNodes.length > 0)
+                      ) {
+                        var a,
+                          s = t(this.shadowRootNodes);
+                        try {
+                          for (s.s(); !(a = s.n()).done; ) {
+                            var u = a.value,
+                              h = document.createTreeWalker(
+                                u,
+                                NodeFilter.SHOW_ELEMENT
+                              );
+                            n = n.concat(this.getSimilarNodesWithNodeTypeOne(h, e));
+                          }
+                        } catch (e) {
+                          s.e(e);
+                        } finally {
+                          s.f();
+                        }
+                      }
+                    }
+                    if ("3" === e.NT) {
+                      var d = document.createTreeWalker(
+                        document,
+                        NodeFilter.SHOW_TEXT
+                      );
+                      if (
+                        ((n = n.concat(this.getSimilarNodesWithNodeTypeThree(d, e))),
+                        this.shadowRootNodes.length > 0)
+                      ) {
+                        var c,
+                          f = t(this.shadowRootNodes);
+                        try {
+                          for (f.s(); !(c = f.n()).done; ) {
+                            var g = c.value,
+                              v = document.createTreeWalker(g, NodeFilter.SHOW_TEXT);
+                            n = n.concat(this.getSimilarNodesWithNodeTypeThree(v, e));
+                          }
+                        } catch (e) {
+                          f.e(e);
+                        } finally {
+                          f.f();
+                        }
+                      }
+                    }
+                    return (
+                      (n = n.filter(function (e, t) {
+                        return n.indexOf(e) === t;
+                      })),
+                      console.log(
+                        "Time taken for getSimilarNodesFromAttributes: " +
+                          (new Date().getTime() - o) +
+                          "ms"
+                      ),
+                      n
+                    );
+                  },
+                },
+                {
+                  key: "getSimilarNodesWithNodeTypeOne",
+                  value: function (e, t) {
+                    var o,
+                      n,
+                      i = 200,
+                      r = [],
+                      l = [],
+                      a = { DY: [], BC: [], CR: [], TC: [] };
+                    for (var s in t) a[s] = [];
+                    for (; null != (o = e.nextNode()); ) {
+                      var u = window.getComputedStyle(o, null),
+                        h = o.attributes;
+                      for (var d in (this.isWithinBoundingBox(
+                        o.getBoundingClientRect(),
+                        (t.LT + t.WH) / 2,
+                        (t.TP + t.HT) / 2
+                      ) && l.push(o),
+                      Object.prototype.hasOwnProperty.call(t, "DY") &&
+                        u.getPropertyValue("display") === t.DY &&
+                        (a.DY.push(o), a.DY.length > i && (delete t.DY, delete a.DY)),
+                      Object.prototype.hasOwnProperty.call(t, "BC") &&
+                        u.getPropertyValue("background-color") === t.BC &&
+                        (a.BC.push(o), a.BC.length > i && (delete t.BC, delete a.BC)),
+                      Object.prototype.hasOwnProperty.call(t, "CR") &&
+                        u.getPropertyValue("color") === t.CR &&
+                        (a.CR.push(o), a.CR.length > i && (delete t.CR, delete a.CR)),
+                      Object.prototype.hasOwnProperty.call(t, "TC") &&
+                        o.text === t.TC &&
+                        (a.TC.push(o), a.TC.length > i && (delete t.TC, delete a.TC)),
+                      t)) {
+                        var c = this.reversedAttributeNameMap(d);
+                        void 0 !== h[c] &&
+                          h[c].value === t[d] &&
+                          (a[d].push(o),
+                          a[d].length > i && (delete t[d], delete a[d]));
+                      }
+                    }
+                    for (var f in a)
+                      (0 === r.length ||
+                        (a[f].length > 1 && a[f].length < r.length)) &&
+                        ((r = a[f]), (n = f));
+                    return (
+                      r.length > 0
+                        ? console.log("Chosen attribute for similar nodes: " + n)
+                        : console.log("Not able to find similar nodes"),
+                      console.log("Nearby node found: " + l.length),
+                      r.concat(l)
+                    );
+                  },
+                },
+                {
+                  key: "getSimilarNodesWithNodeTypeThree",
+                  value: function (e, t) {
+                    for (
+                      var o, n = [], i = [], r = document.createRange();
+                      null != (o = e.nextNode());
+
+                    ) {
+                      r.selectNodeContents(o);
+                      var l = r.getClientRects();
+                      null != l &&
+                        void 0 !== l &&
+                        0 !== l.length &&
+                        this.isWithinBoundingBox(
+                          l[0],
+                          (t.LT + t.WH) / 2,
+                          (t.TP + t.HT) / 2
+                        ) &&
+                        i.push(o),
+                        o.data === t.TV && n.push(o);
+                    }
+                    return console.log("Nearby node found: " + i.length), n.concat(i);
+                  },
+                },
+                {
+                  key: "isWithinBoundingBox",
+                  value: function (e, t, o) {
+                    for (
+                      var n = 0,
+                        i = [
+                          [e.left, e.top],
+                          [e.right, e.top],
+                          [e.left, e.bottom],
+                          [e.right, e.bottom],
+                        ];
+                      n < i.length;
+                      n++
+                    ) {
+                      var r = i[n];
+                      if (
+                        r[0] >= Math.max(0, t - this.boundingBoxPixelLimit) &&
+                        r[0] <= t + this.boundingBoxPixelLimit &&
+                        r[1] >= Math.max(0, o - this.boundingBoxPixelLimit) &&
+                        r[1] <= o + this.boundingBoxPixelLimit
+                      )
+                        return !0;
+                    }
+                    return !1;
+                  },
+                },
+                {
+                  key: "getBoxRect",
+                  value: function (e) {
+                    var t = document.createRange();
+                    if (
+                      "contents" ===
+                      window.getComputedStyle(e, null).getPropertyValue("display")
+                    ) {
+                      var o = e.firstChild;
+                      if (null == o)
+                        if ("SLOT" === e.tagName) {
+                          var n = e.assignedElements();
+                          o = null != n && n.length > 0 ? n[0] : e.getRootNode().host;
+                        } else
+                          o =
+                            11 === e.getRootNode().nodeType
+                              ? e.getRootNode().host
+                              : e.parentNode;
+                      if (null != o) {
+                        t.selectNodeContents(o);
+                        var i = t.getClientRects();
+                        if (i.length > 0) return i[0];
+                      }
+                    }
+                    return e.getBoundingClientRect();
+                  },
+                },
+                {
+                  key: "getSimilarNodes",
+                  value: function (e) {
+                    var t = {};
+                    if (((t.NT = e.nodeType + ""), 1 === e.nodeType)) {
+                      (t.TN = e.tagName), (t.TC = e.text);
+                      for (var o = e.attributes, n = 0; n < o.length; n++)
+                        t[this.attributeNameMap(o[n].name)] = o[n].value;
+                    }
+                    3 === e.nodeType && (t.TV = e.data);
+                    var i = window.getComputedStyle(e, null);
+                    if (
+                      ((t.DY = i.getPropertyValue("display")),
+                      (t.BC = i.getPropertyValue("background-color")),
+                      (t.CR = i.getPropertyValue("color")),
+                      1 === e.nodeType)
+                    ) {
+                      var r = this.getBoxRect(e);
+                      (t.LT = r.left),
+                        (t.TP = r.top),
+                        (t.WH = r.width),
+                        (t.HT = r.height);
+                    } else if (3 === e.nodeType) {
+                      var l = document.createRange();
+                      l.selectNodeContents(e);
+                      var a = l.getClientRects();
+                      null == a || void 0 === a || 0 === a.length
+                        ? ((t.LT = 0), (t.TP = 0), (t.WH = 0), (t.HT = 0))
+                        : ((t.LT = a[0].left),
+                          (t.TP = a[0].top),
+                          (t.WH = a[0].width),
+                          (t.HT = a[0].height));
+                    }
+                    var s = this.getSimilarNodesFromAttributes(t);
+                    return 0 === s.length && s.push(e), s;
+                  },
+                },
+                {
+                  key: "buildSmallTree",
+                  value: function () {
+                    if (0 === this.parentNodesMovingToRoot.length)
+                      return "Not able to buildSmallTree because missing parentNodes";
+                    var e = this.parentNodesMovingToRoot[
+                      this.parentNodesMovingToRoot.length - 1
+                    ];
+                    return (
+                      this.traverseForNewTree(e, this.allNodes, this.newTree),
+                      this.newTree
+                    );
+                  },
+                },
+                {
+                  key: "traverseForNewTree",
+                  value: function (e, t, o) {
+                    if (
+                      null == e ||
+                      void 0 === e ||
+                      "SCRIPT" === e.tagName ||
+                      "STYLE" === e.tagName
+                    )
+                      return o;
+                    if (
+                      ((1 !== e.nodeType && 3 !== e.nodeType) ||
+                        t.push(this.computeNodeRecord(e)),
+                      0 === e.childNodes.length)
+                    )
+                      return (
+                        1 === e.nodeType &&
+                          e.setAttribute("functionizeID", this.nodeId),
+                        o.push({ i: this.nodeId }),
+                        this.nodeId++,
+                        o
+                      );
+                    var n = e.childNodes,
+                      i = [],
+                      r = this.nodeId;
+                    1 === e.nodeType && e.setAttribute("functionizeID", r),
+                      this.nodeId++;
+                    for (var l = 0; l < n.length; l++)
+                      if (this.isNodeFoundInNewTraverse(n[l])) {
+                        var a = this.traverseForNewTree(n[l], t, []);
+                        null != a && void 0 !== a && a.length > 0 && i.push(a[0]);
+                      }
+                    return (
+                      i.length > 0 ? o.push({ i: r, c: i }) : o.push({ i: r }), o
+                    );
+                  },
+                },
+                {
+                  key: "computeNodeRecord",
+                  value: function (e) {
+                    var t = null;
+                    try {
+                      t = this.getParentFromNode(e, null);
+                    } catch (o) {
+                      console.log("no parentID found for node: " + e), (t = null);
+                    }
+                    var o = e.nodeType;
+                    if (1 === o) {
+                      for (
+                        var n = e.tagName,
+                          i = this.getBoxRect(e),
+                          r = window.getComputedStyle(e, null),
+                          l = e.attributes,
+                          a = {},
+                          s = 0;
+                        s < l.length;
+                        s++
+                      )
+                        a[l[s].name] = l[s].value;
+                      return [
+                        t,
+                        this.nodeId + "",
+                        o + "",
+                        i.left,
+                        i.top,
+                        i.width,
+                        i.height,
+                        r.getPropertyValue("display"),
+                        r.getPropertyValue("background-color"),
+                        r.getPropertyValue("color"),
+                        r.getPropertyValue("z-index"),
+                        n,
+                        a,
+                      ];
+                    }
+                    if (3 === o) {
+                      var u = document.createRange();
+                      u.selectNodeContents(e);
+                      var h = u.getClientRects();
+                      return null == h || void 0 === h || 0 === h.length
+                        ? [t, this.nodeId + "", o + "", 0, 0, 0, 0, e.data]
+                        : [
+                            t,
+                            this.nodeId + "",
+                            o + "",
+                            h[0].left,
+                            h[0].top,
+                            h[0].width,
+                            h[0].height,
+                            e.data,
+                          ];
+                    }
+                  },
+                },
+                {
+                  key: "isNodeFoundInNewTraverse",
+                  value: function (e) {
+                    return this.historyQueue.some(function (t) {
+                      return t === e;
+                    });
+                  },
+                },
+                {
+                  key: "traverseFromSimilarNodes",
+                  value: function (e) {
+                    var t,
+                      o = new Date().getTime(),
+                      n = {};
+                    this.traverseUpwardUntilRootFromNodes(e, n);
+                    var i = [];
+                    for (var r in n) {
+                      var l = n[r];
+                      null != t &&
+                        t !== l[l.length - 1] &&
+                        (console.log("Root node is different among routes"),
+                        console.log(n)),
+                        (t = l[l.length - 1]);
+                      var a = l.filter(function (e) {
+                        return !i.includes(e);
+                      });
+                      i = a.concat(i);
+                    }
+                    this.parentNodesMovingToRoot = i;
+                    var s = 0;
+                    for (
+                      this.fifoQueue = e.concat(i);
+                      s <= this.traverseOutwardLimit;
+
+                    ) {
+                      for (var u = []; this.fifoQueue.length > 0; )
+                        for (
+                          var h = this.popFromFifoQueue().childNodes, d = 0;
+                          d < h.length;
+                          d++
+                        )
+                          u.push(h[d]);
+                      for (var c = 0, f = u; c < f.length; c++) {
+                        var g = f[c];
+                        this.pushIntoFifoQueue(g);
+                      }
+                      s += 1;
+                    }
+                    return (
+                      console.log(
+                        "Complete traverseFromSimilarNodes in : " +
+                          (new Date().getTime() - o) +
+                          "ms"
+                      ),
+                      this.historyQueue
+                    );
+                  },
+                },
+                {
+                  key: "traverseFromSelectedNode",
+                  value: function (t) {
+                    var o = this,
+                      n = new Date().getTime(),
+                      i = 0,
+                      r = 0;
+                    for (
+                      this.parentNodesMovingToRoot = [],
+                        Array.isArray(t)
+                          ? ((r = this.traverseUpwardUntilRootFromNodes(t, {})),
+                            (this.fifoQueue = this.fifoQueue.concat(t)))
+                          : ((r = this.traverseUpwardUntilRoot(
+                              t,
+                              this.parentNodesMovingToRoot
+                            )),
+                            this.fifoQueue.push(t));
+                      0 !== this.fifoQueue.length;
+
+                    ) {
+                      if (new Date().getTime() - n > 25e3) {
+                        var l = (function () {
+                          console.log(
+                            "Traverse from selected node exceeding time limit of 25000ms"
+                          ),
+                            console.log(
+                              "history size: " +
+                                o.historyQueue.length +
+                                ", fifo size: " +
+                                o.fifoQueue.length +
+                                ", current loop: " +
+                                i
+                            );
+                          var e = o.historyQueue.concat(o.parentNodesMovingToRoot);
+                          return (
+                            (o.historyQueue = e.filter(function (t, o) {
+                              return e.indexOf(t) === o;
+                            })),
+                            { v: o.historyQueue }
+                          );
+                        })();
+                        if ("object" === e(l)) return l.v;
+                      } else if (this.historyQueue.length > 5e3) {
+                        var a = (function () {
+                          console.log(
+                            "Traverse from selected node exceeding size of 5000"
+                          ),
+                            console.log(
+                              "history size: " +
+                                o.historyQueue.length +
+                                ", fifo size: " +
+                                o.fifoQueue.length +
+                                ", current loop: " +
+                                i
+                            );
+                          var e = o.historyQueue.concat(o.parentNodesMovingToRoot);
+                          return (
+                            (o.historyQueue = e.filter(function (t, o) {
+                              return e.indexOf(t) === o;
+                            })),
+                            { v: o.historyQueue }
+                          );
+                        })();
+                        if ("object" === e(a)) return a.v;
+                      }
+                      var s = this.popFromFifoQueue();
+                      if (i < r) {
+                        this.traverseOutwardFromNode(s);
+                        var u = this.parentNodesMovingToRoot.filter(function (e) {
+                          return o.historyQueue.includes(e);
+                        });
+                        null != u && (i = u.length);
+                      }
+                    }
+                    return this.historyQueue;
+                  },
+                },
+                {
+                  key: "traverseOutwardFromNode",
+                  value: function (e) {
+                    if (null != e) {
+                      this.pushIntoFifoQueue(e.parentNode);
+                      for (var t = e; null !== t.nextSibling; )
+                        this.pushIntoFifoQueue(t.nextSibling), (t = t.nextSibling);
+                      for (var o = e.childNodes, n = 0; n < o.length; n++)
+                        this.pushIntoFifoQueue(o[n]);
+                      void 0 !== e.shadowRoot &&
+                        null != e.shadowRoot &&
+                        this.pushIntoFifoQueue(e.shadowRoot);
+                    }
+                  },
+                },
+                {
+                  key: "popFromFifoQueue",
+                  value: function () {
+                    if (0 === this.fifoQueue.length) return null;
+                    var e = this.fifoQueue.shift();
+                    return this.historyQueue.push(e), e;
+                  },
+                },
+                {
+                  key: "pushIntoFifoQueue",
+                  value: function (e) {
+                    null === e ||
+                      this.historyQueue.some(function (t) {
+                        return t === e;
+                      }) ||
+                      this.fifoQueue.some(function (t) {
+                        return t === e;
+                      }) ||
+                      this.fifoQueue.push(e);
+                  },
+                },
+                {
+                  key: "traverseUpwardUntilRootFromNodes",
+                  value: function (e, o) {
+                    var n,
+                      i = new Date().getTime(),
+                      r = t(e);
+                    try {
+                      for (r.s(); !(n = r.n()).done; ) {
+                        var l = n.value,
+                          a = [];
+                        o[this.traverseUpwardUntilRoot(l, a)] = a.slice();
+                      }
+                    } catch (e) {
+                      r.e(e);
+                    } finally {
+                      r.f();
+                    }
+                    var s = 0;
+                    for (var u in o) u > s && (s = u);
+                    return (
+                      (this.parentNodesMovingToRoot = o[s].slice()),
+                      console.log(
+                        "Time taken for traverseUpwardUntilRootFromNodes: " +
+                          (new Date().getTime() - i) +
+                          "ms"
+                      ),
+                      s
+                    );
+                  },
+                },
+                {
+                  key: "traverseUpwardUntilRoot",
+                  value: function (e, t) {
+                    var o = 0;
+                    if (null == e) return o;
+                    for (; null != e.parentNode; )
+                      (e = e.parentNode), t.push(e), (o += 1);
+                    return (
+                      null != e.host &&
+                        void 0 !== e.host &&
+                        (t.push(e), (o += this.traverseUpwardUntilRoot(e.host, t))),
+                      o
+                    );
+                  },
+                },
+                {
+                  key: "isCompletedData",
+                  value: function (e) {
+                    return (
+                      null != e &&
+                      null != e.comp &&
+                      this.historyQueue.length === e.comp.length
+                    );
+                  },
+                },
+              ]) && i(n.prototype, r),
+              o
+            );
+          })()),
+            (window.SiteStatistics = r);
+        })();
+      })();
 
     (function(global, factory) {
         typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : (global = global || self, global.html2canvas = factory());
