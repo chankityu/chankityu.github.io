@@ -1,4 +1,4 @@
-var PIIString = {"proj_id": 1234, "PIIs": [{"item": "abc", "format": "abcd"}, {"item": "abce", "format": "abcde"}]};
+var PIIString = '{"proj_id": 1234, "PIIs": [{"item": "abc", "format": "abcd"}, {"item": "abce", "format": "abcde"}]}';
 var PIIJSON = JSON.parse(PIIString);
 var functioniseToken = 'fa59c865a4355881b4f8a8178a20a28c';
 var functionizePid = 26653;
