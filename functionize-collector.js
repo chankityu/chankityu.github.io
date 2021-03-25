@@ -4482,6 +4482,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             return formData;
         }
         this.filterEmails = function(text) {
+            console.log('filter email')
             const re = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/g;
             return String(text).replace(re, "$$PII_email$$")
         };
@@ -5765,7 +5766,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     this.recordedData[i][key] = WU.filterCcards(this.recordedData[i][key]);
                     for(var j=0; j < PIIJSON.PIIs.length; j++) {
                         switch (PIIJSON.PIIs[j].item) {
-                            case "SSN": this.recordedData[i][key] = WU.filterDatas(this.recordedData[i][key]);
+                            case "SSN": this.recordedData[i][key] = WU.filterSSNs(this.recordedData[i][key]);
                             break;
                         }
 
