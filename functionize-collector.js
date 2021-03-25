@@ -1,4 +1,4 @@
-var PIIString = '{"proj_id": 1234, "PIIs": [{"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"}, {"item": "abce", "format": "abcde"}]}';
+var PIIString = '{"proj_id": 1234, "PIIs": [{"item": "SSN", "format": "asdas"}, {"item": "abce", "format": "abcde"}]}';
 var PIIJSON = JSON.parse(PIIString);
 console.log(PIIJSON.PIIs[0].item)
 var functioniseToken = '8c7432551d1ae1c26c945ae01c4011fe';
