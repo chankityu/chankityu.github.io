@@ -1,4 +1,4 @@
-var PIIString = '{"proj_id": 1234, "PIIs": [{"item": "abc", "format": "abcd"}, {"item": "abce", "format": "abcde"}]}';
+var PIIString = '{"proj_id": 1234, "PIIs": [{"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"}, {"item": "abce", "format": "abcde"}]}';
 var PIIJSON = JSON.parse(PIIString);
 console.log(PIIJSON.PIIs[0].item)
 var functioniseToken = 'fa59c865a4355881b4f8a8178a20a28c';
@@ -4485,6 +4485,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             const re = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/g;
             return String(text).replace(re, "$$PII_email$$")
         };
+        this.filterDatas = function(text, re, item) {
+            return String(text).replace(re, item)
+        }
         this.filterCcards = function(text) {
             function luhn(ccardNumber) {
                 var nCheck = 0;
@@ -5759,6 +5762,10 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     if (!this.recordedData.hasOwnProperty(key) || key in safeKeys) continue;
                     this.recordedData[i][key] = WU.filterEmails(this.recordedData[i][key]);
                     this.recordedData[i][key] = WU.filterCcards(this.recordedData[i][key]);
+                    for(var j=0; j < PIIJSON.PIIs.length; j++) {
+                        this.recordedData[i][key] = WU.filterDatas(this.recordedData[i][key], PIIJSON.PIIs[j].format, '$$'+
+                        PIIJSON.PIIs[j].item + '$$' );
+                    }
                 }
             }
         };
