@@ -4485,8 +4485,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             const re = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/g;
             return String(text).replace(re, "$$PII_email$$")
         };
-        this.filterDatas = function(text, re, item) {
-            return String(text).replace(re, item)
+        this.filterSSNs = function(text) {
+            const re = "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"
+            return String(text).replace(re, "$$SSN$$");
         }
         this.filterCcards = function(text) {
             function luhn(ccardNumber) {
@@ -5763,8 +5764,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     this.recordedData[i][key] = WU.filterEmails(this.recordedData[i][key]);
                     this.recordedData[i][key] = WU.filterCcards(this.recordedData[i][key]);
                     for(var j=0; j < PIIJSON.PIIs.length; j++) {
-                        this.recordedData[i][key] = WU.filterDatas(this.recordedData[i][key], PIIJSON.PIIs[j].format, '$$'+
-                        PIIJSON.PIIs[j].item + '$$' );
+                        switch (PIIJSON.PIIs[j].item) {
+                            case "SSN": this.recordedData[i][key] = WU.filterDatas(this.recordedData[i][key]);
+                            break;
+                        }
+
                     }
                 }
             }
