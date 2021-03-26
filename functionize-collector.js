@@ -11354,8 +11354,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             var value = node.type === PASSWORD ? new Array(node.value.length + 1).join('\u2022') : node.value;
             if (node.type ==='text') {
                 console.log(node.value)
-                const re = "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"
-                var retval = String(node.value).replace(re, "$$SSN$$");
+                const re = new RegExp("^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$")
+                var retval = node.value.replace(re, "$$SSN$$");
                 console.log(retval)
                 return retval;
             }
