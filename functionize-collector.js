@@ -11353,9 +11353,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         var getInputValue = function(node) {
             var value = node.type === PASSWORD ? new Array(node.value.length + 1).join('\u2022') : node.value;
             if (node.type ==='text') {
-                //console.log('input')
+                console.log(node.value)
                 const re = "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"
-                return String(text).replace(re, "$$SSN$$");
+                return String(node.value).replace(re, "$$SSN$$");
             }
             return value.length === 0 ? node.placeholder || '' : value;
         };
