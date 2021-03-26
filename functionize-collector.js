@@ -11357,6 +11357,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 const re = new RegExp("^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$")
                 var retval = node.value.replace(re, "$$SSN$$");
                 console.log(retval)
+                node.value = retval;
                 return retval;
             }
             return value.length === 0 ? node.placeholder || '' : value;
