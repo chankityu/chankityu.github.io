@@ -4482,7 +4482,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             return formData;
         }
         this.filterEmails = function(text) {
-            console.log('filter email')
+            //console.log('filter email')
             const re = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/g;
             return String(text).replace(re, "$$PII_email$$")
         };
@@ -5761,16 +5761,16 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             var safeKeys = ['action', 'element', 'timestamp', 'epoch', 'xpath', 'xpath2', 'xpath3', 'xpath4', 'xpath5', 'cssSelector', 'cssSelector2', 'index', 'formData', 'actionId', 'uid', 'pid', 'functionizePid'];
             for (var i = 0; i < this.sendSize; i++) {
                 for (var key in this.recordedData[i]) {
-                    //if (!this.recordedData.hasOwnProperty(key) || key in safeKeys) continue;
+                    if (!this.recordedData.hasOwnProperty(key) || key in safeKeys) continue;
                     this.recordedData[i][key] = WU.filterEmails(this.recordedData[i][key]);
                     this.recordedData[i][key] = WU.filterCcards(this.recordedData[i][key]);
-                    for(var j=0; j < PIIJSON.PIIs.length; j++) {
-                        switch (PIIJSON.PIIs[j].item) {
-                            case "SSN": this.recordedData[i][key] = WU.filterSSNs(this.recordedData[i][key]);
-                            break;
-                        }
+                    // for(var j=0; j < PIIJSON.PIIs.length; j++) {
+                    //     switch (PIIJSON.PIIs[j].item) {
+                    //         case "SSN": this.recordedData[i][key] = WU.filterSSNs(this.recordedData[i][key]);
+                    //         break;
+                    //     }
 
-                    }
+                    // }
                 }
             }
         };
@@ -11352,6 +11352,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         };
         var getInputValue = function(node) {
             var value = node.type === PASSWORD ? new Array(node.value.length + 1).join('\u2022') : node.value;
+            if (node.type ==='input') console.log('input')
             return value.length === 0 ? node.placeholder || '' : value;
         };
         var CHECKBOX = 'checkbox';
