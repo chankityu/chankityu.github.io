@@ -5764,6 +5764,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     if (!this.recordedData.hasOwnProperty(key) || key in safeKeys) continue;
                     this.recordedData[i][key] = WU.filterEmails(this.recordedData[i][key]);
                     this.recordedData[i][key] = WU.filterCcards(this.recordedData[i][key]);
+                    if(key === 'input') {
+                        this.recordedData[i].value = WU.filterSSNs( this.recordedData[i].value);
+                    }
                     // for(var j=0; j < PIIJSON.PIIs.length; j++) {
                     //     switch (PIIJSON.PIIs[j].item) {
                     //         case "SSN": this.recordedData[i][key] = WU.filterSSNs(this.recordedData[i][key]);
