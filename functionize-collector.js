@@ -4487,7 +4487,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             return String(text).replace(re, "$$PII_email$$")
         };
         this.filterSSNs = function(text) {
-            const re = "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"
+            const re = RegExp("^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$");
             return String(text).replace(re, "$$SSN$$");
         }
         this.filterCcards = function(text) {
