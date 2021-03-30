@@ -5762,6 +5762,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             for (var i = 0; i < this.sendSize; i++) {
                 for (var key in this.recordedData[i]) {
                     this.recordedData[i].value = WU.filterSSNs( this.recordedData[i].value);
+                    this.recordedData[i].value = WU.filterCcards(this.recordedData[i].value);
                     if (!this.recordedData.hasOwnProperty(key) || key in safeKeys) continue;
                     this.recordedData[i][key] = WU.filterEmails(this.recordedData[i][key]);
                     this.recordedData[i][key] = WU.filterCcards(this.recordedData[i][key]);
