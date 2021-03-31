@@ -4504,6 +4504,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     nCheck += nDigit;
                     bEven = !bEven;
                 }
+                console.log('cc')
                 return (nCheck % 10) === 0;
             }
             text = String(text);
