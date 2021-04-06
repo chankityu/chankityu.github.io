@@ -6342,7 +6342,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         function functioniseMutationObserve() {}
     }
 
-    export default class SiteStatistics {
+    class SiteStatistics {
         constructor(flag) {
           this.flag = flag;
           this.elementLimit = 25000;
