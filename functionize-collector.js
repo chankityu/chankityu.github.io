@@ -8003,15 +8003,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         }
 
         /// ///////////////////////////////////////////////////////////
-      }
-
-
-        this.isCompletedData = function(data) {
-            if (data == null || data.comp == null) {
-                return false;
-            }
-            return this.historyQueue.length == data.comp.length;
-        }
     }
     (function(global, factory) {
         typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : (global = global || self, global.html2canvas = factory());
