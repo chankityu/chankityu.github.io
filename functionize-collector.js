@@ -4491,25 +4491,32 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         }
 
         this.filterDriverLicence = function(text) {
-            var oneToSevenNumeric = /^[0-9]{1,7}$/;
-            var oneAlpha = /(.*[A-Za-z]){1}/;
-            var oneAlphaPlusSeven = /^.[0-9]{7}$/;
-            var twoAlpha = /(.*[A-Za-z]){2}/;
-            var alphaPlusSixNumeric = /(.*[0-9]){6}$/;
-            var threeToFiveNumeric = /(.*[0-9]){3,5}$/;
-            var fiveToNineNumeric = /(.*[0-9]){5,9}/;
-            var sixNumeric = /^[0-9]{6}$/;
-            var sevenNumeric = /^[0-9]{7}$/;
-            var sevenToNineNumeric = /^[0-9]{7,9}$/;
-            var eightAreNumbers = /(.*[0-9]){8}/;
-            var nineNumeric = /^[0-9]{9}$/;
-            var nineAlphaChars = /^[A-Za-z0-9]{9}$/;
-            var tenNumeric = /^[0-9]{10}$/;
-            var elevenNumeric = /^.[0-9]{11}$/;
-            var twelveNumeric = /^.[0-9]{12}$/;
-            var hPlusEight = /([H][0-9]{8})$/;
-            var sevenPlusX = /([H][0-9]{7}X)$/;
-
+            // Decide to use this structure with variables instead of arrays so we know what each regex is doing.
+            var mask = "$$DRIVER_LICENCE";
+            var dict = {};
+            dict.oneToSevenNumeric = /^[0-9]{1,7}$/;
+            dict.oneAlphaPlusSeven = /^.[0-9]{7}$/;
+            dict.twoAlpha = /(.*[A-Za-z]){2}/;
+            dict.alphaPlusSixNumeric = /(.*[0-9]){6}$/;
+            dict.threeToFiveNumeric = /(.*[0-9]){3,5}$/;
+            dict.fiveToNineNumeric = /(.*[0-9]){5,9}/;
+            dict.sixNumeric = /^[0-9]{6}$/;
+            dict.sevenNumeric = /^[0-9]{7}$/;
+            dict.sevenToNineNumeric = /^[0-9]{7,9}$/;
+            dict.eightAreNumbers = /(.*[0-9]){8}/;
+            dict.nineNumeric = /^[0-9]{9}$/;
+            dict.nineAlphaChars = /^[A-Za-z0-9]{9}$/;
+            dict.tenNumeric = /^[0-9]{10}$/;
+            dict.elevenNumeric = /^.[0-9]{11}$/;
+            dict.twelveNumeric = /^.[0-9]{12}$/;
+            dict.hPlusEight = /([H][0-9]{8})$/;
+            dict.sevenPlusX = /([H][0-9]{7}X)$/;
+            for (var key in dict) {
+                if (String(text).replace(RegExp(dict[key]), mask) !== String(text)) {
+                    return String(text).replace(RegExp(dict[key]), mask);
+                }
+            }
+            return String(text)
         }
 
         this.filterCcards = function(text) {
