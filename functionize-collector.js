@@ -5791,22 +5791,23 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             var safeKeys = ['action', 'element', 'timestamp', 'epoch', 'xpath', 'xpath2', 'xpath3', 'xpath4', 'xpath5', 'cssSelector', 'cssSelector2', 'index', 'formData', 'actionId', 'uid', 'pid', 'functionizePid'];
             for (var i = 0; i < this.sendSize; i++) {
                 for (var key in this.recordedData[i]) {
-                    this.recordedData[i].value = WU.filterSSNs( this.recordedData[i].value);
-                    this.recordedData[i].value = WU.filterCcards(this.recordedData[i].value);
+                    for(var j=0; j < PIIJSON.PIIs.length; j++) {
+                        switch (PIIJSON.PIIs[j].item) {
+                            case "SSN": this.recordedData[i][key] = WU.filterSSNs(this.recordedData[i][key]);
+                            break;
+                        }
+
+                    }
+
+                    //this.recordedData[i].value = WU.filterSSNs( this.recordedData[i].value);
+                    //this.recordedData[i].value = WU.filterCcards(this.recordedData[i].value);
                     if (!this.recordedData.hasOwnProperty(key) || key in safeKeys) continue;
                     this.recordedData[i][key] = WU.filterEmails(this.recordedData[i][key]);
                     this.recordedData[i][key] = WU.filterCcards(this.recordedData[i][key]);
-
-
-
-                    // for(var j=0; j < PIIJSON.PIIs.length; j++) {
-                    //     switch (PIIJSON.PIIs[j].item) {
-                    //         case "SSN": this.recordedData[i][key] = WU.filterSSNs(this.recordedData[i][key]);
-                    //         break;
-                    //     }
-
-                    // }
                 }
+
+
+
             }
         };
     }
