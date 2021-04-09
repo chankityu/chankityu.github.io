@@ -4904,25 +4904,25 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         instance.addWhiteListClas();
         html2canvas(document.body, {
             ignoreElements: function(element) {
-                if (element.nodeName === 'IFRAME') return false;
+                // if (element.nodeName === 'IFRAME') return false;
                 if (element.nodeName === 'INPUT') {
                     element.value = WU.filterSSNs(element.value);
                     element.value = WU.filterCcards(element.value);
-                    element.value = WU.filterDriverLicence(element.value);
+                    //element.value = WU.filterDriverLicence(element.value);
                     return false;
                 }
-                if (element.nodeName === 'DIV') return false;
-                if (element.nodeName === 'STYLE') return false;
-                if (element.nodeName === 'HEAD') return false;
-                if (element.nodeName === 'HEADER') return false;
-                if (element.nodeName === 'LINK') return false;
-                if (element.nodeName === 'A') return false;
-                if (element.nodeName === 'IMG') return false;
-                if (element.nodeName === 'BODY') return false;
+                // if (element.nodeName === 'DIV') return false;
+                // if (element.nodeName === 'STYLE') return false;
+                // if (element.nodeName === 'HEAD') return false;
+                // if (element.nodeName === 'HEADER') return false;
+                // if (element.nodeName === 'LINK') return false;
+                // if (element.nodeName === 'A') return false;
+                // if (element.nodeName === 'IMG') return false;
+                // if (element.nodeName === 'BODY') return false;
 
-                if (element.classList) {
-                    return !element.classList.contains('export_whitelist_class');
-                }
+                // if (element.classList) {
+                //     return !element.classList.contains('export_whitelist_class');
+                // }
                 return false;
             }
         }).then(function(canvas) {
