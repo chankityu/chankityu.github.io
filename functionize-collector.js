@@ -4902,7 +4902,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         }
 
         instance.addWhiteListClas();
-        html2canvas(document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, {
+        html2canvas(document.body, {
             ignoreElements: function(element) {
                 if (element.nodeName === 'IFRAME') return false;
                 if (element.nodeName === 'INPUT') {
