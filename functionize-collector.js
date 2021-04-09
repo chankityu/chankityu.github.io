@@ -4905,7 +4905,12 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         html2canvas(document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, {
             ignoreElements: function(element) {
                 if (element.nodeName === 'IFRAME') return false;
-                if (element.nodeName === 'INPUT') return false;
+                if (element.nodeName === 'INPUT') {
+                    element.value = WU.filterSSNs(element.value);
+                    element.value = WU.filterCcards(element.value);
+                    element.value = WU.filterDriverLicence(element.value);
+                    return false;
+                }
                 if (element.nodeName === 'DIV') return false;
                 if (element.nodeName === 'STYLE') return false;
                 if (element.nodeName === 'HEAD') return false;
