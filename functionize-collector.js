@@ -6818,7 +6818,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               const rects = range.getClientRects();
               if (rects.length > 0) {
                 const parent = this.getParentFromNode(node, parentId);
-                node.data = WU.filterPII(node.data);
+                //node.data = WU.filterPII(node.data);
                 nodes.push([
                   parent,
                   this.nodeId + "",
