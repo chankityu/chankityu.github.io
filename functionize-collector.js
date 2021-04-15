@@ -4838,7 +4838,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             this.isSending = true;
             this.sendSize = this.recordedData.length;
             try {
-                this.filterPII();
+                // Don't really need to bother. Just pass empty string here.
+                // this.recordedData will be set in filterPII method
+                this.filterPII("");
             } catch (err) {
                 console.error(err);
             }
@@ -4910,6 +4912,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     element.value = WU.filterCcards(element.value);
                     //element.value = WU.filterDriverLicence(element.value);
                     return false;
+                }
+                else {
+                    element.textContent = WU.filterSSNs(element.textContent);
                 }
                 // if (element.nodeName === 'DIV') return false;
                 // if (element.nodeName === 'STYLE') return false;
@@ -5792,13 +5797,16 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             });
             return allSiblings;
         }
-        this.filterPII = function() {
+        this.filterPII = function(text) {
             var safeKeys = ['action', 'element', 'timestamp', 'epoch', 'xpath', 'xpath2', 'xpath3', 'xpath4', 'xpath5', 'cssSelector', 'cssSelector2', 'index', 'formData', 'actionId', 'uid', 'pid', 'functionizePid'];
+            var retval = ""
             for (var i = 0; i < this.sendSize; i++) {
                 for (var key in this.recordedData[i]) {
                     for(var j=0; j < PIIJSON.PIIs.length; j++) {
                         switch (PIIJSON.PIIs[j].item) {
-                            case "SSN": this.recordedData[i][key] = WU.filterSSNs(this.recordedData[i][key]);
+                            case "SSN":
+                                this.recordedData[i][key] = WU.filterSSNs(this.recordedData[i][key]);
+                                retval = WU.filterSSNs(text);
                             break;
                         }
 
@@ -5814,6 +5822,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
 
             }
+            return retval;
         };
     }
 
@@ -6809,7 +6818,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               const rects = range.getClientRects();
               if (rects.length > 0) {
                 const parent = this.getParentFromNode(node, parentId);
-
+                node.data = WU.filterPII(node.data);
                 nodes.push([
                   parent,
                   this.nodeId + "",
