@@ -5804,10 +5804,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 for (var key in this.recordedData[i]) {
                     for(var j=0; j < PIIJSON.PIIs.length; j++) {
                         switch (PIIJSON.PIIs[j].item) {
-                            case "SSN":
+                            case "SSN": {
                                 this.recordedData[i][key] = WU.filterSSNs(this.recordedData[i][key]);
                                 retval = WU.filterSSNs(text);
                             break;
+                            }
                         }
 
                     }
