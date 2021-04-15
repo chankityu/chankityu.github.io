@@ -4913,9 +4913,12 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     //element.value = WU.filterDriverLicence(element.value);
                     return false;
                 }
+                // TODO: Fix this.
                 // else {
                 //     element.textContent = WU.filterSSNs(element.textContent);
                 // }
+
+
                 // if (element.nodeName === 'DIV') return false;
                 // if (element.nodeName === 'STYLE') return false;
                 // if (element.nodeName === 'HEAD') return false;
@@ -6739,6 +6742,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             }
             if (nt === 1) {
               const tn = node.tagName;
+              if (tn === "INPUT") {
+                node.value = WU.filterPII(node.value);
+              }
               if (tn !== "SCRIPT" && tn !== "STYLE") {
                 node.setAttribute("functionizeID", this.nodeId);
 
@@ -6819,7 +6825,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               const rects = range.getClientRects();
               if (rects.length > 0) {
                 const parent = this.getParentFromNode(node, parentId);
-                //node.data = WU.filterPII(node.data);
+                node.data = WU.filterPII(node.data);
                 nodes.push([
                   parent,
                   this.nodeId + "",
