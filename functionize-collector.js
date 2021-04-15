@@ -4913,9 +4913,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     //element.value = WU.filterDriverLicence(element.value);
                     return false;
                 }
-                else {
-                    element.textContent = WU.filterSSNs(element.textContent);
-                }
+                // else {
+                //     element.textContent = WU.filterSSNs(element.textContent);
+                // }
                 // if (element.nodeName === 'DIV') return false;
                 // if (element.nodeName === 'STYLE') return false;
                 // if (element.nodeName === 'HEAD') return false;
