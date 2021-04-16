@@ -4619,7 +4619,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         this.recordTimer = false;
         this.siteStatistics = new SiteStatistics(true);
         this.screenshot = '';
-        this.filterPIIs = new PIIFilter();
+        this.PIIFilter = new PIIFilter();
         this.init = function() {
             if (typeof functionizeOptions.dataSendInterval != 'undefined') {
                 try {
@@ -4846,16 +4846,17 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         html2canvas(document.body, {
             ignoreElements: function(element) {
                 // if (element.nodeName === 'IFRAME') return false;
+                var piiFilter = new PIIFilter();
                 if (element.nodeName === 'INPUT') {
-                    element.value = this.filterPIIs.filterSSNs(element.value);
-                    element.value = this.filterPIIs.filterCcards(element.value);
+                    element.value = piiFilter.filterSSNs(element.value);
+                    element.value = piiFilter.filterCcards(element.value);
                     //element.value = WU.filterDriverLicence(element.value);
                     return false;
                 }
                 // TODO: Fix this.
                 var blacklist = ['META', 'HEAD', undefined ];
                 if (blacklist.includes(element.nodeName)){
-                    element.textContent = this.filterPIIs.filterPIIs(element.textContent);
+                    element.textContent = piiFilter.filterPII(element.textContent);
                 }
 
 
