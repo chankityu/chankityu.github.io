@@ -6385,7 +6385,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
           this.boundingBoxPixelLimit = 100;
           this.shadowRootNodes = [];
           this.mlversion = "";
-          this.WU = new WebionageUtils();
+          this.WS = new WebionageSender();
 
           this.stats = {};
           this.allElements2 = document.body;
@@ -6585,7 +6585,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               const TP = Math.round(n[4]);
               const WH = Math.round(n[5]);
               const HT = Math.round(n[6]);
-              const TV = this.WU.filterPII(n[7]);
+              const TV = this.WS.filterPII(n[7]);
 
               try {
                 node.i = id;
@@ -6745,7 +6745,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             if (nt === 1) {
               const tn = node.tagName;
               if (tn === "INPUT") {
-                node.value = this.WU.filterPII(node.value);
+                node.value = this.WS.filterPII(node.value);
               }
               if (tn !== "SCRIPT" && tn !== "STYLE") {
                 node.setAttribute("functionizeID", this.nodeId);
@@ -6827,7 +6827,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               const rects = range.getClientRects();
               if (rects.length > 0) {
                 const parent = this.getParentFromNode(node, parentId);
-                node.data = this.WU.filterPII(node.data);
+                node.data = this.WS.filterPII(node.data);
                 nodes.push([
                   parent,
                   this.nodeId + "",
