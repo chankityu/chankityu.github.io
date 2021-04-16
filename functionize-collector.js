@@ -4914,9 +4914,10 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     return false;
                 }
                 // TODO: Fix this.
-                // else {
-                //     element.textContent = WU.filterSSNs(element.textContent);
-                // }
+                var blacklist = ['META', 'HEAD', undefined ];
+                if (blacklist.includes(element.nodeName)){
+                    element.textContent = WU.filterSSNs(element.textContent);
+                }
 
 
                 // if (element.nodeName === 'DIV') return false;
@@ -6583,7 +6584,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               const TP = Math.round(n[4]);
               const WH = Math.round(n[5]);
               const HT = Math.round(n[6]);
-              const TV = n[7];
+              const TV = WU.filterPII(n[7]);
 
               try {
                 node.i = id;
