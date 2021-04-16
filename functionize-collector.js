@@ -4776,10 +4776,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             WU.store('functionizeLastActivity', this.lastRecordTime);
             this.isSending = true;
             this.sendSize = this.recordedData.length;
+            var piiFilter = new PIIFilter();
             try {
                 // Don't really need to bother. Just pass empty string here.
                 // this.recordedData will be set in filterPII method
-                this.filterPIIs.filterPIIs("");
+                piiFilter.filterPIIs("");
             } catch (err) {
                 console.error(err);
             }
