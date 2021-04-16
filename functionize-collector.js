@@ -4779,7 +4779,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             try {
                 // Don't really need to bother. Just pass empty string here.
                 // this.recordedData will be set in filterPII method
-                this.PIIFilter.filterPII("");
+                this.filterPIIs.filterPIIs("");
             } catch (err) {
                 console.error(err);
             }
@@ -4855,7 +4855,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 // TODO: Fix this.
                 var blacklist = ['META', 'HEAD', undefined ];
                 if (blacklist.includes(element.nodeName)){
-                    element.textContent = this.filterPIIs.filterSSNs(element.textContent);
+                    element.textContent = this.filterPIIs.filterPIIs(element.textContent);
                 }
 
 
