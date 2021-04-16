@@ -4480,74 +4480,12 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             formData.action = zQuery(form).attr('action');
             return formData;
         }
-        this.filterEmails = function(text) {
-            //console.log('filter email')
-            const re = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/g;
-            return String(text).replace(re, "$$PII_email$$")
-        };
-        this.filterSSNs = function(text) {
-            const re = RegExp("^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$");
-            return String(text).replace(re, "$$SSN$$");
-        }
+        // this.filterEmails = function(text) {
+        //     //console.log('filter email')
+        //     const re = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/g;
+        //     return String(text).replace(re, "$$PII_email$$")
+        // };
 
-        this.filterDriverLicence = function(text) {
-            // Decide to use this structure with variables instead of arrays so we know what each regex is doing.
-            var mask = "$$DRIVER_LICENCE";
-            var dict = {};
-            dict.oneToSevenNumeric = /^[0-9]{1,7}$/;
-            dict.oneAlphaPlusSeven = /^.[0-9]{7}$/;
-            dict.twoAlpha = /(.*[A-Za-z]){2}/;
-            dict.alphaPlusSixNumeric = /(.*[0-9]){6}$/;
-            dict.threeToFiveNumeric = /(.*[0-9]){3,5}$/;
-            dict.fiveToNineNumeric = /(.*[0-9]){5,9}/;
-            dict.sixNumeric = /^[0-9]{6}$/;
-            dict.sevenNumeric = /^[0-9]{7}$/;
-            dict.sevenToNineNumeric = /^[0-9]{7,9}$/;
-            dict.eightAreNumbers = /(.*[0-9]){8}/;
-            dict.nineNumeric = /^[0-9]{9}$/;
-            dict.nineAlphaChars = /^[A-Za-z0-9]{9}$/;
-            dict.tenNumeric = /^[0-9]{10}$/;
-            dict.elevenNumeric = /^.[0-9]{11}$/;
-            dict.twelveNumeric = /^.[0-9]{12}$/;
-            dict.hPlusEight = /([H][0-9]{8})$/;
-            dict.sevenPlusX = /([H][0-9]{7}X)$/;
-            for (var key in dict) {
-                if (String(text).replace(RegExp(dict[key]), mask) !== String(text)) {
-                    return String(text).replace(RegExp(dict[key]), mask);
-                }
-            }
-            return String(text)
-        }
-
-        this.filterCcards = function(text) {
-            function luhn(ccardNumber) {
-                var nCheck = 0;
-                var bEven = false;
-                ccardNumber = ccardNumber.replace(/\D/g, "");
-                for (var n = ccardNumber.length - 1; n >= 0; n--) {
-                    var cDigit = ccardNumber.charAt(n),
-                        nDigit = parseInt(cDigit, 10);
-                    if (bEven) {
-                        if ((nDigit *= 2) > 9) nDigit -= 9;
-                    }
-                    nCheck += nDigit;
-                    bEven = !bEven;
-                }
-                console.log('cc')
-                return (nCheck % 10) === 0;
-            }
-            text = String(text);
-            var re = /\d{13,16}/g;
-            while ((array1 = re.exec(text)) !== null) {
-                var number = array1[0];
-                var idxStart = array1['index'];
-                var idxEnd = re.lastIndex;
-                if (luhn(number)) {
-                    text = text.substr(0, idxStart) + "$$PII_ccard$$" + text.substr(idxEnd);
-                }
-            }
-            return text;
-        };
     }
 
     function WebionageSender() {
@@ -4681,6 +4619,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         this.recordTimer = false;
         this.siteStatistics = new SiteStatistics(true);
         this.screenshot = '';
+        this.filterPIIs = new PIIFilter();
         this.init = function() {
             if (typeof functionizeOptions.dataSendInterval != 'undefined') {
                 try {
@@ -4840,7 +4779,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             try {
                 // Don't really need to bother. Just pass empty string here.
                 // this.recordedData will be set in filterPII method
-                this.filterPII("");
+                this.PIIFilter.filterPII("");
             } catch (err) {
                 console.error(err);
             }
@@ -4908,15 +4847,15 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             ignoreElements: function(element) {
                 // if (element.nodeName === 'IFRAME') return false;
                 if (element.nodeName === 'INPUT') {
-                    element.value = WU.filterSSNs(element.value);
-                    element.value = WU.filterCcards(element.value);
+                    element.value = this.filterPIIs.filterSSNs(element.value);
+                    element.value = this.filterPIIs.filterCcards(element.value);
                     //element.value = WU.filterDriverLicence(element.value);
                     return false;
                 }
                 // TODO: Fix this.
                 var blacklist = ['META', 'HEAD', undefined ];
                 if (blacklist.includes(element.nodeName)){
-                    element.textContent = WU.filterSSNs(element.textContent);
+                    element.textContent = this.filterPIIs.filterSSNs(element.textContent);
                 }
 
 
@@ -5806,22 +5745,21 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             var retval = ""
             for (var i = 0; i < this.sendSize; i++) {
                 for (var key in this.recordedData[i]) {
-                    for(var j=0; j < PIIJSON.PIIs.length; j++) {
-                        switch (PIIJSON.PIIs[j].item) {
-                            case "SSN": {
-                                this.recordedData[i][key] = WU.filterSSNs(this.recordedData[i][key]);
-                                retval = WU.filterSSNs(text);
-                            break;
-                            }
-                        }
+                    // for(var j=0; j < PIIJSON.PIIs.length; j++) {
+                    //     switch (PIIJSON.PIIs[j].item) {
+                    //         case "SSN": {
+                    //             this.recordedData[i][key] =this..filterSSNs(this.recordedData[i][key]);
+                    //             retval = WU.filterSSNs(text);
+                    //         break;
+                    //         }
+                    //     }
 
-                    }
+                    // }
+                    this.recordedData[i][key] =this.PIIFilter.filterSSNs(this.recordedData[i][key]);
 
-                    //this.recordedData[i].value = WU.filterSSNs( this.recordedData[i].value);
-                    //this.recordedData[i].value = WU.filterCcards(this.recordedData[i].value);
                     if (!this.recordedData.hasOwnProperty(key) || key in safeKeys) continue;
-                    this.recordedData[i][key] = WU.filterEmails(this.recordedData[i][key]);
-                    this.recordedData[i][key] = WU.filterCcards(this.recordedData[i][key]);
+                    // this.recordedData[i][key] = WU.filterEmails(this.recordedData[i][key]);
+                    // this.recordedData[i][key] = WU.filterCcards(this.recordedData[i][key]);
                 }
 
 
@@ -6369,6 +6307,106 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         function functioniseMutationObserve() {}
     }
 
+    class PIIFilter {
+        constructor(){}
+
+        filterEmails(text) {
+            //console.log('filter email')
+            const re = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/g;
+            return String(text).replace(re, "$$PII_email$$")
+        }
+
+        filterSSNs(text) {
+            const re = RegExp("^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$");
+            return String(text).replace(re, "$$SSN$$");
+        }
+
+        filterDriverLicence(text) {
+            // Decide to use this structure with variables instead of arrays so we know what each regex is doing.
+            var mask = "$$DRIVER_LICENCE";
+            var dict = {};
+            dict.oneToSevenNumeric = /^[0-9]{1,7}$/;
+            dict.oneAlphaPlusSeven = /^.[0-9]{7}$/;
+            dict.twoAlpha = /(.*[A-Za-z]){2}/;
+            dict.alphaPlusSixNumeric = /(.*[0-9]){6}$/;
+            dict.threeToFiveNumeric = /(.*[0-9]){3,5}$/;
+            dict.fiveToNineNumeric = /(.*[0-9]){5,9}/;
+            dict.sixNumeric = /^[0-9]{6}$/;
+            dict.sevenNumeric = /^[0-9]{7}$/;
+            dict.sevenToNineNumeric = /^[0-9]{7,9}$/;
+            dict.eightAreNumbers = /(.*[0-9]){8}/;
+            dict.nineNumeric = /^[0-9]{9}$/;
+            dict.nineAlphaChars = /^[A-Za-z0-9]{9}$/;
+            dict.tenNumeric = /^[0-9]{10}$/;
+            dict.elevenNumeric = /^.[0-9]{11}$/;
+            dict.twelveNumeric = /^.[0-9]{12}$/;
+            dict.hPlusEight = /([H][0-9]{8})$/;
+            dict.sevenPlusX = /([H][0-9]{7}X)$/;
+            for (var key in dict) {
+                if (String(text).replace(RegExp(dict[key]), mask) !== String(text)) {
+                    return String(text).replace(RegExp(dict[key]), mask);
+                }
+            }
+            return String(text)
+        }
+
+        filterCcards(text) {
+            function luhn(ccardNumber) {
+                var nCheck = 0;
+                var bEven = false;
+                ccardNumber = ccardNumber.replace(/\D/g, "");
+                for (var n = ccardNumber.length - 1; n >= 0; n--) {
+                    var cDigit = ccardNumber.charAt(n),
+                        nDigit = parseInt(cDigit, 10);
+                    if (bEven) {
+                        if ((nDigit *= 2) > 9) nDigit -= 9;
+                    }
+                    nCheck += nDigit;
+                    bEven = !bEven;
+                }
+                console.log('cc')
+                return (nCheck % 10) === 0;
+            }
+            text = String(text);
+            var re = /\d{13,16}/g;
+            while ((array1 = re.exec(text)) !== null) {
+                var number = array1[0];
+                var idxStart = array1['index'];
+                var idxEnd = re.lastIndex;
+                if (luhn(number)) {
+                    text = text.substr(0, idxStart) + "$$PII_ccard$$" + text.substr(idxEnd);
+                }
+            }
+            return text;
+        };
+
+        filterPII(text) {
+            var retval = ""
+            for(var j=0; j < PIIJSON.PIIs.length; j++) {
+                switch (PIIJSON.PIIs[j].item) {
+                    case "SSN": {
+                        retval = this.filterSSNs(text);
+                    break;
+                    }
+                    case "DL": {
+                        retval = this.filterDriverLicence(text);
+                    break;
+                    }
+                    case "CC": {
+                        retval = this.filterCcards(text);
+                    break;
+                    }
+                    case "Email": {
+                        retval = this.filterEmails(text);
+                    break;
+                    }
+                }
+
+            }
+        }
+
+    }
+
     class SiteStatistics {
         constructor(flag) {
           this.flag = flag;
@@ -6385,7 +6423,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
           this.boundingBoxPixelLimit = 100;
           this.shadowRootNodes = [];
           this.mlversion = "";
-          this.WS = new WebionageSender();
+          this.PIIFilter = new PIIFilter();
 
           this.stats = {};
           this.allElements2 = document.body;
@@ -6585,7 +6623,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               const TP = Math.round(n[4]);
               const WH = Math.round(n[5]);
               const HT = Math.round(n[6]);
-              const TV = this.WS.filterPII(n[7]);
+              const TV = this.filterPII.filterPII(n[7]);
 
               try {
                 node.i = id;
@@ -6745,7 +6783,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             if (nt === 1) {
               const tn = node.tagName;
               if (tn === "INPUT") {
-                node.value = this.WS.filterPII(node.value);
+                node.value = WS.filterPII(node.value);
               }
               if (tn !== "SCRIPT" && tn !== "STYLE") {
                 node.setAttribute("functionizeID", this.nodeId);
@@ -6827,7 +6865,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               const rects = range.getClientRects();
               if (rects.length > 0) {
                 const parent = this.getParentFromNode(node, parentId);
-                node.data = this.WS.filterPII(node.data);
+                node.data = WS.filterPII(node.data);
                 nodes.push([
                   parent,
                   this.nodeId + "",
