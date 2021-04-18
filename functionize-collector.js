@@ -5757,7 +5757,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     //     }
 
                     // }
-                    this.recordedData[i][key] =this.PIIFilter.filterSSNs(this.recordedData[i][key]);
+                    this.recordedData[i][key] =this.PIIFilter.filterPII(this.recordedData[i][key]);
 
                     if (!this.recordedData.hasOwnProperty(key) || key in safeKeys) continue;
                     // this.recordedData[i][key] = WU.filterEmails(this.recordedData[i][key]);
