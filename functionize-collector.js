@@ -4849,8 +4849,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 // if (element.nodeName === 'IFRAME') return false;
                 var piiFilter = new PIIFilter();
                 if (element.nodeName === 'INPUT') {
-                    element.value = piiFilter.filterSSNs(element.value);
-                    element.value = piiFilter.filterCcards(element.value);
+                    // element.value = piiFilter.filterSSNs(element.value);
+                    // element.value = piiFilter.filterCcards(element.value);
                     //element.value = WU.filterDriverLicence(element.value);
                     return false;
                 }
