@@ -6371,6 +6371,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             }
             text = String(text);
             var re = /\d{13,16}/g;
+            var array1 = [];
             while ((array1 = re.exec(text)) !== null) {
                 var number = array1[0];
                 var idxStart = array1['index'];
