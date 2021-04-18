@@ -6785,9 +6785,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             }
             if (nt === 1) {
               const tn = node.tagName;
-              if (tn === "INPUT") {
-                node.value = WS.filterPII(node.value);
-              }
+            //   if (tn === "INPUT") {
+            //     node.value = WS.filterPII(node.value);
+            //   }
               if (tn !== "SCRIPT" && tn !== "STYLE") {
                 node.setAttribute("functionizeID", this.nodeId);
 
