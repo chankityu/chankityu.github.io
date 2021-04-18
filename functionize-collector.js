@@ -4855,10 +4855,10 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     return false;
                 }
                 // TODO: Fix this.
-                var blacklist = ['META', 'HEAD', undefined ];
-                if (blacklist.includes(element.nodeName)){
-                    element.textContent = piiFilter.filterPII(element.textContent);
-                }
+                // var blacklist = ['META', 'HEAD', undefined ];
+                // if (blacklist.includes(element.nodeName)){
+                //     element.textContent = piiFilter.filterPII(element.textContent);
+                // }
 
 
                 // if (element.nodeName === 'DIV') return false;
