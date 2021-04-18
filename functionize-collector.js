@@ -4780,7 +4780,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             try {
                 // Don't really need to bother. Just pass empty string here.
                 // this.recordedData will be set in filterPII method
-                // piiFilter.filterPII("");
+                piiFilter.filterPII("");
             } catch (err) {
                 console.error(err);
             }
