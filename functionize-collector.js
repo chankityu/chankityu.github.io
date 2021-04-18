@@ -6626,7 +6626,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               const TP = Math.round(n[4]);
               const WH = Math.round(n[5]);
               const HT = Math.round(n[6]);
-              const TV = this.filterPII.filterPII(n[7]);
+              const TV = n[7];//this.filterPII.filterPII(n[7]);
 
               try {
                 node.i = id;
