@@ -4854,7 +4854,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     return false;
                 }
                 // TODO: Fix this.
-                var blacklist = ['DIV', 'HEADER', 'META', 'HEAD', 'TITLE', 'LINK', 'STYLE', 'NOSCRIPT', 'BODY', undefined ];
+                var blacklist = ['FOOTER', 'DIV', 'HEADER', 'META', 'HEAD', 'TITLE', 'LINK', 'STYLE', 'NOSCRIPT', 'BODY', undefined ];
                 if (!blacklist.includes(element.nodeName)){
                     element.textContent = piiFilter.filterPII(element.textContent);
                 }
