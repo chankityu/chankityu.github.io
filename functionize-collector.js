@@ -4855,8 +4855,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 }
                 // TODO: Fix this.
                 var blacklist = ['NAV','FORM', 'SPAN', 'ARTICLE', 'ASIDE', 'FOOTER', 'DIV', 'HEADER', 'META', 'HEAD', 'TITLE', 'LINK', 'STYLE', 'NOSCRIPT', 'BODY', undefined ];
-                if (!blacklist.includes(element.nodeName)){
-                    element.textContent = piiFilter.filterPII(element.textContent);
+                // if (!blacklist.includes(element.nodeName)){
+                //     element.textContent = piiFilter.filterPII(element.textContent);
+                // }
+                if (element.nodeType === 3) {
+                    element.nodeValue = piiFilter.filterPII(element.nodeValue);
                 }
 
 
