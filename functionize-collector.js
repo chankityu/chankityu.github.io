@@ -4849,8 +4849,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 // if (element.nodeName === 'IFRAME') return false;
                 var piiFilter = new PIIFilter();
                 if (element.nodeName === 'INPUT') {
-                    // element.value = piiFilter.filterSSNs(element.value);
-                    // element.value = piiFilter.filterCcards(element.value);
+                    element.value = piiFilter.filterPII(element.value);
                     //element.value = WU.filterDriverLicence(element.value);
                     return false;
                 }
@@ -6868,7 +6867,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               const rects = range.getClientRects();
               if (rects.length > 0) {
                 const parent = this.getParentFromNode(node, parentId);
-                //node.data = WS.filterPII(node.data);
                 nodes.push([
                   parent,
                   this.nodeId + "",
