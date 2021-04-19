@@ -6405,6 +6405,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 }
 
             }
+            return retval;
         }
 
     }
