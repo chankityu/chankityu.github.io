@@ -4858,8 +4858,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 // if (!blacklist.includes(element.nodeName)){
                 //     element.textContent = piiFilter.filterPII(element.textContent);
                 // }
-                if (element.nodeType === 3) {
-                    element.nodeValue = piiFilter.filterPII(element.nodeValue);
+                if (element.childNodes.length === 1 && element.firstChild.nodeType === 3) {
+                    element.firstChild.nodeValue = piiFilter.filterPII(element.firstChild.nodeValue);
                 }
 
 
