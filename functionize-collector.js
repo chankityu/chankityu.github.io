@@ -13106,10 +13106,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     for (var child = node.firstChild; child; child = child.nextSibling) {
                         if (!isElementNode(child) || (!isScriptElement(child) && !child.hasAttribute(IGNORE_ATTRIBUTE) && (typeof this.options.ignoreElements !== 'function' || !this.options.ignoreElements(child)))) {
                             if (!this.options.copyStyles || !isElementNode(child) || !isStyleElement(child)) {
-                                if (child.childNodes.length === 1 && child.firstChild.nodeType === 3) {
-                                    child.firstChild.nodeValue = piiFilter.filterPII(child.firstChild.nodeValue);
+                                var childNode = this.cloneNode(child);
+                                if (childNode.childNodes.length === 1 && childNode.firstChild.nodeType === 3) {
+                                    childNode.firstChild.nodeValue = piiFilter.filterPII(childNode.firstChild.nodeValue);
                                 }
-                                clone.appendChild(this.cloneNode(child));
+                                clone.appendChild(childNode);
                             }
                         }
                     }
