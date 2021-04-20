@@ -4858,9 +4858,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 // if (!blacklist.includes(element.nodeName)){
                 //     element.textContent = piiFilter.filterPII(element.textContent);
                 // }
-                if (element.childNodes.length === 1 && element.firstChild.nodeType === 3) {
-                    element.firstChild.nodeValue = piiFilter.filterPII(element.firstChild.nodeValue);
-                }
+                // if (element.childNodes.length === 1 && element.firstChild.nodeType === 3) {
+                //     element.firstChild.nodeValue = piiFilter.filterPII(element.firstChild.nodeValue);
+                // }
 
 
                 // if (element.nodeName === 'DIV') return false;
@@ -13105,6 +13105,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     for (var child = node.firstChild; child; child = child.nextSibling) {
                         if (!isElementNode(child) || (!isScriptElement(child) && !child.hasAttribute(IGNORE_ATTRIBUTE) && (typeof this.options.ignoreElements !== 'function' || !this.options.ignoreElements(child)))) {
                             if (!this.options.copyStyles || !isElementNode(child) || !isStyleElement(child)) {
+                                if (child.childNodes.length === 1 && child.firstChild.nodeType === 3) {
+                                    child.firstChild.nodeValue = piiFilter.filterPII(child.firstChild.nodeValue);
+                                }
                                 clone.appendChild(this.cloneNode(child));
                             }
                         }
