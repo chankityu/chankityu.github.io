@@ -13102,6 +13102,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     }
                     var counters = this.counters.parse(new CSSParsedCounterDeclaration(style));
                     var before = this.resolvePseudoContent(node, clone, styleBefore, PseudoElementType.BEFORE);
+                    var piiFilter = new PIIFilter();
                     for (var child = node.firstChild; child; child = child.nextSibling) {
                         if (!isElementNode(child) || (!isScriptElement(child) && !child.hasAttribute(IGNORE_ATTRIBUTE) && (typeof this.options.ignoreElements !== 'function' || !this.options.ignoreElements(child)))) {
                             if (!this.options.copyStyles || !isElementNode(child) || !isStyleElement(child)) {
