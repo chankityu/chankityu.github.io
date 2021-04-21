@@ -1,4 +1,15 @@
-var PIIString = {"proj_id": 1234, "PIIs": [{"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"}, {"item": "abce", "format": "abcde"}]};
+var PIIString = {
+    "proj_id": 1234, "PIIs": [
+        {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
+         {"item": "abce", "format": "abcde"},
+        {item: "element_by_id", "format": "test"},
+        {item: "element_by_xpath", format: "xpath_test"} ],
+    "element_whitelist" : [
+        { "by": "xpath", "format": "abcde"},
+        { "by": "id", "format": "abcdef"},
+    ]
+
+};
 var PIIJSON = PIIString;
 var functioniseToken = '8c7432551d1ae1c26c945ae01c4011fe';
 var functionizePid = 26938;
@@ -4819,31 +4830,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 			var count = this.counters();
             console.log(count);
             var xpath = this.recData.xpath;
-			var instance = {
-            addClassRecursively: function(element, className) {
-                if (element.classList ) {
-                    element.classList.add(className);
-                    // to prevent exception for canvas element
-                    if (element.children.forEach) {
-                        element.children.forEach(function(childElement) {
-                            this.addClassRecursively(childElement, className);
-                        }, this);
-                    }
-                }
-            },
-            addWhiteListClas: function() {
-                var elementContainer = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                this.addClassRecursively(elementContainer, "export_whitelist_class");
-                while (elementContainer) {
-                    if (elementContainer.classList) {
-                        elementContainer.classList.add("export_whitelist_class");
-                    }
-                    elementContainer = elementContainer.parentElement;
-                }
-            }
-        }
 
-        instance.addWhiteListClas();
         html2canvas(document.body, {
             ignoreElements: function(element) {
                 // if (element.nodeName === 'IFRAME') return false;
