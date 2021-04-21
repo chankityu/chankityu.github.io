@@ -1,10 +1,12 @@
 var PIIString = {
-    "proj_id": 1234, "PIIs": [
+    "projId": 1234, "PIIs": [
         {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
          {"item": "abce", "format": "abcde"},
-        {item: "element_by_id", "format": "test"},
-        {item: "element_by_xpath", format: "xpath_test"} ],
-    "element_whitelist" : [
+    "elementWhitelist" : [
+        { "by": "xpath", "format": "abcde"},
+        { "by": "id", "format": "abcdef"},
+    ],
+    "elementBlacklist" : [
         { "by": "xpath", "format": "abcde"},
         { "by": "id", "format": "abcdef"},
     ]
@@ -4788,10 +4790,24 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             this.isSending = true;
             this.sendSize = this.recordedData.length;
             var piiFilter = new PIIFilter();
+            // Map into list of whiteListArray.
+            var whiteListElement = PIIJSON.elementWhiteList.map((item) => {
+                if (item.by === 'id')
+                    return document.getElementById(item.format)
+                else if (item.by === 'xpath')
+                    return document.evaluate(item.format, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            })
+            var selectedElement = document.evaluate(this.recData.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            var toFilter = true;
+            for(element in whiteListElement){
+                if(element.isEqualNode(selectedElement))
+                    toFilter = false;
+            }
             try {
                 // Don't really need to bother. Just pass empty string here.
                 // this.recordedData will be set in filterPII method
-                piiFilter.filterPII("");
+                if (toFilter)
+                    piiFilter.filterPII("");
             } catch (err) {
                 console.error(err);
             }
@@ -6371,6 +6387,22 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             }
             return text;
         };
+
+        filterPIIByElement() {
+            for(var j=0; j < PIIJSON.elementBlacklist.length; j++) {
+                var elementBlackListItem = PIIJSON.element_blacklist[j];
+                // by, format
+                if(elementBlackListItem.by === 'id') {
+                    var element = document.querySelectorAll('id^='+elementBlackListItem.format);
+                    element.remove();
+                }
+                else if (elementBlackListItem.by === 'xpath') {
+                    // use find by xpath first
+                    var element = document.evaluate(elementBlackListItem.format, document,null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                    element.remove();
+                }
+            }
+        }
 
         filterPII(text) {
             var retval = ""
