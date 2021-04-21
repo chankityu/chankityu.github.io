@@ -3,11 +3,11 @@ var PIIString = {
         {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
          {"item": "abce", "format": "abcde"},
         ],
-    "elementWhitelist" : [
+    "elementWhiteList" : [
         { "by": "xpath", "format": "abcde"},
         { "by": "id", "format": "abcdef"},
     ],
-    "elementBlacklist" : [
+    "elementBlackList" : [
         { "by": "xpath", "format": "abcde"},
         { "by": "id", "format": "abcdef"},
     ]
