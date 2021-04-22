@@ -6383,11 +6383,17 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 var idxStart = array1['index'];
                 var idxEnd = re.lastIndex;
                 if (luhn(number)) {
-                    text = text.substr(0, idxStart) + "$$PII_ccard$$" + text.substr(idxEnd);
+                    text = text.substr(0, idxStart) + "$$PII_CC$$" + text.substr(idxEnd);
                 }
             }
             return text;
         };
+
+        filterPhoneNumber(text){
+            var phoneFormat = /^\d{10}$/;
+            var mask = "$$PHONENO$$";
+            return String(text).replace(RegExp(phoneFormat), mask);
+        }
 
         filterPIIByElement() {
             for(var j=0; j < PIIJSON.elementBlacklist.length; j++) {
