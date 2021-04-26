@@ -6398,10 +6398,18 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         filterPIIByElement() {
             for(var j=0; j < PIIJSON.elementBlacklist.length; j++) {
                 var elementBlackListItem = PIIJSON.element_blacklist[j];
+                var regExp = RegExp(elementBlackListItem.format);
                 // by, format
                 if(elementBlackListItem.by === 'id') {
-                    var element = document.querySelectorAll('id^='+elementBlackListItem.format);
-                    element.remove();
+                    // var element = document.querySelectorAll('id^='+elementBlackListItem.format);
+                    // element.remove();
+                    var elements = document.querySelectorAll("*");
+                    elements.forEach((currentElement, currentIndex, listOb) => {
+                        var id = elements.getAttribute("id");
+                        if(regExp.test(id)) {
+                            currentElement.parentNode.removeChild(currentElement);
+                        }
+                    });
                 }
                 else if (elementBlackListItem.by === 'xpath') {
                     // use find by xpath first
