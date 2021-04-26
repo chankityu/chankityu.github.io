@@ -5,11 +5,11 @@ var PIIJSON = {
         ],
     "elementWhiteList" : [
         { "by": "xpath", "format": "abcde"},
-        { "by": "id", "format": "abcdef"},
+        { "by": "id", "format": "main"},
     ],
     "elementBlackList" : [
         { "by": "xpath", "format": "abcde"},
-        { "by": "id", "format": "abcdef"},
+        { "by": "id", "format": "/main/"},
     ]
 
 };
