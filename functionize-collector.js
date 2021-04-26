@@ -1,4 +1,4 @@
-var PIIString = {
+var PIIJSON = {
     "projId": 1234, "PIIs": [
         {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
          {"item": "abce", "format": "abcde"},
@@ -13,7 +13,7 @@ var PIIString = {
     ]
 
 };
-var PIIJSON = PIIString;
+//var PIIJSON = PIIString;
 var functioniseToken = '8c7432551d1ae1c26c945ae01c4011fe';
 var functionizePid = 26938;
 var functionizeProjectEnv = 'live';
