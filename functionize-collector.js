@@ -6397,7 +6397,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         }
 
         filterPIIByElement() {
-            for(var j=0; j < PIIJSON.elementBlacklist.length; j++) {
+            for(var j=0; j < PIIJSON.elementBlackList.length; j++) {
                 var elementBlackListItem = PIIJSON.element_blacklist[j];
                 var regExp = RegExp(elementBlackListItem.format);
                 // by, format
