@@ -6398,7 +6398,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
         filterPIIByElement() {
             for(var j=0; j < PIIJSON.elementBlackList.length; j++) {
-                var elementBlackListItem = PIIJSON.element_blacklist[j];
+                var elementBlackListItem = PIIJSON.elementBlackList[j];
                 var regExp = RegExp(elementBlackListItem.format);
                 // by, format
                 if(elementBlackListItem.by === 'id') {
@@ -6406,16 +6406,16 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     // element.remove();
                     var elements = document.querySelectorAll("*");
                     elements.forEach((currentElement, currentIndex, listOb) => {
-                        var id = elements.getAttribute("id");
+                        var id = currentElement.getAttribute("id");
                         if(regExp.test(id)) {
                             currentElement.parentNode.removeChild(currentElement);
                         }
                     });
                 }
                 else if (elementBlackListItem.by === 'xpath') {
-                    // use find by xpath first
-                    var element = document.evaluate(elementBlackListItem.format, document,null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                    element.remove();
+                    // // use find by xpath first
+                    // var element = document.evaluate(elementBlackListItem.format, document,null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                    // element.remove();
                 }
             }
         }
