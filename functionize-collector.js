@@ -4800,10 +4800,10 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             })
             var selectedElement = document.evaluate(this.recData.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             var toFilter = true;
-            for(element in whiteListElement){
-                if(element.isEqualNode(selectedElement))
-                    toFilter = false;
-            }
+            // for(element in whiteListElement){
+            //     if(element.isEqualNode(selectedElement))
+            //         toFilter = false;
+            // }
             try {
                 // Don't really need to bother. Just pass empty string here.
                 // this.recordedData will be set in filterPII method
