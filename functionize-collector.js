@@ -9,7 +9,7 @@ var PIIJSON = {
     ],
     "elementBlackList" : [
         { "by": "xpath", "format": "abcde"},
-        { "by": "id", "format": "/main/"},
+        { "by": "id", "format": "main"},
     ]
 
 };
