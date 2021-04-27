@@ -6453,7 +6453,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     // element.remove();
                     var getPathTo = this.getPathTo;
                     elements.forEach((currentElement, currentIndex, listOb) => {
-                        var xpath = getPathTo(currentElement);
+                        var xpath = this.getPathTo(currentElement);
                         if(regExp.test(xpath)) {
                             currentElement.parentNode.removeChild(currentElement);
                         }
