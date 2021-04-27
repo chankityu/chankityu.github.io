@@ -6451,8 +6451,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     // // use find by xpath first
                     // var element = document.evaluate(elementBlackListItem.format, document,null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                     // element.remove();
+                    var getPathTo = this.getPathTo;
                     elements.forEach((currentElement, currentIndex, listOb) => {
-                        var xpath = this.getPathTo(currentElement);
+                        var xpath = getPathTo(currentElement);
                         if(regExp.test(xpath)) {
                             currentElement.parentNode.removeChild(currentElement);
                         }
