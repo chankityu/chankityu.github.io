@@ -6319,7 +6319,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
     class PIIFilter {
         constructor(){
             this.shadowRootNodes = [];
-            this.collectShadowNodes(document.body);
         }
 
         filterEmails(text) {
@@ -6393,21 +6392,54 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             return text;
         };
 
-        filterPhoneNumber(text){
+        filterPhoneNumber(text) {
             var phoneFormat = /^\d{10}$/;
             var mask = "$$PHONENO$$";
             return String(text).replace(RegExp(phoneFormat), mask);
         }
 
-        filterPIIByElement() {
+        filterShadowNodes() {
+            this.collectShadowNodes(document.body);
             for(var j=0; j < PIIJSON.elementBlackList.length; j++) {
                 var elementBlackListItem = PIIJSON.elementBlackList[j];
                 var regExp = RegExp(elementBlackListItem.format);
+                //var elements = document.querySelectorAll("*");
                 // by, format
                 if(elementBlackListItem.by === 'id') {
                     // var element = document.querySelectorAll('id^='+elementBlackListItem.format);
                     // element.remove();
-                    var elements = document.querySelectorAll("*");
+                    this.shadowRootNodes.forEach((currentElement, currentIndex) => {
+                        var id = currentElement.getAttribute("id");
+                        if(regExp.test(id)) {
+                            currentElement.parentNode.removeChild(currentElement);
+                        }
+                    });
+                }
+                else if (elementBlackListItem.by === 'xpath') {
+                    // // use find by xpath first
+                    // var element = document.evaluate(elementBlackListItem.format, document,null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                    // element.remove();
+                    this.shadowRootNodes.forEach((currentElement, currentIndex) => {
+                        var xpath = this.getPathTo(currentElement);
+                        if(regExp.test(xpath)) {
+                            currentElement.parentNode.removeChild(currentElement);
+                        }
+                    });
+                }
+            }
+        }
+
+        filterPIIByElement() {
+            // Filter shadow root node first
+            this.filterShadowNodes();
+            for(var j=0; j < PIIJSON.elementBlackList.length; j++) {
+                var elementBlackListItem = PIIJSON.elementBlackList[j];
+                var regExp = RegExp(elementBlackListItem.format);
+                var elements = document.querySelectorAll("*");
+                // by, format
+                if(elementBlackListItem.by === 'id') {
+                    // var element = document.querySelectorAll('id^='+elementBlackListItem.format);
+                    // element.remove();
                     elements.forEach((currentElement, currentIndex, listOb) => {
                         var id = currentElement.getAttribute("id");
                         if(regExp.test(id)) {
@@ -6419,7 +6451,31 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     // // use find by xpath first
                     // var element = document.evaluate(elementBlackListItem.format, document,null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                     // element.remove();
+                    elements.forEach((currentElement, currentIndex, listOb) => {
+                        var xpath = this.getPathTo(currentElement);
+                        if(regExp.test(xpath)) {
+                            currentElement.parentNode.removeChild(currentElement);
+                        }
+                    });
                 }
+            }
+        }
+
+        // From https://stackoverflow.com/questions/2631820/how-do-i-ensure-saved-click-coordinates-can-be-reloaed-to-the-same-place-even-i/2631931#2631931
+        getPathTo(element) {
+            if (element.tagName == 'HTML')
+                return '/HTML[1]';
+            if (element===document.body)
+                return '/HTML[1]/BODY[1]';
+
+            var ix= 0;
+            var siblings= element.parentNode.childNodes;
+            for (var i= 0; i<siblings.length; i++) {
+                var sibling= siblings[i];
+                if (sibling===element)
+                    return getPathTo(element.parentNode)+'/'+element.tagName+'['+(ix+1)+']';
+                if (sibling.nodeType===1 && sibling.tagName===element.tagName)
+                    ix++;
             }
         }
 
