@@ -6420,6 +6420,26 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             }
         }
 
+        collectShadowNodes(start) {
+            let node;
+            const walker = document.createTreeWalker(
+              start,
+              NodeFilter.SHOW_ELEMENT,
+              this.ignoreFilter,
+              false
+            );
+            while ((node = walker.nextNode()) != null) {
+              if (node.shadowRoot !== undefined && node.shadowRoot != null) {
+                this.shadowRootNodes.push(node.shadowRoot);
+                // check if there is nested shadowRoot (valid for shadow DOM v1)
+                this.collectShadowNodes(node.shadowRoot);
+              }
+            }
+            console.log(
+              "collected " + this.shadowRootNodes.length + " shadowRoot so far...."
+            );
+          }
+
         filterPII(text) {
             var retval = ""
             for(var j=0; j < PIIJSON.PIIs.length; j++) {
