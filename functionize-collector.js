@@ -6319,6 +6319,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
     class PIIFilter {
         constructor(){
             this.shadowRootNodes = [];
+            this.collectShadowNodes(document.body);
         }
 
         filterEmails(text) {
