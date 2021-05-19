@@ -4504,9 +4504,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
     }
 
     function AccessibilityIngestor(){
-        this.init = function(){
-            console.log("Accessibility Ingestor initialized");
-        }
+        console.log("Accessibility Ingestor initialized");
+
     }
 
     function WebionageSender() {
