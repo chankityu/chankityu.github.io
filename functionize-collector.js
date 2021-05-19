@@ -4518,38 +4518,38 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             axe
             .run()
             .then(results => {
+                var sentJson, pass;
                 if (results.violations.length) {
-                    var sentJson = results.violations.map( (element) => {
-                        retval = {}
-                        retval.id = element.id;
-                        retval.impact = element.impact;
-                        return retval;
-                    })
-                    console.log(JSON.stringify(results.violations));
-                    zQuery.ajax({
-                        type: 'POST',
-                        url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
-                        //url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
-                        crossDomain: true,
-                        data: {
-                            apiKey: functionizeHttpToken,
-                            accessibilityJson: JSON.stringify(results.violations),
-                            //accessibilityJson: WU.es(results.violations),
-                            projId: functionizePid,
-                            sessionId: functionizeUID
-                        },
-                        async: true,
-                        timeout: 20000,
-                        success: function(responseData, textStatus, jqXHR) {
-                            console.log("Accessibility Data sent");
-                        },
-                        error: function(responseData, textStatus, errorThrown) {
-                            console.error("Error in sending accessibility data");
-                            console.error(errorThrown);
-                        }
-                    });
+                    sentJson = JSON.stringify(results.violation);
+                    pass = False;
                 }
-
+                else {
+                    sentJson = JSON.stringify({});
+                    pass = True;
+                }
+                console.log(sentJson);
+                zQuery.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
+                    //url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
+                    crossDomain: true,
+                    data: {
+                        apiKey: functionizeHttpToken,
+                        accessibilityJson: sentJson,
+                        pass: pass,
+                        projId: functionizePid,
+                        sessionId: functionizeUID
+                    },
+                    async: true,
+                    timeout: 20000,
+                    success: function(responseData, textStatus, jqXHR) {
+                        console.log("Accessibility Data sent");
+                    },
+                    error: function(responseData, textStatus, errorThrown) {
+                        console.error("Error in sending accessibility data");
+                        console.error(errorThrown);
+                    }
+                });
             })
             .catch(err => {
                 console.error('Something bad happened:', err.message);
