@@ -4528,7 +4528,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     console.log(sentJson);
                     zQuery.ajax({
                         type: 'POST',
-                        url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
+                        //url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
+                        url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app',
                         crossDomain: true,
                         data: {
                             apiKey: functionizeHttpToken,
