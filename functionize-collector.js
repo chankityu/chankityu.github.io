@@ -4525,14 +4525,14 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         retval.impact = element.impact;
                         return retval;
                     })
-                    console.log(WU.es(sentJson));
+                    console.log(sentJson);
                     zQuery.ajax({
                         type: 'POST',
                         url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
                         crossDomain: true,
                         data: {
                             apiKey: functionizeHttpToken,
-                            accessibilityJson: WU.es(sentJson),
+                            accessibilityJson: sentJson,
                             //accessibilityJson: WU.es(results.violations),
                             projId: functionizePid,
                             sessionId: functionizeUID
