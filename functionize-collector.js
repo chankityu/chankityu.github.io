@@ -4641,6 +4641,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         this.siteStatistics = new SiteStatistics(true);
         this.screenshot = '';
         this.PIIFilter = new PIIFilter();
+        this.accessibilityIngestor = new AccessibilityIngestor();
         this.init = function() {
             if (typeof functionizeOptions.dataSendInterval != 'undefined') {
                 try {
