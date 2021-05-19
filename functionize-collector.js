@@ -4521,11 +4521,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 var sentJson, pass;
                 if (results.violations.length) {
                     sentJson = JSON.stringify(results.violation);
-                    pass = False;
+                    pass = false;
                 }
                 else {
                     sentJson = JSON.stringify({});
-                    pass = True;
+                    pass = true;
                 }
                 console.log(sentJson);
                 zQuery.ajax({
