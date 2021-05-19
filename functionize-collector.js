@@ -4503,6 +4503,12 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
     }
 
+    function AccessibilityIngestor(){
+        this.init = function(){
+            console.log("Accessibility Ingestor initialized");
+        }
+    }
+
     function WebionageSender() {
         this.isSending = false;
         this.on = true;
