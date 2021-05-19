@@ -4519,6 +4519,12 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .run()
             .then(results => {
                 if (results.violations.length) {
+                    var sentJson = results.violations.map( (element) => {
+                        retval = {}
+                        retval.id = element.id;
+                        retval.impact = element.impact;
+                        return retval;
+                    })
                     console.log(results.violations);
                     zQuery.ajax({
                         type: 'POST',
@@ -4526,7 +4532,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         crossDomain: true,
                         data: {
                             apiKey: functionizeHttpToken,
-                            accessibilityJson: "{test}",
+                            accessibilityJson: sentJson,
                             //accessibilityJson: WU.es(results.violations),
                             projId: functionizePid,
                             sessionId: functionizeUID
