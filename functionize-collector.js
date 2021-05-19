@@ -4526,7 +4526,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         crossDomain: true,
                         data: {
                             apiKey: functionizeHttpToken,
-                            accessibilityJson: WU.es(results.violations),
+                            accessibilityJson: "{test}",
+                            //accessibilityJson: WU.es(results.violations),
                             projId: functionizePid,
                             sessionId: functionizeUID
                         },
