@@ -4519,8 +4519,27 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .run()
             .then(results => {
                 if (results.violations.length) {
-                throw new Error('Accessibility issues found');
+                    zQuery.ajax({
+                        type: 'POST',
+                        url: 'http://localhost:8080/api/ingest/image-Functionize',
+                        crossDomain: true,
+                        data: {
+                            apiKey: functionizeHttpToken,
+                            accessibilityJson: results.violations,
+                            projId: functionizePid,
+                            sessionId: functionizeUID
+                        },
+                        async: true,
+                        timeout: 20000,
+                        success: function(responseData, textStatus, jqXHR) {
+                            console.log("Accessibility Data sent");
+                        },
+                        error: function(responseData, textStatus, errorThrown) {
+                            console.error("Error in sending accessibility data");
+                        }
+                    });
                 }
+
             })
             .catch(err => {
                 console.error('Something bad happened:', err.message);
