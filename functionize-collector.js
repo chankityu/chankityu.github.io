@@ -4521,7 +4521,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 if (results.violations.length) {
                     zQuery.ajax({
                         type: 'POST',
-                        url: 'http://localhost:8080/api/ingest/image-Functionize',
+                        url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
                         crossDomain: true,
                         data: {
                             apiKey: functionizeHttpToken,
