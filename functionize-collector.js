@@ -4519,6 +4519,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .run()
             .then(results => {
                 if (results.violations.length) {
+                    console.log(results.violations);
                     zQuery.ajax({
                         type: 'POST',
                         url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
@@ -4536,6 +4537,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         },
                         error: function(responseData, textStatus, errorThrown) {
                             console.error("Error in sending accessibility data");
+                            console.error(errorThrown);
                         }
                     });
                 }
