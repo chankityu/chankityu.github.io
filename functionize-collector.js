@@ -4520,7 +4520,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .then(results => {
                 var sentJson, pass;
                 if (results.violations.length) {
-                    sentJson = JSON.stringify(results.violation);
+                    sentJson = JSON.stringify(results.violations);
                     pass = false;
                 }
                 else {
