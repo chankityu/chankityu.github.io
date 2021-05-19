@@ -1,16 +1,25 @@
+// var PIIJSON = {
+//     "projId": 1234, "PIIs": [
+//         {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
+//          {"item": "abce", "format": "abcde"},
+//         ],
+//     "elementWhiteList" : [
+//         { "by": "xpath", "format": "abcde"},
+//         { "by": "id", "format": "main"},
+//     ],
+//     "elementBlackList" : [
+//         { "by": "xpath", "format": "abcde"},
+//         { "by": "id", "format": "main"},
+//     ]
+
+// };
 var PIIJSON = {
     "projId": 1234, "PIIs": [
         {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
          {"item": "abce", "format": "abcde"},
         ],
-    "elementWhiteList" : [
-        { "by": "xpath", "format": "abcde"},
-        { "by": "id", "format": "main"},
-    ],
-    "elementBlackList" : [
-        { "by": "xpath", "format": "abcde"},
-        { "by": "id", "format": "main"},
-    ]
+    "elementWhiteList" : [],
+    "elementBlackList" : []
 
 };
 //var PIIJSON = PIIString;
