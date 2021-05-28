@@ -4518,10 +4518,14 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             axe
             .run()
             .then(results => {
-                var sentJson, pass;
+                var sentJson, pass, image;
                 if (results.violations.length) {
                     sentJson = JSON.stringify(results.violations);
                     pass = false;
+                    html2canvas(document.body).then(function(canvas) {
+                        document.body.appendChild(canvas);
+                        image = canvas.toDataURL();
+                    });
                 }
                 else {
                     sentJson = JSON.stringify({});
