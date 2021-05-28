@@ -4525,6 +4525,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     html2canvas(document.body).then(function(canvas) {
                         document.body.appendChild(canvas);
                         image = canvas.toDataURL();
+                        console.log(image);
                         zQuery.ajax({
                             type: 'POST',
                             url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
