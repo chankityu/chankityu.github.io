@@ -4522,7 +4522,16 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 if (results.violations.length) {
                     sentJson = JSON.stringify(results.violations);
                     pass = false;
-                    html2canvas(document.body).then(function(canvas) {
+                    html2canvas(document.body,
+                        {
+                            onclone: function(document) {
+                                for(var i=0; i < results.violations[0].nodes.length; i++) {
+                                    var node = document.querySelector(results.violations[0].nodes[i].target);
+                                    node.style.backgroundColor = "red";
+                                }
+                            }
+                        }
+                    ).then(function(canvas) {
                         document.body.appendChild(canvas);
                         image = canvas.toDataURL();
                         console.log(image);
