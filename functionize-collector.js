@@ -4532,6 +4532,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     pass = true;
                 }
                 console.log(sentJson);
+                console.log(image);
                 zQuery.ajax({
                     type: 'POST',
                     url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
