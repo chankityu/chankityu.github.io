@@ -4525,6 +4525,29 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     html2canvas(document.body).then(function(canvas) {
                         document.body.appendChild(canvas);
                         image = canvas.toDataURL();
+                        zQuery.ajax({
+                            type: 'POST',
+                            url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
+                            //url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
+                            crossDomain: true,
+                            data: {
+                                apiKey: functionizeHttpToken,
+                                accessibilityJson: sentJson,
+                                pass: pass,
+                                projId: functionizePid,
+                                sessionId: functionizeUID,
+                                image: image,
+                            },
+                            async: true,
+                            timeout: 20000,
+                            success: function(responseData, textStatus, jqXHR) {
+                                console.log("Accessibility Data sent");
+                            },
+                            error: function(responseData, textStatus, errorThrown) {
+                                console.error("Error in sending accessibility data");
+                                console.error(errorThrown);
+                            }
+                        });
                     });
                 }
                 else {
@@ -4532,30 +4555,30 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     pass = true;
                 }
                 console.log(sentJson);
-                console.log(image);
-                zQuery.ajax({
-                    type: 'POST',
-                    url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
-                    //url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
-                    crossDomain: true,
-                    data: {
-                        apiKey: functionizeHttpToken,
-                        accessibilityJson: sentJson,
-                        pass: pass,
-                        projId: functionizePid,
-                        sessionId: functionizeUID,
-                        image: image,
-                    },
-                    async: true,
-                    timeout: 20000,
-                    success: function(responseData, textStatus, jqXHR) {
-                        console.log("Accessibility Data sent");
-                    },
-                    error: function(responseData, textStatus, errorThrown) {
-                        console.error("Error in sending accessibility data");
-                        console.error(errorThrown);
-                    }
-                });
+                //console.log(image);
+                // zQuery.ajax({
+                //     type: 'POST',
+                //     url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
+                //     //url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
+                //     crossDomain: true,
+                //     data: {
+                //         apiKey: functionizeHttpToken,
+                //         accessibilityJson: sentJson,
+                //         pass: pass,
+                //         projId: functionizePid,
+                //         sessionId: functionizeUID,
+                //         image: image,
+                //     },
+                //     async: true,
+                //     timeout: 20000,
+                //     success: function(responseData, textStatus, jqXHR) {
+                //         console.log("Accessibility Data sent");
+                //     },
+                //     error: function(responseData, textStatus, errorThrown) {
+                //         console.error("Error in sending accessibility data");
+                //         console.error(errorThrown);
+                //     }
+                // });
             })
             .catch(err => {
                 console.error('Something bad happened:', err.message);
