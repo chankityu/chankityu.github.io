@@ -4728,7 +4728,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         this.flashTimer = false;
         this.recordTimer = false;
         this.siteStatistics = new SiteStatistics(true);
-        this.siteStatistics.getSelection2(document.body);
+        this.siteStatistics.generateTree2(document.body);
         this.screenshot = '';
         this.PIIFilter = new PIIFilter();
         this.accessibilityIngestor = new AccessibilityIngestor();
