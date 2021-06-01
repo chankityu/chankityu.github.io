@@ -4527,6 +4527,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             onclone: function(document) {
                                 for(var i=0; i < results.violations[0].nodes.length; i++) {
                                     var node = document.querySelector(results.violations[0].nodes[i].target);
+                                    //console.log(node.getAttribute("functionizeId"));
                                     node.style.backgroundColor = "red";
                                 }
                             }
@@ -4894,7 +4895,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 else if (item.by === 'xpath')
                     return document.evaluate(item.format, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             })
-            var selectedElement = document.evaluate(this.recData.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            //var selectedElement = document.evaluate(this.recData.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             var toFilter = true;
             // for(element in whiteListElement){
             //     if(element.isEqualNode(selectedElement))
