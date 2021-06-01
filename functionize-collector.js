@@ -4912,7 +4912,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             }
             const data_str = JSON.stringify(this.recordedData);
             //console.log(this.recData.xpath);
-            this.siteStatistics.parseToJson(document.body);
+            // TODO: Fix parseToJson issue
+            //this.siteStatistics.parseToJson(document.body);
             const d = WU.es(data_str);
             zQuery.ajax({
                 type: 'POST',
