@@ -4520,6 +4520,10 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .then(results => {
                 var sentJson, pass, image;
                 if (results.violations.length) {
+                    for(var i=0; i < results.violations[0].nodes.length; i++) {
+                        var node = document.querySelector(results.violations[0].nodes[i].target);
+                        results.violations[0].nodes[i].functionizeId = node.getAttribute("functionizeid");
+                    }
                     sentJson = JSON.stringify(results.violations);
                     pass = false;
                     html2canvas(document.body,
