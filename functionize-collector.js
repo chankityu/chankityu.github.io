@@ -6714,7 +6714,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
           const json = {};
           json.nodes = [];
           json.tree = [];
-          json.version = version;
+          json.version = 1.6;
           json.mlversion = this.mlversion;
           json.url = data.url;
           json.cookie = data.cookie;
