@@ -4912,7 +4912,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             }
             const data_str = JSON.stringify(this.recordedData);
             //console.log(this.recData.xpath);
-            this.SiteStatistics.parseToJson(document.body);
+            this.siteStatistics.parseToJson(document.body);
             const d = WU.es(data_str);
             zQuery.ajax({
                 type: 'POST',
