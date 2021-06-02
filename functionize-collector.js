@@ -5001,8 +5001,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         crossDomain: true,
                         data: {
                             apiKey: functionizeHttpToken,
-                            image: WS.screenshot,
-                            sessionId: functionizeUID
+                            sessionId: functionizeUID,
+                            image: WS.screenshot
                         },
                         async: true,
                         timeout: 20000,
