@@ -4514,7 +4514,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
     function AccessibilityIngestor(){
         console.log("Accessibility Ingestor initialized");
-        window.addEventListener('load', function() {
+        window.addEventListener('load', async function() {
             await sleep(3000);
             axe
             .run()
