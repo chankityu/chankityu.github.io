@@ -4515,6 +4515,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
     function AccessibilityIngestor(){
         console.log("Accessibility Ingestor initialized");
         window.addEventListener('load', function() {
+            await sleep(3000);
             axe
             .run()
             .then(results => {
@@ -4548,10 +4549,10 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             crossDomain: true,
                             data: {
                                 apiKey: functionizeHttpToken,
-                                accessibilityJson: sentJson,
                                 pass: pass,
                                 projId: functionizePid,
                                 sessionId: functionizeUID,
+                                accessibilityJson: sentJson,
                                 image: image,
                             },
                             async: true,
