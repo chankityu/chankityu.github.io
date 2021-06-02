@@ -4535,7 +4535,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                     node.style.backgroundColor = "red";
                                 }
                             }
-                        }
+                        },
+                        { allowTaint: true }
                     ).then(function(canvas) {
                         document.body.appendChild(canvas);
                         image = canvas.toDataURL();
