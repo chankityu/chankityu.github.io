@@ -4541,6 +4541,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 var imgNode = document.querySelector("[functionizeId='10']");
                                 console.log(imgNode.tagName);
                                 imgNode.setAttribute("crossOrigin","true");
+                                console.log(imgNode.getContext("2d").getImageData(0,0,imgNode.width, imgNode.height));
                                 // var functionizeId = document.getAttribute("functionizeId");
                                 // if (functionizeId === '10') {
 
