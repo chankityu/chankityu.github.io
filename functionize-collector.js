@@ -4538,10 +4538,10 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                     //console.log(node.getAttribute("functionizeId"));
                                     node.style.backgroundColor = "red";
                                 }
-                                var functionizeId = document.getAttribute("functionizeId");
-                                if (functionizeId === '10') {
+                                // var functionizeId = document.getAttribute("functionizeId");
+                                // if (functionizeId === '10') {
 
-                                }
+                                // }
                             }
                         },
                         { allowTaint: true, logging: true }
