@@ -4546,7 +4546,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 // }
                             }
                         },
-                        { allowTaint: true, logging: true }
+                        { allowTaint: true, logging: true, useCORS: true }
                     ).then(function(canvas) {
                         document.body.appendChild(canvas);
                         image = canvas.toDataURL();
