@@ -4544,9 +4544,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 // if (functionizeId === '10') {
 
                                 // }
-                            }
+                            }, allowTaint: true, logging: true, useCORS: true
                         },
-                        { allowTaint: true, logging: true, useCORS: true }
                     ).then(function(canvas) {
                         document.body.appendChild(canvas);
                         image = canvas.toDataURL();
