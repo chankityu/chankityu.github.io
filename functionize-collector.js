@@ -4538,9 +4538,13 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                     //console.log(node.getAttribute("functionizeId"));
                                     node.style.backgroundColor = "red";
                                 }
+                                var functionizeId = document.getAttribute("functionizeId");
+                                if (functionizeId === '10') {
+
+                                }
                             }
                         },
-                        { allowTaint: true }
+                        { allowTaint: true, logging: true }
                     ).then(function(canvas) {
                         document.body.appendChild(canvas);
                         image = canvas.toDataURL();
