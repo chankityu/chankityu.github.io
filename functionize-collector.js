@@ -4540,6 +4540,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 }
                                 var imgNode = document.querySelector("[functionizeId='10']");
                                 console.log(imgNode.tagName);
+                                imgNode.setAttribute("crossOrigin","true");
                                 // var functionizeId = document.getAttribute("functionizeId");
                                 // if (functionizeId === '10') {
 
