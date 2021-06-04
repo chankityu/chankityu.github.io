@@ -4547,7 +4547,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 ctx.drawImage(imgNode, 0, 0);
                                 var dataURL = canvas.toDataURL("image/png");
                                 console.log(dataURL);
-                                imgNode.setAttribute("src", dataURL);
+                                //imgNode.setAttribute("src", dataURL);
+                                imgNode.src = dataURL;
                                 //dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
                                 // var functionizeId = document.getAttribute("functionizeId");
                                 // if (functionizeId === '10') {
