@@ -4546,6 +4546,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 var ctx = canvas.getContext("2d");
                                 ctx.drawImage(imgNode, 0, 0);
                                 var dataURL = canvas.toDataURL("image/png");
+                                console.log(dataURL);
                                 imgNode.setAttribute("src", dataURL);
                                 //dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
                                 // var functionizeId = document.getAttribute("functionizeId");
@@ -4560,7 +4561,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     ).then(function(canvas) {
                         document.body.appendChild(canvas);
                         image = canvas.toDataURL();
-                        console.log(image);
+                        //console.log(image);
                         zQuery.ajax({
                             type: 'POST',
                             //url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
