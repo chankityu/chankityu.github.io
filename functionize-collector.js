@@ -4548,8 +4548,10 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 var dataURL = canvas.toDataURL("image/png");
                                 console.log(dataURL);
                                 //imgNode.setAttribute("src", dataURL);
+
+                                dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+                                console.log(dataURL);
                                 imgNode.src = dataURL;
-                                //dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
                                 // var functionizeId = document.getAttribute("functionizeId");
                                 // if (functionizeId === '10') {
 
