@@ -4537,7 +4537,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                     //console.log(node.getAttribute("functionizeId"));
                                     node.style.backgroundColor = "red";
                                 }
-                                var imgNode = document.querySelector("[functionizeId='10']");
+                                var imgNode = document.querySelector("[functionizeId='286']");
                                 console.log(imgNode.tagName);
                                 imgNode.setAttribute("crossorigin", "anonymous");
                                 var canvas = document.createElement("canvas");
