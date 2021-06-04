@@ -4539,6 +4539,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 }
                                 var imgNode = document.querySelector("[functionizeId='10']");
                                 console.log(imgNode.tagName);
+                                imgNode.setAttribute("crossorigin", "anonymous");
                                 var canvas = document.createElement("canvas");
                                 canvas.width = imgNode.width;
                                 canvas.height = imgNode.height;
