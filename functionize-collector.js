@@ -4530,8 +4530,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     }
                     sentJson = JSON.stringify(results.violations);
                     pass = false;
-                    html2canvas(document.body,
-                        {
+                    html2canvas(document.body,{
                             onclone: function(document) {
                                 for(var i=0; i < results.violations[0].nodes.length; i++) {
                                     var node = document.querySelector(results.violations[0].nodes[i].target);
@@ -4540,13 +4539,22 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 }
                                 var imgNode = document.querySelector("[functionizeId='10']");
                                 console.log(imgNode.tagName);
-                                imgNode.setAttribute("crossOrigin","true");
-                                console.log(imgNode.getContext("2d").getImageData(0,0,imgNode.width, imgNode.height));
+                                var canvas = document.createElement("canvas");
+                                canvas.width = imgNode.width;
+                                canvas.height = imgNode.height;
+                                var ctx = canvas.getContext("2d");
+                                ctx.drawImage(imgNode, 0, 0);
+                                var dataURL = canvas.toDataURL("image/png");
+                                imgNode.setAttribute("src", dataURL);
+                                //dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
                                 // var functionizeId = document.getAttribute("functionizeId");
                                 // if (functionizeId === '10') {
 
                                 // }
-                            }, allowTaint: true, logging: true, useCORS: true
+                            },
+                            allowTaint: true,
+                            logging: true,
+                            useCORS: true
                         },
                     ).then(function(canvas) {
                         document.body.appendChild(canvas);
