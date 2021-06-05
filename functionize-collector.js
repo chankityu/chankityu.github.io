@@ -4527,6 +4527,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     for(var i=0; i < results.violations[0].nodes.length; i++) {
                         var node = document.querySelector(results.violations[0].nodes[i].target);
                         results.violations[0].nodes[i].functionizeId = node.getAttribute("functionizeid");
+                        results.violations[0].nodes[i].XYCoord = node.getBoundingClientRect();
                     }
                     sentJson = JSON.stringify(results.violations);
                     pass = false;
