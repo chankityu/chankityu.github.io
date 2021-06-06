@@ -4533,30 +4533,32 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     pass = false;
                     html2canvas(document.body,{
                             onclone: function(document) {
-                                for(var i=0; i < results.violations[0].nodes.length; i++) {
-                                    var node = document.querySelector(results.violations[0].nodes[i].target);
-                                    //console.log(node.getAttribute("functionizeId"));
-                                    node.style.backgroundColor = "red";
+                                for(var h=0; h < results.violations.length ; h++) {
+                                    for(var i=0; i < results.violations[h].nodes.length; i++) {
+                                        var node = document.querySelector(results.violations[0].nodes[i].target);
+                                        //console.log(node.getAttribute("functionizeId"));
+                                        node.style.backgroundColor = "red";
+                                    }
+                                    var imgNode = document.querySelector("[functionizeId='10']");
+                                    console.log(imgNode.tagName);
+                                    imgNode.setAttribute("crossorigin", "anonymous");
+                                    var canvas = document.createElement("canvas");
+                                    canvas.width = imgNode.width;
+                                    canvas.height = imgNode.height;
+                                    var ctx = canvas.getContext("2d");
+                                    ctx.drawImage(imgNode, 0, 0);
+                                    var dataURL = canvas.toDataURL("image/png");
+                                    console.log(dataURL);
+                                    //imgNode.setAttribute("src", dataURL);
+
+                                    dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+                                    console.log(dataURL);
+                                    imgNode.src = dataURL;
+                                    // var functionizeId = document.getAttribute("functionizeId");
+                                    // if (functionizeId === '10') {
+
+                                    // }
                                 }
-                                var imgNode = document.querySelector("[functionizeId='10']");
-                                console.log(imgNode.tagName);
-                                imgNode.setAttribute("crossorigin", "anonymous");
-                                var canvas = document.createElement("canvas");
-                                canvas.width = imgNode.width;
-                                canvas.height = imgNode.height;
-                                var ctx = canvas.getContext("2d");
-                                ctx.drawImage(imgNode, 0, 0);
-                                var dataURL = canvas.toDataURL("image/png");
-                                console.log(dataURL);
-                                //imgNode.setAttribute("src", dataURL);
-
-                                dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-                                console.log(dataURL);
-                                imgNode.src = dataURL;
-                                // var functionizeId = document.getAttribute("functionizeId");
-                                // if (functionizeId === '10') {
-
-                                // }
                             },
                             allowTaint: true,
                             logging: true,
