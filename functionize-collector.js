@@ -4535,7 +4535,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             onclone: function(document) {
                                 for(var h=0; h < results.violations.length ; h++) {
                                     for(var i=0; i < results.violations[h].nodes.length; i++) {
-                                        var node = document.querySelector(results.violations[0].nodes[i].target);
+                                        var node = document.querySelector(results.violations[h].nodes[i].target);
                                         //console.log(node.getAttribute("functionizeId"));
                                         node.style.backgroundColor = "red";
                                     }
