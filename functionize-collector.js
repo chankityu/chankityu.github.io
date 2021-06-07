@@ -4547,6 +4547,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                     canvas.height = imgNode.height;
                                     var ctx = canvas.getContext("2d");
                                     ctx.drawImage(imgNode, 0, 0);
+                                    imgNode.appendChild(canvas);
                                     var dataURL = canvas.toDataURL("image/png");
                                     console.log(dataURL);
                                     //imgNode.setAttribute("src", dataURL);
