@@ -4539,21 +4539,29 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                         //console.log(node.getAttribute("functionizeId"));
                                         node.style.backgroundColor = "red";
                                     }
-                                    var imgNode = document.querySelector("[functionizeId='10']");
+                                    var imgSourceNode = document.querySelector("[functionizeId='10']");
+                                    var imgNode = new Image;
                                     console.log(imgNode.tagName);
                                     imgNode.setAttribute("crossorigin", "Anonymous");
-                                    var canvas = document.createElement("canvas");
-                                    canvas.width = imgNode.width;
-                                    canvas.height = imgNode.height;
-                                    var ctx = canvas.getContext("2d");
-                                    ctx.drawImage(imgNode, 0, 0);
-                                    imgNode.appendChild(canvas);
-                                    var dataURL = canvas.toDataURL("image/png");
-                                    console.log(dataURL);
-                                    //imgNode.setAttribute("src", dataURL);
 
-                                    dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-                                    console.log(dataURL);
+                                    imgNode.addEventListener("load" , function imageReceived() {
+                                         var canvas = document.createElement("canvas");
+                                        canvas.width = imgNode.width;
+                                        canvas.height = imgNode.height;
+                                        var ctx = canvas.getContext("2d");
+                                        ctx.drawImage(imgNode, 0, 0);
+                                        imgNode.appendChild(canvas);
+                                        var dataURL = canvas.toDataURL("image/png");
+                                        console.log(dataURL);
+                                        //imgNode.setAttribute("src", dataURL);
+
+                                        dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+                                        console.log(dataURL);
+                                    }, false);
+                                    imgNode.src = imgSourceNode.src;
+
+
+
                                     imgNode.src = dataURL;
                                     // var functionizeId = document.getAttribute("functionizeId");
                                     // if (functionizeId === '10') {
