@@ -4562,8 +4562,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             },
                             allowTaint: true,
                             logging: true,
-                            useCORS: true,
-                            taintTest: false
+                            useCORS: true
                         },
                     ).then(function(canvas) {
                         document.body.appendChild(canvas);
