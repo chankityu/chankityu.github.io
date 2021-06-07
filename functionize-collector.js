@@ -4557,12 +4557,13 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
                                         dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
                                         console.log(dataURL);
+                                        imgNode.src = dataURL;
                                     }, false);
                                     imgNode.src = imgSourceNode.src;
 
 
 
-                                    imgNode.src = dataURL;
+
                                     // var functionizeId = document.getAttribute("functionizeId");
                                     // if (functionizeId === '10') {
 
