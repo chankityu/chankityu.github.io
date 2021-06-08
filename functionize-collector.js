@@ -4523,8 +4523,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .run()
             .then(results => {
                 var sentJson, pass, image;
-                //var elementStatistics = WS.siteStatistics.getSelection2(document.body);
-                //console.log(elementStatistics);
                 if (results.violations.length) {
                     for(var i=0; i < results.violations[0].nodes.length; i++) {
                         console.log(results.violations[0].nodes[i].target);
@@ -4533,6 +4531,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         results.violations[0].nodes[i].XYCoord = node.getBoundingClientRect();
                     }
                     sentJson = JSON.stringify(results.violations);
+                    var elementStatistics = WS.siteStatistics.getSelection2(document.body);
+                    console.log(elementStatistics);
                     pass = false;
                     html2canvas(document.body,{
                             onclone: function(document) {
