@@ -4531,8 +4531,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         results.violations[0].nodes[i].XYCoord = node.getBoundingClientRect();
                     }
                     sentJson = JSON.stringify(results.violations);
-                    var elementStatistics = WS.siteStatistics.getSelection2(document.body);
-                    console.log(elementStatistics);
                     pass = false;
                     html2canvas(document.body,{
                             onclone: function(document) {
@@ -4580,6 +4578,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     ).then(function(canvas) {
                         document.body.appendChild(canvas);
                         image = canvas.toDataURL();
+                        var elementStatistics = WS.siteStatistics.getSelection2(document.body);
+                        console.log(elementStatistics);
                         //console.log(image);
                         zQuery.ajax({
                             type: 'POST',
