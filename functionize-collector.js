@@ -4524,7 +4524,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .then(results => {
                 var sentJson, pass, image;
                 var siteStastistics = new SiteStatistics(true);
-                var elementStatistics = siteStastistics.getSelection2(document.body);
+                var elementStatistics = JSON.stringify(siteStastistics.getSelection2(document.body));
                 console.log(elementStatistics);
                 if (results.violations.length) {
                     for(var i=0; i < results.violations[0].nodes.length; i++) {
