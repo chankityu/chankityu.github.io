@@ -4776,7 +4776,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
         this.siteStatistics.generateTree2(document.body);
         this.screenshot = '';
         this.PIIFilter = new PIIFilter();
-        this.accessibilityIngestor = new AccessibilityIngestor();
+        //this.accessibilityIngestor = new AccessibilityIngestor();
         this.init = function() {
             if (typeof functionizeOptions.dataSendInterval != 'undefined') {
                 try {
@@ -6154,6 +6154,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 return;
             }
             functionizeRegistered();
+            AccessibilityIngestor();
         }
 
         function functionizeRegistered() {
