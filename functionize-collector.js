@@ -4523,6 +4523,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .run()
             .then(results => {
                 var sentJson, pass, image;
+                var siteStastistics = new SiteStatistics(true);
+                var elementStatistics = siteStatistics.getSelection2(document.body);
+                console.log(elementStatistics);
                 if (results.violations.length) {
                     for(var i=0; i < results.violations[0].nodes.length; i++) {
                         var node = document.querySelector(results.violations[0].nodes[i].target);
