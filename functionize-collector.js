@@ -4528,6 +4528,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 console.log(elementStatistics);
                 if (results.violations.length) {
                     for(var i=0; i < results.violations[0].nodes.length; i++) {
+                        console.log(results.violations[0].nodes[i].target);
                         var node = document.querySelector(results.violations[0].nodes[i].target);
                         results.violations[0].nodes[i].functionizeId = node.getAttribute("functionizeid");
                         results.violations[0].nodes[i].XYCoord = node.getBoundingClientRect();
