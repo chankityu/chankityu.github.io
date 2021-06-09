@@ -4564,7 +4564,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                                 console.log(dataURL);
                                                 imgNode.src = dataURL;
                                             }, false);
-                                            node.src = imgSourceNode.src;
+                                            node.src = imgSourceNode.src+"?not-from-cache-please";
                                         }
                                     });
 
