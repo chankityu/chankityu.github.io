@@ -4593,7 +4593,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 sessionId: functionizeUID,
                                 accessibilityJson: sentJson,
                                 image: image,
-                                elementStatistics: elementStatistics
+                                elementStatistics: "test",
                             },
                             async: true,
                             timeout: 20000,
