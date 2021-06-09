@@ -4524,11 +4524,13 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .then(results => {
                 var sentJson, pass, image;
                 if (results.violations.length) {
-                    for(var i=0; i < results.violations[0].nodes.length; i++) {
-                        console.log(results.violations[0].nodes[i].target);
-                        var node = document.querySelector(results.violations[0].nodes[i].target);
-                        results.violations[0].nodes[i].functionizeId = node.getAttribute("functionizeid");
-                        results.violations[0].nodes[i].XYCoord = node.getBoundingClientRect();
+                    for(var h=0; h < results.violations.length ; h++) {
+                        for(var i=0; i < results.violations[h].nodes.length; i++) {
+                            console.log(results.violations[h].nodes[i].target);
+                            var node = document.querySelector(results.violations[h].nodes[i].target);
+                            results.violations[h].nodes[i].functionizeId = node.getAttribute("functionizeid");
+                            results.violations[h].nodes[i].XYCoord = node.getBoundingClientRect();
+                        }
                     }
                     sentJson = JSON.stringify(results.violations);
                     pass = false;
