@@ -4542,6 +4542,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                         //console.log(node.getAttribute("functionizeId"));
                                         node.style.backgroundColor = "red";
                                     }
+                                    debugger;
                                     document.body.querySelectorAll("[src^='http']").forEach(function(node) {
                                         if(typeof node.src !== 'undefined' && node.src.startsWith("http") ) {
                                             var imgSourceNode = node;//document.querySelector("[functionizeId='10']");
