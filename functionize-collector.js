@@ -4540,7 +4540,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                         //console.log(node.getAttribute("functionizeId"));
                                         node.style.backgroundColor = "red";
                                     }
-                                    document.querySelectorAll("*").forEach(function(node) {
+                                    document.querySelectorAll("[src^='http']").forEach(function(node) {
                                         if(typeof node.src !== 'undefined' && node.src.startsWith("http") ) {
                                             var imgSourceNode = node;//document.querySelector("[functionizeId='10']");
                                             var imgNode = new Image;
