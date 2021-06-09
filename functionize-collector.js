@@ -4518,7 +4518,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             function sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
-            await sleep(5000);
+            await sleep(1500);
             axe
             .run()
             .then(results => {
