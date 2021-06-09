@@ -4543,31 +4543,34 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                         node.style.backgroundColor = "red";
                                     }
                                     debugger;
-                                    document.body.querySelectorAll("[src^='http']").forEach(function(node) {
-                                        if(typeof node.src !== 'undefined' && node.src.startsWith("http") ) {
-                                            var imgSourceNode = node;//document.querySelector("[functionizeId='10']");
-                                            var imgNode = new Image;
-                                            console.log(node.tagName);
-                                            imgNode.setAttribute("crossorigin", "Anonymous");
+                                    if(typeof this.runOnce === 'undefined') {
+                                        document.body.querySelectorAll("[src^='http']").forEach(function(node) {
+                                            if(typeof node.src !== 'undefined' && node.src.startsWith("http") ) {
+                                                var imgSourceNode = node;//document.querySelector("[functionizeId='10']");
+                                                var imgNode = new Image;
+                                                console.log(node.tagName);
+                                                imgNode.setAttribute("crossorigin", "Anonymous");
 
-                                            imgNode.addEventListener("load" , function imageReceived() {
-                                                var canvas = document.createElement("canvas");
-                                                canvas.width = imgNode.width;
-                                                canvas.height = imgNode.height;
-                                                var ctx = canvas.getContext("2d");
-                                                ctx.drawImage(imgNode, 0, 0);
-                                                imgNode.appendChild(canvas);
-                                                var dataURL = canvas.toDataURL("image/png");
-                                                console.log(dataURL);
-                                                //imgNode.setAttribute("src", dataURL);
+                                                imgNode.addEventListener("load" , function imageReceived() {
+                                                    var canvas = document.createElement("canvas");
+                                                    canvas.width = imgNode.width;
+                                                    canvas.height = imgNode.height;
+                                                    var ctx = canvas.getContext("2d");
+                                                    ctx.drawImage(imgNode, 0, 0);
+                                                    imgNode.appendChild(canvas);
+                                                    var dataURL = canvas.toDataURL("image/png");
+                                                    console.log(dataURL);
+                                                    //imgNode.setAttribute("src", dataURL);
 
-                                                dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-                                                console.log(dataURL);
-                                                imgNode.src = dataURL;
-                                            }, false);
-                                            node.src = imgSourceNode.src;
-                                        }
-                                    });
+                                                    dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+                                                    console.log(dataURL);
+                                                    imgNode.src = dataURL;
+                                                }, false);
+                                                node.src = imgSourceNode.src;
+                                            }
+                                        });
+                                        this.runOnce = true;
+                                    }
 
 
 
