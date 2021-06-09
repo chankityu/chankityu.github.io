@@ -4541,7 +4541,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                         node.style.backgroundColor = "red";
                                     }
                                     document.querySelectorAll("*").forEach(function(node) {
-                                        if(typeof imgNode.src !== 'undefined' && imgNode.src.startsWith("http") ) {
+                                        if(typeof node.src !== 'undefined' && node.src.startsWith("http") ) {
                                             var imgSourceNode = node;//document.querySelector("[functionizeId='10']");
                                             var imgNode = new Image;
                                             console.log(imgNode.tagName);
