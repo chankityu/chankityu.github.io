@@ -4542,7 +4542,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                     }
                                     document.querySelectorAll("[src^='http']").forEach(function(node) {
                                         if(typeof node.src !== 'undefined' && node.src.startsWith("http") ) {
-                                            var imgSourceNode = document.querySelector("[functionizeId='286']");
+                                            var imgSourceNode = node;//document.querySelector("[functionizeId='10']");
                                             var imgNode = new Image;
                                             console.log(node.tagName);
                                             imgNode.setAttribute("crossorigin", "Anonymous");
