@@ -4542,7 +4542,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                         //console.log(node.getAttribute("functionizeId"));
                                         node.style.backgroundColor = "red";
                                     }
-                                    debugger;
+                                    //debugger;
                                     if(typeof this.runOnce === 'undefined') {
                                         document.body.querySelectorAll("[src^='http']").forEach(function(node) {
                                             if(typeof node.src !== 'undefined' && node.src.startsWith("http") ) {
