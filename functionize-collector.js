@@ -4579,7 +4579,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         document.body.appendChild(canvas);
                         image = canvas.toDataURL();
                         var elementStatistics = WS.siteStatistics.getSelection2(document.body);
-                        console.log(elementStatistics);
+                        console.log(JSON.stringify(elementStatistics));
                         //console.log(image);
                         zQuery.ajax({
                             type: 'POST',
