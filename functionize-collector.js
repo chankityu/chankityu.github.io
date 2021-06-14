@@ -4523,6 +4523,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .run()
             .then(results => {
                 var sentJson, pass, image;
+                var serious=0, critical=0, minor=0, moderate=0;
                 if (results.violations.length) {
                     for(var h=0; h < results.violations.length ; h++) {
                         for(var i=0; i < results.violations[h].nodes.length; i++) {
@@ -4530,6 +4531,22 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             var node = document.querySelector(results.violations[h].nodes[i].target);
                             results.violations[h].nodes[i].functionizeId = node.getAttribute("functionizeid");
                             results.violations[h].nodes[i].XYCoord = node.getBoundingClientRect();
+                            var impact = results.violations[h].nodes[i].target;
+                            if (impact === 'serious') {
+                                serious++;
+                            }
+                            else if (impact === 'critical') {
+                                critical++;
+                            }
+                            else if (impact === 'moderate') {
+                                moderate++;
+                            }
+                            else if (impact === 'minor') {
+                                minor++;
+                            }
+                            else {
+                                console.error("Impact category did not get categorized");
+                            }
                         }
                     }
                     sentJson = JSON.stringify(results.violations);
@@ -4594,14 +4611,19 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         //console.log(image);
                         zQuery.ajax({
                             type: 'POST',
-                            //url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
-                            url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
+                            url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
+                            //url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
                             crossDomain: true,
                             data: {
                                 apiKey: functionizeHttpToken,
                                 pass: pass,
                                 projId: functionizePid,
                                 sessionId: functionizeUID,
+                                siteURL: window.location.href,
+                                seriousCount: serious,
+                                minorCount: minor,
+                                criticalCount: critical,
+                                moderateCount: moderate,
                                 accessibilityJson: sentJson,
                                 image: image,
                                 elementStatistics: JSON.stringify(elementStatistics),
