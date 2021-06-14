@@ -4531,7 +4531,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             var node = document.querySelector(results.violations[h].nodes[i].target);
                             results.violations[h].nodes[i].functionizeId = node.getAttribute("functionizeid");
                             results.violations[h].nodes[i].XYCoord = node.getBoundingClientRect();
-                            var impact = results.violations[h].nodes[i].target;
+                            var impact = results.violations[h].nodes[i].impact;
                             if (impact === 'serious') {
                                 serious++;
                             }
