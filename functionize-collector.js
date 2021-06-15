@@ -4616,8 +4616,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         //console.log(image);
                         zQuery.ajax({
                             type: 'POST',
-                            //url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
-                            url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
+                            url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
+                            //url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
                             crossDomain: true,
                             data: {
                                 apiKey: functionizeHttpToken,
@@ -4626,9 +4626,13 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 sessionId: functionizeUID,
                                 siteURL: window.location.href,
                                 seriousCount: serious,
+                                seriousArray: JSON.stringify(seriousArray),
                                 minorCount: minor,
+                                minorArray: JSON.stringify(minorArray),
                                 criticalCount: critical,
+                                criticalArray: JSON.stringify(criticalArray),
                                 moderateCount: moderate,
+                                moderateArray: JSON.stringify(moderateArray),
                                 accessibilityJson: sentJson,
                                 image: image,
                                 elementStatistics: JSON.stringify(elementStatistics),
