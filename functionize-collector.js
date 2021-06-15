@@ -4524,6 +4524,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .then(results => {
                 var sentJson, pass, image;
                 var serious=0, critical=0, minor=0, moderate=0;
+                var seriousArray=[], criticalArray=[], minorArray=[], moderateArray=[];
                 if (results.violations.length) {
                     for(var h=0; h < results.violations.length ; h++) {
                         for(var i=0; i < results.violations[h].nodes.length; i++) {
@@ -4534,15 +4535,19 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             var impact = results.violations[h].nodes[i].impact;
                             if (impact === 'serious') {
                                 serious++;
+                                seriousArray.push(results.violations[h].nodes[i].functionizeId);
                             }
                             else if (impact === 'critical') {
                                 critical++;
+                                criticalArray.push(results.violations[h].nodes[i].functionizeId);
                             }
                             else if (impact === 'moderate') {
                                 moderate++;
+                                moderateArray.push(results.violations[h].nodes[i].functionizeId);
                             }
                             else if (impact === 'minor') {
                                 minor++;
+                                minorArray.push(results.violations[h].nodes[i].functionizeId);
                             }
                             else {
                                 console.error("Impact category did not get categorized");
