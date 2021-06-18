@@ -4628,6 +4628,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 sessionId: functionizeUID,
                                 siteURL: window.location.href,
                                 seriousCount: serious,
+                                screenshotWidth: canvas.width,
+                                screenshotHeight: canvas.height,
                                 seriousArray: JSON.stringify(seriousArray),
                                 minorCount: minor,
                                 minorArray: JSON.stringify(minorArray),
