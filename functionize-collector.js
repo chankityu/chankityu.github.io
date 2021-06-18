@@ -4610,6 +4610,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         },
                     ).then(function(canvas) {
                         document.body.appendChild(canvas);
+                        console.log(canvas.height);
+                        console.log(canvas.width);
                         image = canvas.toDataURL();
                         var elementStatistics = WS.siteStatistics.getSelection2(document.body);
                         console.log(JSON.stringify(elementStatistics));
