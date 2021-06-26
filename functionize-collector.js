@@ -4513,6 +4513,48 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
     }
 
     function AccessibilityIngestor(){
+        // remove \n and space in front and back
+        function subRoutine5(str) {
+            let o = "";
+            o = str.replace(/\n/g, "");
+            o = o.replace(/\t/g, "");
+            while (o.charAt(0) === " ") {
+              o = o.substring(1, o.length);
+            }
+            while (o.charAt(o.length - 1) === " ") {
+              o = o.substring(0, o.length - 1);
+            }
+            // replace double spaces
+            let done = false;
+            while (done === false) {
+              const temp = o.replace(/ {2}/g, " ");
+              if (temp.length === o.length) {
+                done = true;
+              }
+              o = temp;
+            }
+            // hash value if longer that 256
+            if (o.length > 256) {
+              o = "hash" + this.hashCode(o);
+            }
+            return o;
+          }
+
+          function skipNodeCriteria(o) {
+            let skip = false;
+            if (o.nodeType === "3") {
+              let text = subRoutine5(o.data + "");
+              // remove all whitespace character
+              text = text.replace(/\s/g, "");
+              // after all whitespace being removed, if empty means skip
+              if (text === "") {
+                skip = true;
+              }
+            }
+            return skip;
+          }
+
+
         function getParentFromNode(node, defaultParentId) {
             let parent;
             try {
