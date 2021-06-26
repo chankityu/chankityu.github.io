@@ -4669,7 +4669,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 range.selectNodeContents(node);
                 const rects = range.getClientRects();
                 if (rects.length > 0) {
-                  const parent = this.getParentFromNode(node, parentId);
+                  const parent = getParentFromNode(node, parentId);
                   nodes.push([
                     parent,
                     this.nodeId + "",
