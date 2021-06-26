@@ -4582,7 +4582,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             while ((node = walker.nextNode()) != null) {
               const nt = node.nodeType;
               // if match skip criteria, skip this node
-              if (this.skipNodeCriteria(node)) {
+              if (skipNodeCriteria(node)) {
                 continue;
               }
               if (nt === 1) {
@@ -4602,7 +4602,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                   }
 
                   // handle shadowDOM parent
-                  const parent = this.getParentFromNode(node, parentId);
+                  const parent = getParentFromNode(node, parentId);
 
                   // handle display:contents, using child rect, else fallback to parent
                   if (cs.getPropertyValue("display") === "contents") {
