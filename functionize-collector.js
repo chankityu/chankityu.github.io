@@ -4649,7 +4649,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
             return nodes;
           }
-          traverseNodes2(e, null, []);
+          traverseNodes2(document.body, null, []);
         console.log("Accessibility Ingestor initialized");
         window.addEventListener('load', async function() {
             function sleep(ms) {
