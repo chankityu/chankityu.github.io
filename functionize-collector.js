@@ -4513,6 +4513,143 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
     }
 
     function AccessibilityIngestor(){
+        function getParentFromNode(node, defaultParentId) {
+            let parent;
+            try {
+              if (node.parentNode.nodeType === 11) {
+                // if parentNode is document-fragment, parentElement will be null
+                // thus we need to use host
+                parent = node.parentNode.host.getAttribute("functionizeID");
+              } else if (node.parentElement) {
+                parent = node.parentElement.getAttribute("functionizeID");
+              } else {
+                parent = defaultParentId;
+              }
+            } catch (e) {
+              // fallback
+              console.log(e);
+              parent = defaultParentId;
+            }
+            return parent;
+          }
+
+          function traverseNodes2(start, parentId, nodes) {
+            let node;
+            const walker = document.createTreeWalker(start, 5, null, false);
+            const range = document.createRange();
+            while ((node = walker.nextNode()) != null) {
+              const nt = node.nodeType;
+              // if match skip criteria, skip this node
+              if (this.skipNodeCriteria(node)) {
+                continue;
+              }
+              if (nt === 1) {
+                const tn = node.tagName;
+              //   if (tn === "INPUT") {
+              //     node.value = WS.filterPII(node.value);
+              //   }
+                if (tn !== "SCRIPT" && tn !== "STYLE") {
+                  node.setAttribute("functionizeID", this.nodeId);
+
+                  let box = node.getBoundingClientRect();
+                  const cs = window.getComputedStyle(node, null);
+                  const attr = node.attributes;
+                  const a = {};
+                  for (let i = 0; i < attr.length; i++) {
+                    a[attr[i].name] = attr[i].value;
+                  }
+
+                  // handle shadowDOM parent
+                  const parent = this.getParentFromNode(node, parentId);
+
+                  // handle display:contents, using child rect, else fallback to parent
+                  if (cs.getPropertyValue("display") === "contents") {
+                    // access children node from node
+                    let referenceNode = node.firstChild;
+
+                    // handle more edge cases
+                    if (referenceNode == null) {
+                      if (node.tagName === "SLOT") {
+                        // handle node is <slot>
+                        const referenceNodes = node.assignedElements();
+                        if (referenceNodes != null && referenceNodes.length > 0) {
+                          referenceNode = referenceNodes[0];
+                        } else {
+                          referenceNode = node.getRootNode().host;
+                        }
+                      } else if (node.getRootNode().nodeType === 11) {
+                        // handle if the node is inside shadowDOM but not <slot>
+                        referenceNode = node.getRootNode().host;
+                      } else {
+                        // fallback to parent
+                        referenceNode = node.parentNode;
+                      }
+                    }
+
+                    if (referenceNode != null) {
+                      range.selectNodeContents(referenceNode);
+                      const rects = range.getClientRects();
+                      if (rects.length > 0) {
+                        box = rects[0];
+                      }
+                    }
+                  }
+
+                  nodes.push([
+                    parent,
+                    this.nodeId + "",
+                    "1",
+                    box.left,
+                    box.top,
+                    box.width,
+                    box.height,
+                    cs.getPropertyValue("display"),
+                    cs.getPropertyValue("background-color"),
+                    cs.getPropertyValue("color"),
+                    cs.getPropertyValue("z-index"),
+                    tn,
+                    a,
+                  ]);
+                  this.nodeId = this.nodeId + 1;
+
+                  // handle shadowDOM with open mode
+                  if (node.shadowRoot !== undefined && node.shadowRoot != null) {
+                    nodes = this.traverseNodes2(
+                      node.shadowRoot,
+                      this.nodeId - 1,
+                      nodes
+                    );
+                  }
+                } else {
+                  // handle scripts and styles
+                }
+              } else if (nt === 3) {
+                range.selectNodeContents(node);
+                const rects = range.getClientRects();
+                if (rects.length > 0) {
+                  const parent = this.getParentFromNode(node, parentId);
+                  nodes.push([
+                    parent,
+                    this.nodeId + "",
+                    "3",
+                    rects[0].left,
+                    rects[0].top,
+                    rects[0].width,
+                    rects[0].height,
+                    node.data,
+                  ]);
+                  this.nodeId++;
+                } else {
+                  // text nodes with no content
+                }
+              } else {
+                // node type is not 1 and 3
+              }
+            }
+
+            return nodes;
+          }
+          traverseNodes2(e, null, []);
         console.log("Accessibility Ingestor initialized");
         window.addEventListener('load', async function() {
             function sleep(ms) {
@@ -4658,30 +4795,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     pass = true;
                 }
                 console.log(sentJson);
-                //console.log(image);
-                // zQuery.ajax({
-                //     type: 'POST',
-                //     url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
-                //     //url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
-                //     crossDomain: true,
-                //     data: {
-                //         apiKey: functionizeHttpToken,
-                //         accessibilityJson: sentJson,
-                //         pass: pass,
-                //         projId: functionizePid,
-                //         sessionId: functionizeUID,
-                //         image: image,
-                //     },
-                //     async: true,
-                //     timeout: 20000,
-                //     success: function(responseData, textStatus, jqXHR) {
-                //         console.log("Accessibility Data sent");
-                //     },
-                //     error: function(responseData, textStatus, errorThrown) {
-                //         console.error("Error in sending accessibility data");
-                //         console.error(errorThrown);
-                //     }
-                // });
             })
             .catch(err => {
                 console.error('Something bad happened:', err.message);
