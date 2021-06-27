@@ -4579,6 +4579,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             let node;
             const walker = document.createTreeWalker(start, 5, null, false);
             const range = document.createRange();
+            var piiFilter = new PIIFilter();
             while ((node = walker.nextNode()) != null) {
               const nt = node.nodeType;
               // if match skip criteria, skip this node
@@ -4666,6 +4667,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                   // handle scripts and styles
                 }
               } else if (nt === 3) {
+                  console.log(node.data);
                 range.selectNodeContents(node);
                 const rects = range.getClientRects();
                 if (rects.length > 0) {
