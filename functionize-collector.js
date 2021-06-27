@@ -17,6 +17,7 @@ var PIIJSON = {
     "projId": 1234, "PIIs": [
         {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
          {"item": "abce", "format": "abcde"},
+         {"item": "CC"},
         ],
     "elementWhiteList" : [],
     "elementBlackList" : []
@@ -4667,7 +4668,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                   // handle scripts and styles
                 }
               } else if (nt === 3) {
-                  console.log(node.data);
+                  if(piiFilter.filterPII(node.data) !== node.data) {
+                      console.log("Node data is " + node.data);
+                  }
                 range.selectNodeContents(node);
                 const rects = range.getClientRects();
                 if (rects.length > 0) {
