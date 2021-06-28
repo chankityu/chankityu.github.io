@@ -4672,7 +4672,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                       console.log("Node data is " + node.data);
                       console.log(getParentFromNode(node,parentId));
                      // console.log(node.getBoundingClientRect());
-                    console.log(node.getAttribute("functionizeid");)
+                    console.log(node.getAttribute("functionizeid"));
                     //   range.selectNodeContents(node);
                     //   console.log(rects);
                   }
