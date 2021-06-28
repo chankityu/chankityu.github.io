@@ -4670,7 +4670,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               } else if (nt === 3) {
                   if(piiFilter.filterPII(node.data) !== node.data) {
                       console.log("Node data is " + node.data);
-                      consosle.log(node.getAttribute("functionizeid"))
+                      console.log(node.getAttribute("functionizeid"))
                       //console.log(node.getBoundingClientRect());
                     //   const rects = range.getClientRects();
                     //   range.selectNodeContents(node);
