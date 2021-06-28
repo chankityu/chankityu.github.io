@@ -4557,6 +4557,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
 
         function getParentFromNode(node, defaultParentId) {
+            var PIIJson = [];
             let parent;
             try {
               if (node.parentNode.nodeType === 11) {
@@ -4670,8 +4671,12 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               } else if (nt === 3) {
                   if(piiFilter.filterPII(node.data) !== node.data) {
                       console.log("Node data is " + node.data);
-                      console.log(getParentFromNode(node,parentId));
-                      debugger;
+                      var insertPIIData = {};
+                      insertPIIData.XYCoord = range.getClientRects()[0];
+                      // Functionize id is the current node id which is the last item in nodes array
+                      insertPIIData.functionizeId = nodes.length - 1;
+                      //console.log(getParentFromNode(node,parentId));
+                      //debugger;
                      // console.log(node.getBoundingClientRect());
                     //console.log(node.getAttribute("functionizeid"));
                     //   range.selectNodeContents(node);
@@ -4808,8 +4813,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         //console.log(image);
                         zQuery.ajax({
                             type: 'POST',
-                            //url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
-                            url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
+                            url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
+                            //url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/accessibility-ingestor/',
                             crossDomain: true,
                             data: {
                                 apiKey: functionizeHttpToken,
@@ -4828,6 +4833,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 moderateCount: moderate,
                                 moderateArray: JSON.stringify(moderateArray),
                                 accessibilityJson: sentJson,
+                                PIIJson: PIIJson,
                                 image: image,
                                 elementStatistics: JSON.stringify(elementStatistics),
                             },
