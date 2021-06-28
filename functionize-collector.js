@@ -4677,6 +4677,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                       // Functionize id is the current node id which is the last item in nodes array
                       insertPIIData.functionizeId = nodes.length - 1;
                       PIIJson.push(insertPIIData);
+                      debugger;
                       //console.log(getParentFromNode(node,parentId));
                       //debugger;
                      // console.log(node.getBoundingClientRect());
