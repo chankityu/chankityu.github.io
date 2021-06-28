@@ -4514,6 +4514,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
     }
 
     function AccessibilityIngestor(){
+        var PIIJson = [];
         // remove \n and space in front and back
         function subRoutine5(str) {
             let o = "";
@@ -4557,7 +4558,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
 
         function getParentFromNode(node, defaultParentId) {
-            var PIIJson = [];
+
             let parent;
             try {
               if (node.parentNode.nodeType === 11) {
