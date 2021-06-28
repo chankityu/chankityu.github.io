@@ -4673,11 +4673,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                   if(piiFilter.filterPII(node.data) !== node.data) {
                       console.log("Node data is " + node.data);
                       var insertPIIData = {};
+                      range.selectNodeContents(node);
                       insertPIIData.XYCoord = range.getClientRects()[0];
                       // Functionize id is the current node id which is the last item in nodes array
                       insertPIIData.functionizeId = nodes.length - 1;
                       PIIJson.push(insertPIIData);
-                      debugger;
                       //console.log(getParentFromNode(node,parentId));
                       //debugger;
                      // console.log(node.getBoundingClientRect());
