@@ -4844,7 +4844,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 moderateCount: moderate,
                                 moderateArray: JSON.stringify(moderateArray),
                                 accessibilityJson: sentJson,
-                                PIIJson: PIIJson,
+                                PIIJson: JSON.stringify(PIIJson),
                                 image: image,
                                 elementStatistics: JSON.stringify(elementStatistics),
                             },
