@@ -4822,6 +4822,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         var elementStatistics = WS.siteStatistics.getSelection2(document.body);
                         console.log(JSON.stringify(elementStatistics));
                         //console.log(image);
+                        debugger;
                         zQuery.ajax({
                             type: 'POST',
                             url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
