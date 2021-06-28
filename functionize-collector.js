@@ -4593,7 +4593,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
               //     node.value = WS.filterPII(node.value);
               //   }
                 if (tn !== "SCRIPT" && tn !== "STYLE") {
-                  node.setAttribute("functionizeID", this.nodeId);
+                  //node.setAttribute("functionizeID", this.nodeId);
 
                   let box = node.getBoundingClientRect();
                   const cs = window.getComputedStyle(node, null);
@@ -4690,7 +4690,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     rects[0].height,
                     node.data,
                   ]);
-                  this.nodeId++;
+                  //this.nodeId++;
                 } else {
                   // text nodes with no content
                 }
