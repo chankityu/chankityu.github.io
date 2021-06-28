@@ -4671,8 +4671,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                   if(piiFilter.filterPII(node.data) !== node.data) {
                       console.log("Node data is " + node.data);
                       console.log(getParentFromNode(node,parentId));
+                      debugger;
                      // console.log(node.getBoundingClientRect());
-                    console.log(node.getAttribute("functionizeid"));
+                    //console.log(node.getAttribute("functionizeid"));
                     //   range.selectNodeContents(node);
                     //   console.log(rects);
                   }
