@@ -4675,6 +4675,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                       insertPIIData.XYCoord = range.getClientRects()[0];
                       // Functionize id is the current node id which is the last item in nodes array
                       insertPIIData.functionizeId = nodes.length - 1;
+                      PIIJson.push(insertPIIData);
                       //console.log(getParentFromNode(node,parentId));
                       //debugger;
                      // console.log(node.getBoundingClientRect());
@@ -4751,8 +4752,17 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     }
                     sentJson = JSON.stringify(results.violations);
                     pass = false;
+                    var PIIFunctionizeIdArray = PIIJson.map((JsonItem) => {
+                        return JsonItem.functionizeId;
+                    });
                     html2canvas(document.body,{
+                            ignoreElements: function(element) {
+                                var functionizeId = parseInt(node.getAttribute("functionizeId"));
+                                return functionizeId in PIIFunctionizeIdArray;
+                            },
                             onclone: function(document) {
+                                // Map PIIJson to just PII functionize Id
+
                                 for(var h=0; h < results.violations.length ; h++) {
                                     for(var i=0; i < results.violations[h].nodes.length; i++) {
                                         var node = document.querySelector(results.violations[h].nodes[i].target);
