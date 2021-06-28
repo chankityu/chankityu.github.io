@@ -4672,6 +4672,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                       console.log("Node data is " + node.data);
                       //console.log(node.getBoundingClientRect());
                       const rects = range.getClientRects();
+                      range.selectNodeContents(node);
                       console.log(rects);
                   }
                 range.selectNodeContents(node);
