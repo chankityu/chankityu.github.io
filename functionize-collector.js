@@ -5224,7 +5224,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             this.isSending = true;
 			var count = this.counters();
             console.log(count);
-            var xpath = this.recData.xpath;
+            //var xpath = this.recData.xpath;
 
         html2canvas(document.body, {
             ignoreElements: function(element) {
