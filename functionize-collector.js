@@ -4725,7 +4725,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 var seriousArray=[], criticalArray=[], minorArray=[], moderateArray=[];
                 if (results.violations.length) {
                     for(var h=0; h < results.violations.length ; h++) {
-                        results.violations[h].siteURL = window.location.href;//
+                        results.violations[h].siteURL = window.location.href;
+                        results.violations[h].sessionId = functionizeUID;
                         for(var i=0; i < results.violations[h].nodes.length; i++) {
                             console.log(results.violations[h].nodes[i].target);
                             var node = document.querySelector(results.violations[h].nodes[i].target);
