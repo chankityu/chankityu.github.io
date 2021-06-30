@@ -4714,11 +4714,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
           }
           traverseNodes2(document.body, null, []);
         console.log("Accessibility Ingestor initialized");
-        window.addEventListener('load', async function() {
+        // window.addEventListener('load', async function() {
             function sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
-            await sleep(1500);
+            // await sleep(1500);
             axe
             .run()
             .then(results => {
@@ -4873,7 +4873,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             .catch(err => {
                 console.error('Something bad happened:', err.message);
             });
-        })
+        // })
 
     }
 
