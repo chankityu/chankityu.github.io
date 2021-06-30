@@ -4676,7 +4676,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                       var insertPIIData = {};
                       range.selectNodeContents(node);
                       insertPIIData.XYCoord = range.getClientRects()[0];
-                      insertPII.PIICategory = piiObject.PIICategory;
+                      insertPIIData.PIICategory = piiObject.PIICategory;
                       // Functionize id is the current node id which is the last item in nodes array
                       insertPIIData.functionizeId = nodes.length - 1;
                       PIIJson.push(insertPIIData);
