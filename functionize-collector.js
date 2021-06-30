@@ -4670,11 +4670,13 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                   // handle scripts and styles
                 }
               } else if (nt === 3) {
-                  if(piiFilter.filterPII(node.data) !== node.data) {
+                  var piiObject = piiFilter.filterPII(node.data);
+                  if(piiObject.text !== node.data) {
                       console.log("Node data is " + node.data);
                       var insertPIIData = {};
                       range.selectNodeContents(node);
                       insertPIIData.XYCoord = range.getClientRects()[0];
+                      insertPII.PIICategory = piiObject.PIICategory;
                       // Functionize id is the current node id which is the last item in nodes array
                       insertPIIData.functionizeId = nodes.length - 1;
                       PIIJson.push(insertPIIData);
@@ -5231,7 +5233,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 // if (element.nodeName === 'IFRAME') return false;
                 var piiFilter = new PIIFilter();
                 if (element.nodeName === 'INPUT') {
-                    element.value = piiFilter.filterPII(element.value);
+                    element.value = piiFilter.filterPII(element.value).text;
                     //element.value = WU.filterDriverLicence(element.value);
                     return false;
                 }
@@ -6141,7 +6143,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     //     }
 
                     // }
-                    this.recordedData[i][key] =this.PIIFilter.filterPII(this.recordedData[i][key]);
+                    this.recordedData[i][key] =this.PIIFilter.filterPII(this.recordedData[i][key]).text;
 
                     if (!this.recordedData.hasOwnProperty(key) || key in safeKeys) continue;
                     // this.recordedData[i][key] = WU.filterEmails(this.recordedData[i][key]);
@@ -6877,23 +6879,29 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
           }
 
         filterPII(text) {
-            var retval = ""
+            var retval = {}
+            retval.text = text;
+            retval.PIICategory = "NA";
             for(var j=0; j < PIIJSON.PIIs.length; j++) {
                 switch (PIIJSON.PIIs[j].item) {
                     case "SSN": {
-                        retval = this.filterSSNs(text);
+                        retval.text = this.filterSSNs(retval.text);
+                        retval.PIICategory = "SSN";
                     break;
                     }
                     case "DL": {
-                        retval = this.filterDriverLicence(text);
+                        retval.text = this.filterDriverLicence(retval.text);
+                        retval.PIICategory = "DL";
                     break;
                     }
                     case "CC": {
-                        retval = this.filterCcards(text);
+                        retval.text = this.filterCcards(retval.text);
+                        retval.PIICategory = "CC";
                     break;
                     }
                     case "Email": {
-                        retval = this.filterEmails(text);
+                        retval.text = this.filterEmails(retval.text);
+                        retval.PIICategory = "Email";
                     break;
                     }
                 }
@@ -13599,7 +13607,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             if (!this.options.copyStyles || !isElementNode(child) || !isStyleElement(child)) {
                                 var childNode = this.cloneNode(child);
                                 if (childNode.childNodes.length === 1 && childNode.firstChild.nodeType === 3) {
-                                    childNode.firstChild.nodeValue = piiFilter.filterPII(childNode.firstChild.nodeValue);
+                                    childNode.firstChild.nodeValue = piiFilter.filterPII(childNode.firstChild.nodeValue).text;
                                 }
                                 clone.appendChild(childNode);
                             }
