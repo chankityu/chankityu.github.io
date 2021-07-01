@@ -4768,8 +4768,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 var functionizeId = parseInt(node.getAttribute("functionizeId"));
                                 if (functionizeId in PIIFunctionizeIdArray)
                                     return true;
-                                if (element.nodeName === 'IFRAME')
-                                    return true;
                                 return false;
                             },
                             onclone: function(document) {
