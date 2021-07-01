@@ -4761,6 +4761,15 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     var PIIFunctionizeIdArray = PIIJson.map((JsonItem) => {
                         return JsonItem.functionizeId;
                     });
+                    var transform=$(".gm-style>div:first>div").css("transform");
+                    var comp=transform.split(",") ;//split up the transform matrix
+                    var mapleft=parseFloat(comp[4]) ;//get left value
+                    var maptop=parseFloat(comp[5]) ; //get top value
+                    $(".gm-style>div:first>div").css({ //get the map container. not sure if stable
+                    "transform":"none",
+                    "left":mapleft,
+                    "top":maptop,
+                    });
                     html2canvas(document.body,{
                             ignoreElements: function(element) {
                                 var functionizeId = parseInt(node.getAttribute("functionizeId"));
@@ -4817,7 +4826,16 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             },
                             allowTaint: true,
                             logging: true,
-                            useCORS: true
+                            useCORS: true,
+                            onrendered: function(canvas) {
+                                var dataUrl= canvas.toDataURL('image/png');
+                                location.href=dataUrl //for testing I never get window.open to work
+                                $(".gm-style>div:first>div").css({
+                                left:0,
+                                top:0,
+                                "transform":transform
+                                });
+                            }
                         },
                     ).then(function(canvas) {
                         document.body.appendChild(canvas);
