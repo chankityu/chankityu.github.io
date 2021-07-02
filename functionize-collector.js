@@ -4733,6 +4733,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             console.log(results.violations[h].nodes[i].target);
                             var node = document.querySelector(results.violations[h].nodes[i].target);
                             results.violations[h].nodes[i].functionizeId = node.getAttribute("functionizeid");
+                            results.violations[h].nodes[i].html = results.violations[h].nodes[i].html.replace(/functionizeid=["][\d{1,5}\]["]/g, "");
                             results.violations[h].nodes[i].XYCoord = node.getBoundingClientRect();
                             var impact = results.violations[h].nodes[i].impact;
                             if (impact === 'serious') {
