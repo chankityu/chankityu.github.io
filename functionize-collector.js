@@ -4674,6 +4674,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                   var piiObject = piiFilter.filterPII(node.data);
                   if(piiObject.text !== node.data) {
                       console.log("Node data is " + node.data);
+                      console.log("Filtered data is" + piiObject.text);
                       var insertPIIData = {};
                       range.selectNodeContents(node);
                       insertPIIData.XYCoord = range.getClientRects()[0];
