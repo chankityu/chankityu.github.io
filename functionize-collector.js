@@ -18,6 +18,7 @@ var PIIJSON = {
         {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
          {"item": "abce", "format": "abcde"},
          {"item": "CC"},
+         {"item": "Email"}
         ],
     "elementWhiteList" : [],
     "elementBlackList" : []
