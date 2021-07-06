@@ -13612,7 +13612,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         if (!isElementNode(child) || (!isScriptElement(child) && !child.hasAttribute(IGNORE_ATTRIBUTE) && (typeof this.options.ignoreElements !== 'function' || !this.options.ignoreElements(child)))) {
                             if (!this.options.copyStyles || !isElementNode(child) || !isStyleElement(child)) {
                                 var childNode = this.cloneNode(child);
-                                if (/*childNode.childNodes.length === 1 &&*/ childNode.nodeType === 3) {
+                                if (childNode.childNodes.length === 1 && childNode.firstChild.nodeType === 3) {
                                     childNode.firstChild.nodeValue = piiFilter.filterPII(childNode.firstChild.nodeValue).text;
                                     console.log(childNode.firstChild.nodeValue);
                                 }
