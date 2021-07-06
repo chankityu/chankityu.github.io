@@ -13614,6 +13614,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                 var childNode = this.cloneNode(child);
                                 if (childNode.childNodes.length === 1 && childNode.firstChild.nodeType === 3) {
                                     childNode.firstChild.nodeValue = piiFilter.filterPII(childNode.firstChild.nodeValue).text;
+                                    console.log(childNode.firstChild.nodeValue);
                                 }
                                 clone.appendChild(childNode);
                             }
