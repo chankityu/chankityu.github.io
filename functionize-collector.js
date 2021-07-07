@@ -16,7 +16,7 @@
 var PIIJSON = {
     "projId": 1234, "PIIs": [
         {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
-         {"item": "abce", "format": "abcde"},
+         {"item": "abcd-1234", "format": "abcd-1234"},
          {"item": "CC"},
          {"item": "Email"},
          {"item": "PhoneNumber"}
@@ -6915,6 +6915,14 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         retval.text = this.filterPhoneNumber(retval.text);
                         retval.PIICategory = "PhoneNumber";
                     break;
+                    }
+                    default: {
+                        retval.text = retval.text.replace(new RegExp(PIIJSON.PIIs[j].format), "$$CUSTOM_PII$$");
+                        if(PIIJSON.PIIs[j].item !== "")
+                            retval.PIICategory = PIIJSON.PIIs[j].item;
+                        else
+                            retval.PIICategory = "Custom";
+                        break;
                     }
                 }
 
