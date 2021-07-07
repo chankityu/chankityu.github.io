@@ -18,7 +18,8 @@ var PIIJSON = {
         {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
          {"item": "abce", "format": "abcde"},
          {"item": "CC"},
-         {"item": "Email"}
+         {"item": "Email"},
+         {"item": "PhoneNumber"}
         ],
     "elementWhiteList" : [],
     "elementBlackList" : []
@@ -6908,6 +6909,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     case "Email": {
                         retval.text = this.filterEmails(retval.text);
                         retval.PIICategory = "Email";
+                    break;
+                    }
+                    case "PhoneNumber": {
+                        retval.text = this.filterPhoneNumber(retval.text);
+                        retval.PIICategory = "PhoneNumber";
                     break;
                     }
                 }
