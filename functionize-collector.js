@@ -6415,27 +6415,27 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
                     };*/
                     console.log(responseData);
+                    var responseDataObject = JSON.parse(responseData);
                     PIIJSON = {};
                     PIIJSON.projectId = functionizePid;
                     PIIJSON.PIIs = [];
-                    if(responseData.DriverLicense) {
+                    if(responseDataObject.DriverLicense) {
                         PIIJSON.PIIs.push({item: "DL"});
                     }
-                    if(responseData.PhoneNumber) {
+                    if(responseDataObject.PhoneNumber) {
                         PIIJSON.PIIs.push({item: "PhoneNumber"});
                     }
-                    if(responseData.EmailAddress) {
+                    if(responseDataObject.EmailAddress) {
                         PIIJSON.PIIs.push({item: "Email"});
                     }
-                    if(responseData.CreditCard) {
+                    if(responseDataObject.CreditCard) {
                         PIIJSON.PIIs.push({item: "CC"});
                     }
-                    if(responseData.SSN) {
+                    if(responseDataObject.SSN) {
                         PIIJSON.PIIs.push({item: "SSN"});
                     }
-                    debugger;
-                    for(var i=0; i < responseData.CustomData.length; i++) {
-                        PIIJSON.PIIs.push({item: responseData.CustomData[i].item, format: responseData.CustomData[i].format});
+                    for(var i=0; i < responseDataObject.CustomData.length; i++) {
+                        PIIJSON.PIIs.push({item: responseDataObject.CustomData[i].item, format: responseDataObject.CustomData[i].format});
                     }
                     PIIJSON.elementWhiteList = [];
                     PIIJSON.elementBlackList = [];
