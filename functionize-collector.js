@@ -6433,6 +6433,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     if(responseData.SSN) {
                         PIIJSON.PIIs.push({item: "SSN"});
                     }
+                    debugger;
                     for(var i=0; i < responseData.CustomData.length; i++) {
                         PIIJSON.PIIs.push({item: responseData.CustomData[i].item, format: responseData.CustomData[i].format});
                     }
