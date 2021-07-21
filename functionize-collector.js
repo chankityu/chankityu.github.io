@@ -6390,13 +6390,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 WU.storeAndCookie('functionizeSuppress', 'true');
                 return;
             }
-            WS = new WebionageSender();
-            WS.init();
-            functioniseMutationObserve();
-            if (!isFunctioniseCompatible) {
-                return;
-            }
-            functionizeRegistered();
             zQuery.ajax({
                 type: 'POST',
                 // url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
@@ -6455,6 +6448,14 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     console.error(errorThrown);
                 }
             });
+            WS = new WebionageSender();
+            WS.init();
+            functioniseMutationObserve();
+            if (!isFunctioniseCompatible) {
+                return;
+            }
+            functionizeRegistered();
+
             AccessibilityIngestor();
         }
 
