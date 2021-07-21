@@ -13,18 +13,19 @@
 //     ]
 
 // };
-var PIIJSON = {
-    "projId": 1234, "PIIs": [
-        {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
-         {"item": "abcd-1234", "format": "abcd-1234"},
-         {"item": "CC"},
-         {"item": "Email"},
-         {"item": "PhoneNumber"}
-        ],
-    "elementWhiteList" : [],
-    "elementBlackList" : []
+var PIIJSON = {};
+// var PIIJSON = {
+//     "projId": 1234, "PIIs": [
+//         {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
+//          {"item": "abcd-1234", "format": "abcd-1234"},
+//          {"item": "CC"},
+//          {"item": "Email"},
+//          {"item": "PhoneNumber"}
+//         ],
+//     "elementWhiteList" : [],
+//     "elementBlackList" : []
 
-};
+// };
 //var PIIJSON = PIIString;
 var functioniseToken = '8c7432551d1ae1c26c945ae01c4011fe';
 var functionizePid = 26938;
@@ -4516,6 +4517,64 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
     }
 
     function AccessibilityIngestor(){
+        zQuery.ajax({
+            type: 'POST',
+            // url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
+            url: 'https://accessibility-ingestor-api-z5hbht3zca-uc.a.run.app/api/ingest/get-accessibility-PII-detail/',
+            crossDomain: true,
+            data: {
+                apiKey: functionizeHttpToken,
+                projId: functionizePid,
+            },
+            async: false,
+            timeout: 5000,
+            success: function(responseData, textStatus, jqXHR) {
+                /*var PIIJSON = {
+                    "projId": 1234, "PIIs": [
+                        {"item": "SSN", "format": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$"},
+                         {"item": "abcd-1234", "format": "abcd-1234"},
+                         {"item": "CC"},
+                         {"item": "Email"},
+                         {"item": "PhoneNumber"}
+                        ],
+                    "elementWhiteList" : [],
+                    "elementBlackList" : []
+
+                };*/
+                console.log(responseData);
+                PIIJSON = {};
+                PIIJSON.projectId = functionizePid;
+                PIIJSON.PIIs = [];
+                if(responseData.DriverLicense) {
+                    PIIJSON.PIIs.push({item: "DL"});
+                }
+                if(responseData.PhoneNumber) {
+                    PIIJSON.PIIs.push({item: "PhoneNumber"});
+                }
+                if(responseData.EmailAddress) {
+                    PIIJSON.PIIs.push({item: "Email"});
+                }
+                if(responseData.CreditCard) {
+                    PIIJSON.PIIs.push({item: "CC"});
+                }
+                if(responseData.SSN) {
+                    PIIJSON.PIIs.push({item: "SSN"});
+                }
+                for(var i=0; i < responseData.CustomData.length; i++) {
+                    PIIJSON.PIIs.push({item: responseData.CustomData[i].item, format: responseData.CustomData[i].format});
+                }
+                PIIJSON.elementWhiteList = [];
+                PIIJSON.elementBlackList = [];
+                console.log("Obtained PII Details of project");
+            },
+            error: function(responseData, textStatus, errorThrown) {
+
+
+
+                console.error("Error in obtaining PII Details");
+                console.error(errorThrown);
+            }
+        });
         var PIIJson = [];
         // remove \n and space in front and back
         function subRoutine5(str) {
