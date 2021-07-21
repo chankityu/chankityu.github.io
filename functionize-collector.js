@@ -6440,6 +6440,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     PIIJSON.elementWhiteList = [];
                     PIIJSON.elementBlackList = [];
                     console.log("Obtained PII Details of project");
+                    AccessibilityIngestor();
                 },
                 error: function(responseData, textStatus, errorThrown) {
 
@@ -6457,7 +6458,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             }
             functionizeRegistered();
 
-            AccessibilityIngestor();
+
         }
 
         function functionizeRegistered() {
