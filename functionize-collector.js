@@ -7459,7 +7459,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                   rects[0].top,
                   rects[0].width,
                   rects[0].height,
-                  this.PIIFilter.filterPII(node.data).text,//node.data,
+                  node.data,
                 ]);
                 this.nodeId++;
               } else {
