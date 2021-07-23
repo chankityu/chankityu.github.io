@@ -4829,7 +4829,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             useCORS: true
                         },
                     ).then(function(canvas) {
-                        document.body.appendChild(canvas);
+                        //document.body.appendChild(canvas);
                         console.log(canvas.height);
                         console.log(canvas.width);
                         image = canvas.toDataURL();
