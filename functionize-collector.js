@@ -6327,7 +6327,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 return;
             }
             if (!window.isFrameset)
-                addFunctioniseListeners();
+                //addFunctioniseListeners();
             setTimeout(function() {
                 functioniseWindowLoaded()
             }, 20);
