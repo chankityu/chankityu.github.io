@@ -5035,10 +5035,10 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             this.wbHost = functioniseHttpHost;
             var data = WU.store('functionizeData');
             WU.store('functionizeData', '');
-            if (typeof data != 'undefined' && data != 'null') {
-                this.recordedData = JSON.parse(data);
-                this.recordWbData(true);
-            }
+            // if (typeof data != 'undefined' && data != 'null') {
+            //     this.recordedData = JSON.parse(data);
+            //     this.recordWbData(true);
+            // }
             this.initPage();
         }
         this.getPath = function() {
