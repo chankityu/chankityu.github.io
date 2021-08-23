@@ -4790,7 +4790,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                             if(typeof node.src !== 'undefined'  ) {
                                                 var imgSourceNode = node;//document.querySelector("[functionizeId='10']");
                                                 var imgNode = new Image;
-                                                console.log(node.tagName);
+                                                //console.log(node.tagName);
                                                 imgNode.setAttribute("crossorigin", "Anonymous");
 
                                                 imgNode.addEventListener("load" , function imageReceived() {
@@ -4801,11 +4801,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                                     ctx.drawImage(imgNode, 0, 0);
                                                     imgNode.appendChild(canvas);
                                                     var dataURL = canvas.toDataURL("image/png");
-                                                    console.log(dataURL);
+                                                    //console.log(dataURL);
                                                     //imgNode.setAttribute("src", dataURL);
 
                                                     dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-                                                    console.log(dataURL);
+                                                    //console.log(dataURL);
                                                     imgNode.src = dataURL;
                                                 }, false);
                                                 node.src = imgSourceNode.src;
@@ -4830,11 +4830,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         },
                     ).then(function(canvas) {
                         //document.body.appendChild(canvas);
-                        console.log(canvas.height);
-                        console.log(canvas.width);
+                        //console.log(canvas.height);
+                        //console.log(canvas.width);
                         image = canvas.toDataURL();
                         var elementStatistics = WS.siteStatistics.getSelection2(document.body);
-                        console.log(JSON.stringify(elementStatistics));
+                        //console.log(JSON.stringify(elementStatistics));
                         zQuery.ajax({
                             type: 'POST',
                             //url: 'http://localhost:8080/api/ingest/accessibility-ingestor/',
