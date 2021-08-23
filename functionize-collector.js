@@ -4735,7 +4735,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         results.violations[h].siteURL = window.location.href;
                         results.violations[h].sessionId = functionizeUID;
                         for(var i=0; i < results.violations[h].nodes.length; i++) {
-                            console.log(results.violations[h].nodes[i].target);
+                            //console.log(results.violations[h].nodes[i].target);
                             var node = document.querySelector(results.violations[h].nodes[i].target);
                             results.violations[h].nodes[i].functionizeId = node.getAttribute("functionizeid");
                             results.violations[h].nodes[i].html = results.violations[h].nodes[i].html.replace(/functionizeid=["][\d{1,5}\]["]/g, "");
@@ -4877,7 +4877,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     sentJson = JSON.stringify({});
                     pass = true;
                 }
-                console.log(sentJson);
+                //console.log(sentJson);
             })
             .catch(err => {
                 console.error('Something bad happened:', err.message);
