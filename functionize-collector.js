@@ -4664,7 +4664,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
                   // handle shadowDOM with open mode
                   if (node.shadowRoot !== undefined && node.shadowRoot != null) {
-                    nodes = this.traverseNodes2(
+                    nodes = traverseNodes2(
                       node.shadowRoot,
                       this.nodeId - 1,
                       nodes
