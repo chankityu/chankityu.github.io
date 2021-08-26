@@ -4875,6 +4875,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 }
                 else {
                     sentJson = JSON.stringify({});
+                    console.log("Accessibility test passed!");
                     pass = true;
                 }
                 //console.log(sentJson);
