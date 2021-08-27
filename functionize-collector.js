@@ -4811,7 +4811,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                                 node.src = imgSourceNode.src;
                                             }
                                         });
-                                        this.runOnce = true;
+                                        //this.runOnce = true;
                                     }
 
 
