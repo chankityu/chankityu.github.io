@@ -4790,7 +4790,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                             console.log(node.src)
                                             if(typeof node.src !== 'undefined'  ) {
                                                 var imgSourceNode = node;//document.querySelector("[functionizeId='10']");
-                                                var imgNode = new Image;
+                                                var imgNode = new Image();
                                                 //console.log(node.tagName);
                                                 imgNode.setAttribute("crossorigin", "Anonymous");
 
