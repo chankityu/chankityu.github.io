@@ -4785,7 +4785,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                         //node.style.backgroundColor = "red";
                                     }
                                     //debugger;
-                                    if(typeof this.runOnce === 'undefined') {
+                                    // if(typeof this.runOnce === 'undefined') {
                                         WS.siteStatistics.querySelectorAll("[src^='http']").forEach(function(node) {
                                             if(typeof node.src !== 'undefined'  ) {
                                                 var imgSourceNode = node;//document.querySelector("[functionizeId='10']");
@@ -4812,7 +4812,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                             }
                                         });
                                         //this.runOnce = true;
-                                    }
+                                    // }
 
 
 
