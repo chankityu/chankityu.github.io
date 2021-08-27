@@ -4805,7 +4805,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                                     //imgNode.setAttribute("src", dataURL);
 
                                                     dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-                                                    //console.log(dataURL);
+                                                    console.log(dataURL);
                                                     imgNode.src = dataURL;
                                                 }, false);
                                                 node.src = imgSourceNode.src;
