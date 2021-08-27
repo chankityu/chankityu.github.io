@@ -4787,7 +4787,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                     //debugger;
                                     // if(typeof this.runOnce === 'undefined') {
                                         WS.siteStatistics.querySelectorAll("[src^='http']").forEach(function(node) {
-                                            console.log("test")
+                                            console.log(node.src)
                                             if(typeof node.src !== 'undefined'  ) {
                                                 var imgSourceNode = node;//document.querySelector("[functionizeId='10']");
                                                 var imgNode = new Image;
