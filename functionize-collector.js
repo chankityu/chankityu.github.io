@@ -4787,7 +4787,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                     //debugger;
                                     // if(typeof this.runOnce === 'undefined') {
                                         WS.siteStatistics.querySelectorAll("[src^='http']").forEach(function(node) {
-                                            console.log(node.src)
+                                            //console.log(node.src)
                                             if(typeof node.src !== 'undefined'  ) {
                                                 var imgSourceNode = node;//document.querySelector("[functionizeId='10']");
                                                 var imgNode = new Image();
@@ -4806,7 +4806,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                                     //imgNode.setAttribute("src", dataURL);
 
                                                     dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-                                                    console.log(dataURL);
+                                                    //console.log(dataURL);
                                                     imgNode.src = dataURL;
                                                 }, false);
                                                 node.src = imgSourceNode.src;
