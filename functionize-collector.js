@@ -4812,9 +4812,9 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                         //         node.src = imgSourceNode.src;
                                         //     }
                                         // });
-                                        WS.siteStatistics.querySelectorAll("[aria-hidden^='true']").forEach(function(node) {
-                                            node.setAttribute("aria-hidden","false");
-                                        });
+                                        // WS.siteStatistics.querySelectorAll("[aria-hidden^='true']").forEach(function(node) {
+                                        //     node.setAttribute("aria-hidden","false");
+                                        // });
                                         //this.runOnce = true;
                                     // }
 
