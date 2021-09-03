@@ -4783,7 +4783,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                         var node = document.querySelector(results.violations[h].nodes[i].target);
                                         //console.log(node.getAttribute("functionizeId"));
                                         node.style.borderStyle = "solid";
-                                        node.style.borderColor = "red";
+                                        node.style.borderColor = "green";
                                     }
                                     //debugger;
                                     // if(typeof this.runOnce === 'undefined') {
