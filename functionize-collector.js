@@ -4782,8 +4782,10 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                     for(var i=0; i < results.violations[h].nodes.length; i++) {
                                         var node = document.querySelector(results.violations[h].nodes[i].target);
                                         //console.log(node.getAttribute("functionizeId"));
-                                        node.style.borderStyle = "solid";
-                                        node.style.borderColor = "green";
+                                        if(results.violations[h].nodes[i].impact === 'critical') {
+                                            node.style.borderStyle = "solid";
+                                            node.style.borderColor = "green";
+                                        }
                                     }
                                     //debugger;
                                     // if(typeof this.runOnce === 'undefined') {
