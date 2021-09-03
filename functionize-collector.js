@@ -4772,6 +4772,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     html2canvas(document.body,{
                             ignoreElements: function(element) {
                                 var functionizeId = parseInt(node.getAttribute("functionizeId"));
+                                if(element.nodeName === 'IFRAME') return true;
                                 if (functionizeId in PIIFunctionizeIdArray)
                                     return true;
                                 return false;
