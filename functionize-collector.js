@@ -4782,7 +4782,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                                     for(var i=0; i < results.violations[h].nodes.length; i++) {
                                         var node = document.querySelector(results.violations[h].nodes[i].target);
                                         //console.log(node.getAttribute("functionizeId"));
-                                        //node.style.backgroundColor = "red";
+                                        node.style.backgroundColor = "red";
                                     }
                                     //debugger;
                                     // if(typeof this.runOnce === 'undefined') {
