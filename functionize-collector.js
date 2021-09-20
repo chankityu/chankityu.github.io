@@ -4524,12 +4524,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             let o = "";
             o = str.replace(/\n/g, "");
             o = o.replace(/\t/g, "");
-            while (o.charAt(0) === " ") {
-              o = o.substring(1, o.length);
-            }
-            while (o.charAt(o.length - 1) === " ") {
-              o = o.substring(0, o.length - 1);
-            }
+            // trim leading and trailing spaces
+            o = o.replace(/(^\s+|\s+$)/g, "");
             // replace double spaces
             let done = false;
             while (done === false) {
@@ -4549,29 +4545,37 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
           function skipNodeCriteria(o) {
             let skip = false;
             if (o.nodeType === "3") {
-              let text = subRoutine5(o.data + "");
-              // remove all whitespace character
-              text = text.replace(/\s/g, "");
-              // after all whitespace being removed, if empty means skip
-              if (text === "") {
-                skip = true;
-              }
+                let text = this.subRoutine5(o.data + "");
+                // remove all whitespace character
+                text = text.replace(/\s/g, "");
+                // after all whitespace being removed, if empty means skip
+                if (text === "") {
+                    skip = true;
+                }
             }
             return skip;
           }
 
 
         function getParentFromNode(node, defaultParentId) {
-
             let parent;
             try {
               if (node.parentNode.nodeType === 11) {
                 // if parentNode is document-fragment, parentElement will be null
                 // thus we need to use host
-                parent = node.parentNode.host.getAttribute("functionizeID");
+                parent = isIframe
+                  ? node.parentNode.host.iFunctionizeID
+                  : node.parentNode.host.functionizeID;
               } else if (node.parentElement) {
-                parent = node.parentElement.getAttribute("functionizeID");
+                parent = isIframe
+                  ? node.parentElement.iFunctionizeID
+                  : node.parentElement.functionizeID;
               } else {
+                parent = defaultParentId;
+              }
+
+              // when we are inside iframe, the parentElement will be null, and defaultParentId will be iframe ID
+              if (parent == null && defaultParentId != null) {
                 parent = defaultParentId;
               }
             } catch (e) {
@@ -4588,66 +4592,95 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             const range = document.createRange();
             var piiFilter = new PIIFilter();
             while ((node = walker.nextNode()) != null) {
-              const nt = node.nodeType;
-              // if match skip criteria, skip this node
-              if (skipNodeCriteria(node)) {
+            const nt = node.nodeType;
+            // if match skip criteria, skip this node
+            if (this.skipNodeCriteria(node)) {
                 continue;
-              }
-              if (nt === 1) {
+            }
+            if (nt === 1) {
                 const tn = node.tagName;
-              //   if (tn === "INPUT") {
-              //     node.value = WS.filterPII(node.value);
-              //   }
                 if (tn !== "SCRIPT" && tn !== "STYLE") {
-                  //node.setAttribute("functionizeID", this.nodeId);
+                // clear functionzieID to prevent old data
+                if (node.getAttribute("functionizeID") != null) {
+                    node.removeAttribute("functionizeID");
+                }
 
-                  let box = node.getBoundingClientRect();
-                  const cs = window.getComputedStyle(node, null);
-                  const attr = node.attributes;
-                  const a = {};
-                  for (let i = 0; i < attr.length; i++) {
+                const currentFunctionizeID = this.nodeId + "";
+                if (isIframe) {
+                    node.iFunctionizeID = currentFunctionizeID;
+                } else {
+                    node.functionizeID = currentFunctionizeID;
+                }
+
+                if (tn === "IFRAME" || tn === "FRAME") {
+                    this.iframeList.push(node);
+                }
+
+                let box = node.getBoundingClientRect();
+                const cs = window.getComputedStyle(node, null);
+                const attr = node.attributes;
+                const a = {};
+                for (let i = 0; i < attr.length; i++) {
                     a[attr[i].name] = attr[i].value;
-                  }
+                }
 
-                  // handle shadowDOM parent
-                  const parent = getParentFromNode(node, parentId);
+                // if element is being selected, add to comp attributes
+                if (node.functi0nizeSelected) {
+                    a["functi0nize-selected"] = "true";
+                    // if element is not selected, and the element has attribute "functi0nize-selected", we set to false
+                } else if (
+                    node.functi0nizeSelected === false &&
+                    a["functi0nize-selected"] != null
+                ) {
+                    a["functi0nize-selected"] = "false";
+                }
 
-                  // handle display:contents, using child rect, else fallback to parent
-                  if (cs.getPropertyValue("display") === "contents") {
+                // by default, "select" element attributes does not have value field,
+                // so we need to include it to know the selected value
+                if (tn === "SELECT") {
+                    a.value = node.value;
+                }
+
+                // handle shadowDOM parent
+                const parent = this.getParentFromNode(node, parentId, isIframe);
+
+                // handle display:content, using child rect
+                // handle display:contents, using child rect, else fallback to parent
+                if (cs.getPropertyValue("display") === "contents") {
                     // access children node from node
                     let referenceNode = node.firstChild;
 
                     // handle more edge cases
                     if (referenceNode == null) {
-                      if (node.tagName === "SLOT") {
+                    if (node.tagName === "SLOT") {
                         // handle node is <slot>
                         const referenceNodes = node.assignedElements();
                         if (referenceNodes != null && referenceNodes.length > 0) {
-                          referenceNode = referenceNodes[0];
+                        referenceNode = referenceNodes[0];
                         } else {
-                          referenceNode = node.getRootNode().host;
+                        referenceNode = node.getRootNode().host;
                         }
-                      } else if (node.getRootNode().nodeType === 11) {
+                    } else if (node.getRootNode().nodeType === 11) {
                         // handle if the node is inside shadowDOM but not <slot>
                         referenceNode = node.getRootNode().host;
-                      } else {
+                    } else {
                         // fallback to parent
                         referenceNode = node.parentNode;
-                      }
+                    }
                     }
 
                     if (referenceNode != null) {
-                      range.selectNodeContents(referenceNode);
-                      const rects = range.getClientRects();
-                      if (rects.length > 0) {
+                    range.selectNodeContents(referenceNode);
+                    const rects = range.getClientRects();
+                    if (rects.length > 0) {
                         box = rects[0];
-                      }
                     }
-                  }
+                    }
+                }
 
-                  nodes.push([
+                nodes.push([
                     parent,
-                    this.nodeId + "",
+                    currentFunctionizeID,
                     "1",
                     box.left,
                     box.top,
@@ -4659,23 +4692,24 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     cs.getPropertyValue("z-index"),
                     tn,
                     a,
-                  ]);
-                  this.nodeId = this.nodeId + 1;
+                ]);
+                this.nodeId++;
 
-                  // handle shadowDOM with open mode
-                  if (node.shadowRoot !== undefined && node.shadowRoot != null) {
-                    nodes = traverseNodes2(
-                      node.shadowRoot,
-                      this.nodeId - 1,
-                      nodes
+                // handle shadowDOM with open mode
+                if (node.shadowRoot !== undefined && node.shadowRoot != null) {
+                    nodes = this.traverseNodes2(
+                    node.shadowRoot,
+                    currentFunctionizeID,
+                    nodes,
+                    isIframe
                     );
-                  }
-                } else {
-                  // handle scripts and styles
                 }
-              } else if (nt === 3) {
-                  var piiObject = piiFilter.filterPII(node.data);
-                  if(piiObject.text !== node.data) {
+                } else {
+                // handle scripts and styles
+                }
+            } else if (nt === 3) {
+                var piiObject = piiFilter.filterPII(node.data);
+                if(piiObject.text !== node.data) {
                     //   console.log("Node data is " + node.data);
                     //   console.log("Filtered data is" + piiObject.text);
                       var insertPIIData = {};
@@ -4694,25 +4728,58 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                   }
                 range.selectNodeContents(node);
                 const rects = range.getClientRects();
+
+                const textNodeRect = {
+                LT: this.outOfScreenPosition,
+                TP: this.outOfScreenPosition,
+                WH: 0,
+                HT: 0,
+                };
+                // if textNode is within view, change textNodeRect, else use default rect
                 if (rects.length > 0) {
-                  const parent = getParentFromNode(node, parentId);
-                  nodes.push([
-                    parent,
-                    this.nodeId + "",
-                    "3",
-                    rects[0].left,
-                    rects[0].top,
-                    rects[0].width,
-                    rects[0].height,
-                    node.data,
-                  ]);
-                  //this.nodeId++;
-                } else {
-                  // text nodes with no content
+                textNodeRect.LT = rects[0].left;
+                textNodeRect.TP = rects[0].top;
+                textNodeRect.WH = rects[0].width;
+                textNodeRect.HT = rects[0].height;
                 }
-              } else {
+
+                if (node.data !== undefined && node.data !== null) {
+                const trimmedText = this.subRoutine7(node.data);
+                // include the node if
+                // 1. non-empty string outside and inside of viewport
+                if (trimmedText !== "") {
+                    const currentFunctionizeID = this.nodeId + "";
+                    if (isIframe) {
+                    node.iFunctionizeID = currentFunctionizeID;
+                    } else {
+                    node.functionizeID = currentFunctionizeID;
+                    }
+                    const parent = this.getParentFromNode(node, parentId, isIframe);
+                    nodes.push([
+                    parent,
+                    currentFunctionizeID,
+                    "3",
+                    textNodeRect.LT,
+                    textNodeRect.TP,
+                    textNodeRect.WH,
+                    textNodeRect.HT,
+                    // if the text is all whitespaces, then trim all whitespaces
+                    trimmedText === "" ? trimmedText : node.data,
+                    ]);
+                    this.nodeId++;
+                }
+                }
+            } else {
                 // node type is not 1 and 3
-              }
+            }
+
+            // if we enable partial node collections
+            if (
+                this.maxNodeCountToTraverse != null &&
+                this.nodeId >= this.maxNodeCountToTraverse
+            ) {
+                return nodes;
+            }
             }
 
             return nodes;
