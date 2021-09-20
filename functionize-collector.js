@@ -4629,8 +4629,6 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     if (node.getAttribute("functionizeID") != null) {
                         node.removeAttribute("functionizeID");
                     }
-                    // Added by Kit
-                    node.setAttribute("functionizeID", nodeId);
 
                     const currentFunctionizeID = nodeId + "";
                     if (isIframe) {
@@ -4832,7 +4830,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                             //console.log(results.violations[h].nodes[i].target);
                             var node = document.querySelector(results.violations[h].nodes[i].target);
                             results.violations[h].nodes[i].functionizeId = node.functionizeID;//node.getAttribute("functionizeid");
-                            results.violations[h].nodes[i].html = results.violations[h].nodes[i].html.replace(/functionizeid=["][\d{1,5}\]["]/g, "");
+                            // Comment out since functionizeId attribute no longer use setAttribute
+                            // results.violations[h].nodes[i].html = results.violations[h].nodes[i].html.replace(/functionizeid=["][\d{1,5}\]["]/g, "");
                             results.violations[h].nodes[i].XYCoord = node.getBoundingClientRect();
                             var impact = results.violations[h].nodes[i].impact;
                             if (impact === 'serious') {
