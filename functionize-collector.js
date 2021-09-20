@@ -4594,7 +4594,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             while ((node = walker.nextNode()) != null) {
             const nt = node.nodeType;
             // if match skip criteria, skip this node
-            if (this.skipNodeCriteria(node)) {
+            if (skipNodeCriteria(node)) {
                 continue;
             }
             if (nt === 1) {
