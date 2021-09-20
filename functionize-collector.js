@@ -4616,194 +4616,194 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             const range = document.createRange();
             var piiFilter = new PIIFilter();
             while ((node = walker.nextNode()) != null) {
-            const nt = node.nodeType;
-            // if match skip criteria, skip this node
-            if (skipNodeCriteria(node)) {
-                continue;
-            }
-            if (nt === 1) {
-                const tn = node.tagName;
-                if (tn !== "SCRIPT" && tn !== "STYLE") {
-                // clear functionzieID to prevent old data
-                if (node.getAttribute("functionizeID") != null) {
-                    node.removeAttribute("functionizeID");
+                const nt = node.nodeType;
+                // if match skip criteria, skip this node
+                if (skipNodeCriteria(node)) {
+                    continue;
                 }
-
-                const currentFunctionizeID = nodeId + "";
-                if (isIframe) {
-                    node.iFunctionizeID = currentFunctionizeID;
-                } else {
-                    node.functionizeID = currentFunctionizeID;
-                }
-
-                if (tn === "IFRAME" || tn === "FRAME") {
-                    iframeList.push(node);
-                }
-
-                let box = node.getBoundingClientRect();
-                const cs = window.getComputedStyle(node, null);
-                const attr = node.attributes;
-                const a = {};
-                for (let i = 0; i < attr.length; i++) {
-                    a[attr[i].name] = attr[i].value;
-                }
-
-                // if element is being selected, add to comp attributes
-                if (node.functi0nizeSelected) {
-                    a["functi0nize-selected"] = "true";
-                    // if element is not selected, and the element has attribute "functi0nize-selected", we set to false
-                } else if (
-                    node.functi0nizeSelected === false &&
-                    a["functi0nize-selected"] != null
-                ) {
-                    a["functi0nize-selected"] = "false";
-                }
-
-                // by default, "select" element attributes does not have value field,
-                // so we need to include it to know the selected value
-                if (tn === "SELECT") {
-                    a.value = node.value;
-                }
-
-                // handle shadowDOM parent
-                const parent = getParentFromNode(node, parentId, isIframe);
-
-                // handle display:content, using child rect
-                // handle display:contents, using child rect, else fallback to parent
-                if (cs.getPropertyValue("display") === "contents") {
-                    // access children node from node
-                    let referenceNode = node.firstChild;
-
-                    // handle more edge cases
-                    if (referenceNode == null) {
-                    if (node.tagName === "SLOT") {
-                        // handle node is <slot>
-                        const referenceNodes = node.assignedElements();
-                        if (referenceNodes != null && referenceNodes.length > 0) {
-                        referenceNode = referenceNodes[0];
-                        } else {
-                        referenceNode = node.getRootNode().host;
-                        }
-                    } else if (node.getRootNode().nodeType === 11) {
-                        // handle if the node is inside shadowDOM but not <slot>
-                        referenceNode = node.getRootNode().host;
-                    } else {
-                        // fallback to parent
-                        referenceNode = node.parentNode;
-                    }
+                if (nt === 1) {
+                    const tn = node.tagName;
+                    if (tn !== "SCRIPT" && tn !== "STYLE") {
+                    // clear functionzieID to prevent old data
+                    if (node.getAttribute("functionizeID") != null) {
+                        node.removeAttribute("functionizeID");
                     }
 
-                    if (referenceNode != null) {
-                    range.selectNodeContents(referenceNode);
-                    const rects = range.getClientRects();
-                    if (rects.length > 0) {
-                        box = rects[0];
-                    }
-                    }
-                }
-
-                nodes.push([
-                    parent,
-                    currentFunctionizeID,
-                    "1",
-                    box.left,
-                    box.top,
-                    box.width,
-                    box.height,
-                    cs.getPropertyValue("display"),
-                    cs.getPropertyValue("background-color"),
-                    cs.getPropertyValue("color"),
-                    cs.getPropertyValue("z-index"),
-                    tn,
-                    a,
-                ]);
-                nodeId++;
-
-                // handle shadowDOM with open mode
-                if (node.shadowRoot !== undefined && node.shadowRoot != null) {
-                    nodes = traverseNodes2(
-                    node.shadowRoot,
-                    currentFunctionizeID,
-                    nodes,
-                    isIframe
-                    );
-                }
-                } else {
-                // handle scripts and styles
-                }
-            } else if (nt === 3) {
-                var piiObject = piiFilter.filterPII(node.data);
-                if(piiObject.text !== node.data) {
-                    //   console.log("Node data is " + node.data);
-                    //   console.log("Filtered data is" + piiObject.text);
-                      var insertPIIData = {};
-                      range.selectNodeContents(node);
-                      insertPIIData.XYCoord = range.getClientRects()[0];
-                      insertPIIData.PIICategory = piiObject.PIICategory;
-                      // Functionize id is the current node id which is the last item in nodes array
-                      insertPIIData.functionizeId = nodes.length - 1;
-                      PIIJson.push(insertPIIData);
-                      //console.log(getParentFromNode(node,parentId));
-                      //debugger;
-                     // console.log(node.getBoundingClientRect());
-                    //console.log(node.getAttribute("functionizeid"));
-                    //   range.selectNodeContents(node);
-                    //   console.log(rects);
-                  }
-                range.selectNodeContents(node);
-                const rects = range.getClientRects();
-
-                const textNodeRect = {
-                LT: outOfScreenPosition,
-                TP: outOfScreenPosition,
-                WH: 0,
-                HT: 0,
-                };
-                // if textNode is within view, change textNodeRect, else use default rect
-                if (rects.length > 0) {
-                textNodeRect.LT = rects[0].left;
-                textNodeRect.TP = rects[0].top;
-                textNodeRect.WH = rects[0].width;
-                textNodeRect.HT = rects[0].height;
-                }
-
-                if (node.data !== undefined && node.data !== null) {
-                const trimmedText = subRoutine7(node.data);
-                // include the node if
-                // 1. non-empty string outside and inside of viewport
-                if (trimmedText !== "") {
                     const currentFunctionizeID = nodeId + "";
                     if (isIframe) {
-                    node.iFunctionizeID = currentFunctionizeID;
+                        node.iFunctionizeID = currentFunctionizeID;
                     } else {
-                    node.functionizeID = currentFunctionizeID;
+                        node.functionizeID = currentFunctionizeID;
                     }
+
+                    if (tn === "IFRAME" || tn === "FRAME") {
+                        iframeList.push(node);
+                    }
+
+                    let box = node.getBoundingClientRect();
+                    const cs = window.getComputedStyle(node, null);
+                    const attr = node.attributes;
+                    const a = {};
+                    for (let i = 0; i < attr.length; i++) {
+                        a[attr[i].name] = attr[i].value;
+                    }
+
+                    // if element is being selected, add to comp attributes
+                    if (node.functi0nizeSelected) {
+                        a["functi0nize-selected"] = "true";
+                        // if element is not selected, and the element has attribute "functi0nize-selected", we set to false
+                    } else if (
+                        node.functi0nizeSelected === false &&
+                        a["functi0nize-selected"] != null
+                    ) {
+                        a["functi0nize-selected"] = "false";
+                    }
+
+                    // by default, "select" element attributes does not have value field,
+                    // so we need to include it to know the selected value
+                    if (tn === "SELECT") {
+                        a.value = node.value;
+                    }
+
+                    // handle shadowDOM parent
                     const parent = getParentFromNode(node, parentId, isIframe);
+
+                    // handle display:content, using child rect
+                    // handle display:contents, using child rect, else fallback to parent
+                    if (cs.getPropertyValue("display") === "contents") {
+                        // access children node from node
+                        let referenceNode = node.firstChild;
+
+                        // handle more edge cases
+                        if (referenceNode == null) {
+                        if (node.tagName === "SLOT") {
+                            // handle node is <slot>
+                            const referenceNodes = node.assignedElements();
+                            if (referenceNodes != null && referenceNodes.length > 0) {
+                            referenceNode = referenceNodes[0];
+                            } else {
+                            referenceNode = node.getRootNode().host;
+                            }
+                        } else if (node.getRootNode().nodeType === 11) {
+                            // handle if the node is inside shadowDOM but not <slot>
+                            referenceNode = node.getRootNode().host;
+                        } else {
+                            // fallback to parent
+                            referenceNode = node.parentNode;
+                        }
+                        }
+
+                        if (referenceNode != null) {
+                        range.selectNodeContents(referenceNode);
+                        const rects = range.getClientRects();
+                        if (rects.length > 0) {
+                            box = rects[0];
+                        }
+                        }
+                    }
+
                     nodes.push([
-                    parent,
-                    currentFunctionizeID,
-                    "3",
-                    textNodeRect.LT,
-                    textNodeRect.TP,
-                    textNodeRect.WH,
-                    textNodeRect.HT,
-                    // if the text is all whitespaces, then trim all whitespaces
-                    trimmedText === "" ? trimmedText : node.data,
+                        parent,
+                        currentFunctionizeID,
+                        "1",
+                        box.left,
+                        box.top,
+                        box.width,
+                        box.height,
+                        cs.getPropertyValue("display"),
+                        cs.getPropertyValue("background-color"),
+                        cs.getPropertyValue("color"),
+                        cs.getPropertyValue("z-index"),
+                        tn,
+                        a,
                     ]);
                     nodeId++;
-                }
-                }
-            } else {
-                // node type is not 1 and 3
-            }
 
-            // if we enable partial node collections
-            if (
-                maxNodeCountToTraverse != null &&
-                nodeId >= this.maxNodeCountToTraverse
-            ) {
-                return nodes;
-            }
+                    // handle shadowDOM with open mode
+                    if (node.shadowRoot !== undefined && node.shadowRoot != null) {
+                        nodes = traverseNodes2(
+                        node.shadowRoot,
+                        currentFunctionizeID,
+                        nodes,
+                        isIframe
+                        );
+                    }
+                    } else {
+                    // handle scripts and styles
+                    }
+                } else if (nt === 3) {
+                    var piiObject = piiFilter.filterPII(node.data);
+                    if(piiObject.text !== node.data) {
+                        //   console.log("Node data is " + node.data);
+                        //   console.log("Filtered data is" + piiObject.text);
+                        var insertPIIData = {};
+                        range.selectNodeContents(node);
+                        insertPIIData.XYCoord = range.getClientRects()[0];
+                        insertPIIData.PIICategory = piiObject.PIICategory;
+                        // Functionize id is the current node id which is the last item in nodes array
+                        insertPIIData.functionizeId = nodes.length - 1;
+                        PIIJson.push(insertPIIData);
+                        //console.log(getParentFromNode(node,parentId));
+                        //debugger;
+                        // console.log(node.getBoundingClientRect());
+                        //console.log(node.getAttribute("functionizeid"));
+                        //   range.selectNodeContents(node);
+                        //   console.log(rects);
+                    }
+                    range.selectNodeContents(node);
+                    const rects = range.getClientRects();
+
+                    const textNodeRect = {
+                    LT: outOfScreenPosition,
+                    TP: outOfScreenPosition,
+                    WH: 0,
+                    HT: 0,
+                    };
+                    // if textNode is within view, change textNodeRect, else use default rect
+                    if (rects.length > 0) {
+                    textNodeRect.LT = rects[0].left;
+                    textNodeRect.TP = rects[0].top;
+                    textNodeRect.WH = rects[0].width;
+                    textNodeRect.HT = rects[0].height;
+                    }
+
+                    if (node.data !== undefined && node.data !== null) {
+                    const trimmedText = subRoutine7(node.data);
+                    // include the node if
+                    // 1. non-empty string outside and inside of viewport
+                    if (trimmedText !== "") {
+                        const currentFunctionizeID = nodeId + "";
+                        if (isIframe) {
+                        node.iFunctionizeID = currentFunctionizeID;
+                        } else {
+                        node.functionizeID = currentFunctionizeID;
+                        }
+                        const parent = getParentFromNode(node, parentId, isIframe);
+                        nodes.push([
+                        parent,
+                        currentFunctionizeID,
+                        "3",
+                        textNodeRect.LT,
+                        textNodeRect.TP,
+                        textNodeRect.WH,
+                        textNodeRect.HT,
+                        // if the text is all whitespaces, then trim all whitespaces
+                        trimmedText === "" ? trimmedText : node.data,
+                        ]);
+                        nodeId++;
+                    }
+                    }
+                } else {
+                    // node type is not 1 and 3
+                }
+
+                // if we enable partial node collections
+                if (
+                    maxNodeCountToTraverse != null &&
+                    nodeId >= this.maxNodeCountToTraverse
+                ) {
+                    return nodes;
+                }
             }
 
             return nodes;
