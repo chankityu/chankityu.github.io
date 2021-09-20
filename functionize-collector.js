@@ -4831,7 +4831,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                         for(var i=0; i < results.violations[h].nodes.length; i++) {
                             //console.log(results.violations[h].nodes[i].target);
                             var node = document.querySelector(results.violations[h].nodes[i].target);
-                            results.violations[h].nodes[i].functionizeId = node.getAttribute("functionizeid");
+                            results.violations[h].nodes[i].functionizeId = node.functionizeID;//node.getAttribute("functionizeid");
                             results.violations[h].nodes[i].html = results.violations[h].nodes[i].html.replace(/functionizeid=["][\d{1,5}\]["]/g, "");
                             results.violations[h].nodes[i].XYCoord = node.getBoundingClientRect();
                             var impact = results.violations[h].nodes[i].impact;
