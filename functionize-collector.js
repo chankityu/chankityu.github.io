@@ -7006,196 +7006,287 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
     class SiteStatistics {
         constructor(flag) {
-          this.flag = flag;
-          this.elementLimit = 25000;
-          this.timeLimit = 25000; // ms
-          this.warning = "";
-          this.nodeId = 0;
-          this.historyQueue = [];
-          this.fifoQueue = [];
-          this.parentNodesMovingToRoot = [];
-          this.allNodes = [];
-          this.newTree = [];
-          this.traverseOutwardLimit = 1;
-          this.boundingBoxPixelLimit = 100;
-          this.shadowRootNodes = [];
-          this.mlversion = "";
-          this.PIIFilter = new PIIFilter();
+            Node.prototype.functionizeID = null;
+            // for iframe traverse usage
+            Node.prototype.iFunctionizeID = null;
+            Node.prototype.functi0nizeSelected = false;
+            this.flag = flag;
+            this.elementLimit = 25000;
+            this.timeLimit = 25000; // ms
+            this.maxNodeCountToTraverse = null;
+            this.outOfScreenPosition = -1294753;
+            this.warning = "";
+            this.nodeId = 0;
+            this.historyQueue = [];
+            this.fifoQueue = [];
+            this.parentNodesMovingToRoot = [];
+            this.mlversion = "";
+            this.PIIFilter = new PIIFilter();
 
-          this.stats = {};
-          this.allElements2 = document.body;
-          if (this.allElements2 == null) {
-            if (document.childElementCount > 0) {
-              this.allElements2 = document.children[0];
+            this.tree = [];
+            this.textMap = {};
+            this.iframeList = [];
+            this.stats = {};
+            this.allElements2 = document.body;
+            if (this.allElements2 == null) {
+              if (document.childElementCount > 0) {
+                this.allElements2 = document.children[0];
+              }
             }
           }
-        }
 
-        setLimit(eLimit, tLimit) {
-          this.elementLimit = eLimit;
-          this.timeLimit = tLimit;
-        }
-
-        setAllElements(e) {
-          this.allElements = e;
-        }
-
-        getAllElements() {
-          return this.allElements;
-        }
-
-        getStats() {
-          return this.stats;
-        }
-
-        getSelection2(element) {
-          // DO NOT CORRECT THE SPELLING
-          // IT IS MEANT TO BE THIS WAY
-          if (document.readyState === "complete") {
-            element.setAttribute("functi0nize-selected", true);
-            this.nodeId = 0;
-            const tmp = this.generateTree2(this.allElements2);
-            element.setAttribute("functi0nize-selected", false);
-            return tmp;
-          } else {
-            return "document not loaded completely";
-          }
-        }
-
-        generateTree2(e) {
-          const start = new Date().getTime();
-          const out = {};
-          try {
-            out.comp = this.traverseNodes2(e, null, []);
-          } catch (err) {
-            console.log(err);
-            console.log("Error collecting ML data");
+          setLimit(eLimit, tLimit) {
+            this.elementLimit = eLimit;
+            this.timeLimit = tLimit;
           }
 
-          out.url = encodeURI(document.URL);
-          out.cookie = this.getCookieKeys(document.cookie);
-          out.title = document.title;
-          out.iw = window.innerWidth;
-          out.ih = window.innerHeight;
-          const elapsed = new Date().getTime() - start;
-          console.log("Time to Extract: " + elapsed + "ms");
-          return out;
-        }
-
-        parseToJson(data) {
-          const start = new Date().getTime();
-
-          // var parser = new DOMParser();
-          // var str = data.xml.replace(/&nbsp;/g, " ");
-          // str = this.cleanScripts(str);
-          // var xmlDoc = parser.parseFromString(data.xml.replace(/&nbsp;/g, " "), "text/xml");
-          // var json = this.generateTree(xmlDoc.childNodes);
-
-          const json = {};
-          json.nodes = [];
-          json.tree = [];
-          json.version = 1.6;
-          json.mlversion = this.mlversion;
-          json.url = data.url;
-          json.cookie = data.cookie;
-          json.title = data.title;
-          json.timestamp = new Date().getTime();
-
-          // console.log(data.comp);
-          if (data.comp.length > this.elementLimit) {
-            this.warning =
-              "Current elements count is " +
-              data.comp.length +
-              ", which is exceeding the limit of " +
-              this.elementLimit;
-            console.log(this.warning);
+          setAllElements(e) {
+            this.allElements = e;
           }
 
-          for (let i = 0; i < data.comp.length; i++) {
-            const n = data.comp[i];
-            const NT = n[2];
-            if (NT === "1") {
-              const node = {};
-              const id = n[1];
-              const parent = n[0];
-              const LT = Math.round(n[3]);
-              const TP = Math.round(n[4]);
-              const WH = Math.round(n[5]);
-              const HT = Math.round(n[6]);
-              const DY = n[7];
-              const BC = n[8];
-              const CR = n[9];
-              const ZI = n[10];
-              const TN = n[11];
-              const attributes = n[12];
+          getAllElements() {
+            return this.allElements;
+          }
 
-              try {
-                node.i = id;
-                node.a = {};
-                node.a.NT = NT;
+          getStats() {
+            return this.stats;
+          }
 
-                node.a.LT = "" + LT;
-                node.a.TP = "" + TP;
-                node.a.WH = "" + WH;
-                node.a.HT = "" + HT;
-                node.a.DY = "" + DY;
-                node.a.BC = "" + BC;
-                node.a.CR = "" + CR;
-                node.a.ZI = "" + ZI;
-                node.a.PV = this.calculatePV(data.iw, data.ih, LT, TP, WH, HT);
-                node.a.TN = TN;
+          getSelection2(element) {
+            // DO NOT CORRECT THE SPELLING
+            // IT IS MEANT TO BE THIS WAY
+            if (document.readyState === "complete") {
+              // element.setAttribute("functi0nize-selected", true);
+              element.functi0nizeSelected = true;
+              this.nodeId = 0;
+              const tmp = this.generateTree2(this.allElements2);
+              // element.setAttribute("functi0nize-selected", false);
+              element.functi0nizeSelected = false;
+              return tmp;
+            } else {
+              return "document not loaded completely";
+            }
+          }
 
-                for (const att in attributes) {
-                  if (this.isFunctionizeAttribute(att, attributes[att])) {
-                    continue;
+          generateTree2(e) {
+            // const start = new Date().getTime();
+            const out = {};
+            try {
+              out.comp = this.traverseNodes2(e, null, [], false);
+            } catch (err) {
+              console.log(err);
+              console.log("Error collecting ML data");
+            }
+
+            out.url = encodeURI(document.URL);
+            out.cookie = this.getCookieKeys(document.cookie);
+            out.title = document.title;
+            out.iw = window.innerWidth;
+            out.ih = window.innerHeight;
+            // const elapsed = new Date().getTime() - start;
+            // console.log("Time to Extract: " + elapsed + "ms");
+            return out;
+          }
+
+          parseToJson(data) {
+            const start = new Date().getTime();
+
+            // var parser = new DOMParser();
+            // var str = data.xml.replace(/&nbsp;/g, " ");
+            // str = this.cleanScripts(str);
+            // var xmlDoc = parser.parseFromString(data.xml.replace(/&nbsp;/g, " "), "text/xml");
+            // var json = this.generateTree(xmlDoc.childNodes);
+
+            const json = {};
+            json.nodes = [];
+            json.tree = [];
+            json.version = version;
+            json.mlversion = this.mlversion;
+            json.url = data.url;
+            json.cookie = data.cookie;
+            json.title = data.title;
+            json.timestamp = new Date().getTime();
+            json.allColumns = {};
+            // reset textMap for new parse
+            this.textMap = {};
+
+            // console.log(data.comp);
+            if (data.comp.length > this.elementLimit) {
+              this.warning =
+                "Current elements count is " +
+                data.comp.length +
+                ", which is exceeding the limit of " +
+                this.elementLimit;
+              console.log(this.warning);
+            }
+
+            const allColumns = {};
+            allColumns.LT = 1;
+            allColumns.TP = 1;
+            allColumns.WH = 1;
+            allColumns.HT = 1;
+            allColumns.DY = 1;
+            allColumns.BC = 1;
+            allColumns.CR = 1;
+            allColumns.ZI = 1;
+            allColumns.TN = 1;
+            allColumns.TV = 1;
+            allColumns.PV = 1;
+
+            for (let i = 0; i < data.comp.length; i++) {
+              const n = data.comp[i];
+              const NT = n[2];
+              if (NT === "1") {
+                const node = {};
+                const id = n[1];
+                const parent = n[0];
+                const LT = Math.round(n[3]);
+                const TP = Math.round(n[4]);
+                const WH = Math.round(n[5]);
+                const HT = Math.round(n[6]);
+                const DY = n[7];
+                const BC = n[8];
+                const CR = n[9];
+                const ZI = n[10];
+                const TN = n[11];
+                const attributes = n[12];
+
+                try {
+                  node.i = id;
+                  node.a = {};
+                  node.a.NT = NT;
+
+                  node.a.LT = "" + LT;
+                  node.a.TP = "" + TP;
+                  node.a.WH = "" + WH;
+                  node.a.HT = "" + HT;
+                  node.a.DY = "" + DY;
+                  node.a.BC = "" + BC;
+                  node.a.CR = "" + CR;
+                  node.a.ZI = "" + ZI;
+                  node.a.PV = this.calculatePV(data.iw, data.ih, LT, TP, WH, HT);
+                  node.a.TN = TN;
+
+                  if (Object.keys(attributes).includes("functi0nize-selected")) {
+                    const XXKey = this.attributeNameMap("functi0nize-selected");
+                    node.a[XXKey] = attributes["functi0nize-selected"];
+                    delete attributes["functi0nize-selected"];
                   }
-                  // skip reserved attributes
-                  if (
-                    att === "top" ||
-                    att === "bottom" ||
-                    att === "right" ||
-                    att === "left" ||
-                    att === "height" ||
-                    att === "width"
-                  ) {
-                    continue;
-                  }
-                  if (att === "style") {
-                    const styleAttr = this.parseStyle(attributes[att]);
-                    for (const s in styleAttr) {
-                      node.a["ST." + s] = this.subRoutine5(styleAttr[s] + "");
+
+                  for (const att in attributes) {
+                    if (this.isFunctionizeAttribute(att, attributes[att])) {
+                      continue;
                     }
-                  } else if (att === "class") {
-                    const classString = this.subRoutine6(
-                      this.subRoutine5(attributes[att] + "")
-                    );
-                    node.a[this.attributeNameMap(att)] = classString;
-                    // var classes = classString.split(" ");
-                    // var classCount = 0;
-                    // for(c in classes){
-                    // node.a[this.attributeNameMap(att) + classCount] = classes[c];
-                    // classCount++;
-                    // }
-                  } else {
-                    node.a[this.attributeNameMap(att)] = this.subRoutine5(
-                      attributes[att] + ""
-                    );
+
+                    if (att === "style") {
+                      const styleAttr = this.parseStyle(attributes[att]);
+                      for (const s in styleAttr) {
+                        node.a["ST." + s] = this.subRoutine5(styleAttr[s] + "");
+                        allColumns["ST." + s] = 1;
+                      }
+                    } else if (att === "class") {
+                      const classString = this.subRoutine6(
+                        this.subRoutine5(attributes[att] + "")
+                      );
+                      const tempAtt = this.attributeNameMap(att);
+                      node.a[tempAtt] = classString;
+                      allColumns[tempAtt] = 1;
+                      // Add extra fields for each class value
+                      const classValues = classString.split(" ");
+                      const prevClassValues = [];
+                      for (const val of classValues) {
+                        const classValKey = this.normalizeAttrKey(val, prevClassValues);
+                        prevClassValues.push(classValKey);
+                        node.a["CL." + classValKey] = "1";
+                      }
+                    } else {
+                      let tempAtt = this.attributeNameMap(att);
+                      // skip TP, LT, WH, HT
+                      // if we see those 2 letters abvr, we use back the att
+                      if (
+                        tempAtt === "TP" ||
+                        tempAtt === "LT" ||
+                        tempAtt === "WH" ||
+                        tempAtt === "HT"
+                      ) {
+                        tempAtt = att;
+                      }
+                      tempAtt = this.normalizeAttrKey(tempAtt, Object.keys(node.a));
+                      node.a[tempAtt] = this.subRoutine5(attributes[att] + "");
+                      allColumns[tempAtt] = 1;
+                    }
                   }
+
+                  // we need to record submit button which is nodeType 1
+                  if (
+                    TN === "INPUT" &&
+                    attributes.type === "submit" &&
+                    attributes.value
+                  ) {
+                    const valueText = this.subRoutine5(attributes.value + "");
+                    // only add to text map if the value contains characters
+                    if (valueText.replace(/\s/g, "").length > 0) {
+                      this.textMap[node.i] = valueText;
+                    }
+                  }
+
+                  json.nodes.push(node);
+
+                  let o = {};
+                  if (parent == null) {
+                    o = {};
+                    o.i = id;
+                    json.tree.push(o);
+                  } else {
+                    // console.log("parent " + parent);
+                    const treeNode = this.findTreeNode(json.tree, parent);
+                    // console.log(this.findTreeNode(json.tree, parent));
+                    if (treeNode != null) {
+                      // console.log("treenode" + treeNode);
+                      if (treeNode.c !== undefined) {
+                        o.i = id;
+                        treeNode.c.push(o);
+                      } else {
+                        o.i = id;
+                        const c = [];
+                        c.push(o);
+                        treeNode.c = c;
+                      }
+                    } else {
+                      // console.log("treeNode null");
+                    }
+                  }
+                } catch (err) {
+                  console.log(err);
                 }
+              } else if (NT === "3") {
+                const node = {};
+                const id = n[1];
+                const parent = n[0];
+                const LT = Math.round(n[3]);
+                const TP = Math.round(n[4]);
+                const WH = Math.round(n[5]);
+                const HT = Math.round(n[6]);
+                const TV = n[7];
 
-                json.nodes.push(node);
+                try {
+                  node.i = id;
+                  node.a = {};
+                  node.a.NT = NT;
 
-                let o = {};
-                if (parent == null) {
-                  o = {};
-                  o.i = id;
-                  json.tree.push(o);
-                } else {
-                  // console.log("parent " + parent);
+                  node.a.LT = "" + LT;
+                  node.a.TP = "" + TP;
+                  node.a.WH = "" + WH;
+                  node.a.HT = "" + HT;
+                  node.a.PV = this.calculatePV(data.iw, data.ih, LT, TP, WH, HT);
+                  node.a.TV = this.subRoutine5(TV + "");
+                  this.textMap[node.i] = node.a.TV;
+
+                  json.nodes.push(node);
+
                   const treeNode = this.findTreeNode(json.tree, parent);
-                  // console.log(this.findTreeNode(json.tree, parent));
                   if (treeNode != null) {
-                    // console.log("treenode" + treeNode);
+                    const o = {};
                     if (treeNode.c !== undefined) {
                       o.i = id;
                       treeNode.c.push(o);
@@ -7205,1469 +7296,944 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                       c.push(o);
                       treeNode.c = c;
                     }
-                  } else {
-                    // console.log("treeNode null");
                   }
+                } catch (err) {
+                  console.log(err);
                 }
-              } catch (err) {
-                console.log(err);
               }
-            } else if (NT === "3") {
-              const node = {};
-              const id = n[1];
-              const parent = n[0];
-              const LT = Math.round(n[3]);
-              const TP = Math.round(n[4]);
-              const WH = Math.round(n[5]);
-              const HT = Math.round(n[6]);
-              const TV = n[7];//this.filterPII.filterPII(n[7]);
 
-              try {
-                node.i = id;
-                node.a = {};
-                node.a.NT = NT;
+              // DEBUG
+              // if(json.nodes.length % 1000 == 0) {
+              //    console.log("Total nodes is " + data.comp.length + ", Done parsing: " + Math.floor(json.nodes.length / 1000) * 1000);
+              // }
 
-                node.a.LT = "" + LT;
-                node.a.TP = "" + TP;
-                node.a.WH = "" + WH;
-                node.a.HT = "" + HT;
-                node.a.PV = this.calculatePV(data.iw, data.ih, LT, TP, WH, HT);
-                node.a.TV = this.subRoutine5(TV + "");
+              if (json.nodes.length >= this.elementLimit) {
+                console.log(
+                  "now is: " +
+                    json.nodes.length +
+                    " exceeding element limit " +
+                    this.elementLimit
+                );
+                return json;
+              }
 
-                json.nodes.push(node);
-
-                const treeNode = this.findTreeNode(json.tree, parent);
-                if (treeNode != null) {
-                  const o = {};
-                  if (treeNode.c !== undefined) {
-                    o.i = id;
-                    treeNode.c.push(o);
-                  } else {
-                    o.i = id;
-                    const c = [];
-                    c.push(o);
-                    treeNode.c = c;
-                  }
-                }
-              } catch (err) {
-                console.log(err);
+              const timeTakenSoFar = new Date().getTime() - start;
+              if (timeTakenSoFar > this.timeLimit) {
+                this.warning =
+                  "Current JS execution is exceeding time limit of " + this.timeLimit;
+                console.log(this.warning);
+                return json;
               }
             }
 
-            // DEBUG
-            // if(json.nodes.length % 1000 == 0) {
-            //    console.log("Total nodes is " + data.comp.length + ", Done parsing: " + Math.floor(json.nodes.length / 1000) * 1000);
-            // }
+            json.allColumns = Object.keys(allColumns);
+            // json.textMap = this.textMap;
+            this.tree = json.tree; // caching tree in class
 
-            if (json.nodes.length >= this.elementLimit) {
-              console.log(
-                "now is: " +
-                  json.nodes.length +
-                  " exceeding element limit " +
-                  this.elementLimit
-              );
-              return json;
-            }
-
-            const timeTakenSoFar = new Date().getTime() - start;
-            if (timeTakenSoFar > this.timeLimit) {
-              this.warning =
-                "Current JS execution is exceeding time limit of " + this.timeLimit;
-              console.log(this.warning);
-              return json;
-            }
+            // const elapsed = new Date().getTime() - start;
+            // console.log("Time to Parse: " + elapsed + "ms");
+            return json;
           }
 
-          const elapsed = new Date().getTime() - start;
-          console.log("Time to Parse: " + elapsed + "ms");
-          return json;
-        }
+          /**
+           * Compare with existingKeys, if already exist, append @ at the end of the attrKey
+           * else return the normalized key
+           */
+          normalizeAttrKey(attrKey, existingKeys) {
+            const forbiddenKeys = ["XX"];
+            let normalizedAtt = attrKey.replace(/[^a-zA-Z0-9]/gi, "");
+            normalizedAtt = normalizedAtt.toUpperCase();
 
-        xml2Str(xmlNode) {
-          try {
-            // Gecko- and Webkit-based browsers (Firefox, Chrome), Opera.
-            return new XMLSerializer().serializeToString(xmlNode);
-          } catch (e) {
+            // loop until all the repeated keys are covered
+            while (
+              existingKeys.includes(normalizedAtt) ||
+              forbiddenKeys.includes(normalizedAtt)
+            ) {
+              normalizedAtt = normalizedAtt + "@";
+            }
+
+            return normalizedAtt;
+          }
+
+          xml2Str(xmlNode) {
             try {
-              // Internet Explorer.
-              return xmlNode.xml;
+              // Gecko- and Webkit-based browsers (Firefox, Chrome), Opera.
+              return new XMLSerializer().serializeToString(xmlNode);
             } catch (e) {
-              // Other browsers without XML Serializer
+              try {
+                // Internet Explorer.
+                return xmlNode.xml;
+              } catch (e) {
+                // Other browsers without XML Serializer
+              }
             }
+            return false;
           }
-          return false;
-        }
 
-        calculatePV(iw, ih, x, y, w, h) {
-          let vis = "1";
-          if (x >= iw) {
-            vis = "0";
+          calculatePV(iw, ih, x, y, w, h) {
+            let vis = "1";
+            if (x >= iw) {
+              vis = "0";
+            }
+            if (y >= ih) {
+              vis = "0";
+            }
+            if (x + w <= 0) {
+              vis = "0";
+            }
+            if (y + h <= 0) {
+              vis = "0";
+            }
+            return vis;
           }
-          if (y >= ih) {
-            vis = "0";
-          }
-          if (x + w <= 0) {
-            vis = "0";
-          }
-          if (y + h <= 0) {
-            vis = "0";
-          }
-          return vis;
-        }
 
-        findTreeNode(tree, search) {
-          // console.log("tree size " + tree.length);
-          let output = null;
-          for (let j = 0; j < tree.length; j++) {
-            const id = tree[j].i;
-            // console.log("id " + id);
-            if (id === search) {
-              // console.log("found " + JSON.stringify(tree[j]));
-              output = tree[j];
-              j = tree.length;
-            } else {
-              if (tree[j].c !== undefined) {
-                const out = this.findTreeNode(tree[j].c, search);
-                if (out != null) {
-                  output = out;
-                  j = tree.length;
+          findTreeNode(tree, search) {
+            // console.log("tree size " + tree.length);
+            let output = null;
+            for (let j = 0; j < tree.length; j++) {
+              const id = tree[j].i;
+              // console.log("id " + id);
+              if (id === search) {
+                // console.log("found " + JSON.stringify(tree[j]));
+                output = tree[j];
+                j = tree.length;
+              } else {
+                if (tree[j].c !== undefined) {
+                  const out = this.findTreeNode(tree[j].c, search);
+                  if (out != null) {
+                    output = out;
+                    j = tree.length;
+                  }
                 }
               }
             }
+            return output;
           }
-          return output;
-        }
 
-        cleanScripts(xml) {
-          while (xml.indexOf("<script") >= 0) {
-            const i = xml.indexOf("<script");
-            const j = xml.indexOf("/script>", i);
-            xml = xml.slice(0, i) + xml.slice(j + 8, xml.length);
+          cleanScripts(xml) {
+            while (xml.indexOf("<script") >= 0) {
+              const i = xml.indexOf("<script");
+              const j = xml.indexOf("/script>", i);
+              xml = xml.slice(0, i) + xml.slice(j + 8, xml.length);
+            }
+            return xml;
           }
-          return xml;
-        }
 
-        getParentFromNode(node, defaultParentId) {
-          let parent;
-          try {
-            if (node.parentNode.nodeType === 11) {
-              // if parentNode is document-fragment, parentElement will be null
-              // thus we need to use host
-              parent = node.parentNode.host.getAttribute("functionizeID");
-            } else if (node.parentElement) {
-              parent = node.parentElement.getAttribute("functionizeID");
-            } else {
+          getParentFromNode(node, defaultParentId, isIframe) {
+            let parent;
+            try {
+              if (node.parentNode.nodeType === 11) {
+                // if parentNode is document-fragment, parentElement will be null
+                // thus we need to use host
+                parent = isIframe
+                  ? node.parentNode.host.iFunctionizeID
+                  : node.parentNode.host.functionizeID;
+              } else if (node.parentElement) {
+                parent = isIframe
+                  ? node.parentElement.iFunctionizeID
+                  : node.parentElement.functionizeID;
+              } else {
+                parent = defaultParentId;
+              }
+
+              // when we are inside iframe, the parentElement will be null, and defaultParentId will be iframe ID
+              if (parent == null && defaultParentId != null) {
+                parent = defaultParentId;
+              }
+            } catch (e) {
+              // fallback
+              console.log(e);
               parent = defaultParentId;
             }
-          } catch (e) {
-            // fallback
-            console.log(e);
-            parent = defaultParentId;
+            return parent;
           }
-          return parent;
-        }
 
-        traverseNodes2(start, parentId, nodes) {
-          let node;
-          const walker = document.createTreeWalker(start, 5, null, false);
-          const range = document.createRange();
-          while ((node = walker.nextNode()) != null) {
-            const nt = node.nodeType;
-            // if match skip criteria, skip this node
-            if (this.skipNodeCriteria(node)) {
-              continue;
-            }
-            if (nt === 1) {
-              const tn = node.tagName;
-            //   if (tn === "INPUT") {
-            //     node.value = WS.filterPII(node.value);
-            //   }
-              if (tn !== "SCRIPT" && tn !== "STYLE") {
-                node.setAttribute("functionizeID", this.nodeId);
+          traverseNodes2(start, parentId, nodes, isIframe) {
+            let node;
+            const walker = document.createTreeWalker(start, 5, null, false);
+            const range = document.createRange();
+            while ((node = walker.nextNode()) != null) {
+              const nt = node.nodeType;
+              // if match skip criteria, skip this node
+              if (this.skipNodeCriteria(node)) {
+                continue;
+              }
+              if (nt === 1) {
+                const tn = node.tagName;
+                if (tn !== "SCRIPT" && tn !== "STYLE") {
+                  // clear functionzieID to prevent old data
+                  if (node.getAttribute("functionizeID") != null) {
+                    node.removeAttribute("functionizeID");
+                  }
 
-                let box = node.getBoundingClientRect();
-                const cs = window.getComputedStyle(node, null);
-                const attr = node.attributes;
-                const a = {};
-                for (let i = 0; i < attr.length; i++) {
-                  a[attr[i].name] = attr[i].value;
-                }
+                  const currentFunctionizeID = this.nodeId + "";
+                  if (isIframe) {
+                    node.iFunctionizeID = currentFunctionizeID;
+                  } else {
+                    node.functionizeID = currentFunctionizeID;
+                  }
 
-                // handle shadowDOM parent
-                const parent = this.getParentFromNode(node, parentId);
+                  if (tn === "IFRAME" || tn === "FRAME") {
+                    this.iframeList.push(node);
+                  }
 
-                // handle display:contents, using child rect, else fallback to parent
-                if (cs.getPropertyValue("display") === "contents") {
-                  // access children node from node
-                  let referenceNode = node.firstChild;
+                  let box = node.getBoundingClientRect();
+                  const cs = window.getComputedStyle(node, null);
+                  const attr = node.attributes;
+                  const a = {};
+                  for (let i = 0; i < attr.length; i++) {
+                    a[attr[i].name] = attr[i].value;
+                  }
 
-                  // handle more edge cases
-                  if (referenceNode == null) {
-                    if (node.tagName === "SLOT") {
-                      // handle node is <slot>
-                      const referenceNodes = node.assignedElements();
-                      if (referenceNodes != null && referenceNodes.length > 0) {
-                        referenceNode = referenceNodes[0];
-                      } else {
+                  // if element is being selected, add to comp attributes
+                  if (node.functi0nizeSelected) {
+                    a["functi0nize-selected"] = "true";
+                    // if element is not selected, and the element has attribute "functi0nize-selected", we set to false
+                  } else if (
+                    node.functi0nizeSelected === false &&
+                    a["functi0nize-selected"] != null
+                  ) {
+                    a["functi0nize-selected"] = "false";
+                  }
+
+                  // by default, "select" element attributes does not have value field,
+                  // so we need to include it to know the selected value
+                  if (tn === "SELECT") {
+                    a.value = node.value;
+                  }
+
+                  // handle shadowDOM parent
+                  const parent = this.getParentFromNode(node, parentId, isIframe);
+
+                  // handle display:content, using child rect
+                  // handle display:contents, using child rect, else fallback to parent
+                  if (cs.getPropertyValue("display") === "contents") {
+                    // access children node from node
+                    let referenceNode = node.firstChild;
+
+                    // handle more edge cases
+                    if (referenceNode == null) {
+                      if (node.tagName === "SLOT") {
+                        // handle node is <slot>
+                        const referenceNodes = node.assignedElements();
+                        if (referenceNodes != null && referenceNodes.length > 0) {
+                          referenceNode = referenceNodes[0];
+                        } else {
+                          referenceNode = node.getRootNode().host;
+                        }
+                      } else if (node.getRootNode().nodeType === 11) {
+                        // handle if the node is inside shadowDOM but not <slot>
                         referenceNode = node.getRootNode().host;
+                      } else {
+                        // fallback to parent
+                        referenceNode = node.parentNode;
                       }
-                    } else if (node.getRootNode().nodeType === 11) {
-                      // handle if the node is inside shadowDOM but not <slot>
-                      referenceNode = node.getRootNode().host;
+                    }
+
+                    if (referenceNode != null) {
+                      range.selectNodeContents(referenceNode);
+                      const rects = range.getClientRects();
+                      if (rects.length > 0) {
+                        box = rects[0];
+                      }
+                    }
+                  }
+
+                  nodes.push([
+                    parent,
+                    currentFunctionizeID,
+                    "1",
+                    box.left,
+                    box.top,
+                    box.width,
+                    box.height,
+                    cs.getPropertyValue("display"),
+                    cs.getPropertyValue("background-color"),
+                    cs.getPropertyValue("color"),
+                    cs.getPropertyValue("z-index"),
+                    tn,
+                    a,
+                  ]);
+                  this.nodeId++;
+
+                  // handle shadowDOM with open mode
+                  if (node.shadowRoot !== undefined && node.shadowRoot != null) {
+                    nodes = this.traverseNodes2(
+                      node.shadowRoot,
+                      currentFunctionizeID,
+                      nodes,
+                      isIframe
+                    );
+                  }
+                } else {
+                  // handle scripts and styles
+                }
+              } else if (nt === 3) {
+                range.selectNodeContents(node);
+                const rects = range.getClientRects();
+
+                const textNodeRect = {
+                  LT: this.outOfScreenPosition,
+                  TP: this.outOfScreenPosition,
+                  WH: 0,
+                  HT: 0,
+                };
+                // if textNode is within view, change textNodeRect, else use default rect
+                if (rects.length > 0) {
+                  textNodeRect.LT = rects[0].left;
+                  textNodeRect.TP = rects[0].top;
+                  textNodeRect.WH = rects[0].width;
+                  textNodeRect.HT = rects[0].height;
+                }
+
+                if (node.data !== undefined && node.data !== null) {
+                  const trimmedText = this.subRoutine7(node.data);
+                  // include the node if
+                  // 1. non-empty string outside and inside of viewport
+                  if (trimmedText !== "") {
+                    const currentFunctionizeID = this.nodeId + "";
+                    if (isIframe) {
+                      node.iFunctionizeID = currentFunctionizeID;
                     } else {
-                      // fallback to parent
-                      referenceNode = node.parentNode;
+                      node.functionizeID = currentFunctionizeID;
                     }
+                    const parent = this.getParentFromNode(node, parentId, isIframe);
+                    nodes.push([
+                      parent,
+                      currentFunctionizeID,
+                      "3",
+                      textNodeRect.LT,
+                      textNodeRect.TP,
+                      textNodeRect.WH,
+                      textNodeRect.HT,
+                      // if the text is all whitespaces, then trim all whitespaces
+                      trimmedText === "" ? trimmedText : node.data,
+                    ]);
+                    this.nodeId++;
                   }
-
-                  if (referenceNode != null) {
-                    range.selectNodeContents(referenceNode);
-                    const rects = range.getClientRects();
-                    if (rects.length > 0) {
-                      box = rects[0];
-                    }
-                  }
-                }
-
-                nodes.push([
-                  parent,
-                  this.nodeId + "",
-                  "1",
-                  box.left,
-                  box.top,
-                  box.width,
-                  box.height,
-                  cs.getPropertyValue("display"),
-                  cs.getPropertyValue("background-color"),
-                  cs.getPropertyValue("color"),
-                  cs.getPropertyValue("z-index"),
-                  tn,
-                  a,
-                ]);
-                this.nodeId = this.nodeId + 1;
-
-                // handle shadowDOM with open mode
-                if (node.shadowRoot !== undefined && node.shadowRoot != null) {
-                  nodes = this.traverseNodes2(
-                    node.shadowRoot,
-                    this.nodeId - 1,
-                    nodes
-                  );
                 }
               } else {
-                // handle scripts and styles
+                // node type is not 1 and 3
               }
-            } else if (nt === 3) {
-              range.selectNodeContents(node);
-              const rects = range.getClientRects();
-              if (rects.length > 0) {
-                const parent = this.getParentFromNode(node, parentId);
-                nodes.push([
-                  parent,
-                  this.nodeId + "",
-                  "3",
-                  rects[0].left,
-                  rects[0].top,
-                  rects[0].width,
-                  rects[0].height,
-                  node.data,
-                ]);
-                this.nodeId++;
-              } else {
-                // text nodes with no content
-              }
-            } else {
-              // node type is not 1 and 3
-            }
-          }
 
-          return nodes;
-        }
-
-        parseStyle(cssText) {
-          const obj = {};
-          const str = cssText.match(/([^:]+: *[^;]+); */g);
-          if (str !== undefined && str != null) {
-            let tem;
-            let k = 0;
-            const L = str.length;
-            while (k < L) {
-              tem = str[k++].split(/: */);
-              obj[tem[0]] = tem[1];
-            }
-          }
-          return obj;
-        }
-
-        isFunctionizeAttribute(name, value) {
-          if (name.indexOf("functionise") > -1 || name.indexOf("functionize") > -1) {
-            return true;
-          }
-          if (
-            value.indexOf("functionise") > -1 ||
-            value.indexOf("functionize") > -1
-          ) {
-            return true;
-          }
-          return false;
-        }
-
-        findElementByFunctionizeId(start, functionizeID) {
-          let node;
-          const walker = document.createTreeWalker(start, 5, null, false);
-          while ((node = walker.nextNode()) != null) {
-            const nt = node.nodeType;
-            if (nt === 1) {
-              const tn = node.tagName;
-              if (tn !== "SCRIPT" && tn !== "STYLE") {
-                if (node.shadowRoot !== undefined && node.shadowRoot != null) {
-                  node = this.findElementByFunctionizeId(
-                    node.shadowRoot,
-                    functionizeID
-                  );
-                }
-
-                if (node != null) {
-                  const id = node.getAttribute("functionizeID");
-                  // mlengine pass in functionizeID in integer format, getAttribute will return string format
-                  // thus we need to convert functionizeID to string before compare
-                  if (id === functionizeID + "") {
-                    break;
-                  }
-                }
-              }
-            }
-          }
-          return node;
-        }
-
-        removeElementXX(start) {
-          let node;
-          const walker = document.createTreeWalker(start, 5, null, false);
-          while ((node = walker.nextNode()) != null) {
-            const nt = node.nodeType;
-            if (nt === 1) {
-              const tn = node.tagName;
-              if (tn !== "SCRIPT" && tn !== "STYLE") {
-                if (node.shadowRoot !== undefined && node.shadowRoot != null) {
-                  this.removeElementXX(node.shadowRoot);
-                }
-                try {
-                  node.removeAttribute("functi0nize-selected");
-                } catch (e) {}
-              }
-            }
-          }
-          return node;
-        }
-
-        // remove \n and space in front and back
-        subRoutine5(str) {
-          let o = "";
-          o = str.replace(/\n/g, "");
-          o = o.replace(/\t/g, "");
-          while (o.charAt(0) === " ") {
-            o = o.substring(1, o.length);
-          }
-          while (o.charAt(o.length - 1) === " ") {
-            o = o.substring(0, o.length - 1);
-          }
-          // replace double spaces
-          let done = false;
-          while (done === false) {
-            const temp = o.replace(/ {2}/g, " ");
-            if (temp.length === o.length) {
-              done = true;
-            }
-            o = temp;
-          }
-          // hash value if longer that 256
-          if (o.length > 256) {
-            o = "hash" + this.hashCode(o);
-          }
-          return o;
-        }
-
-        // split string and sort alphabetical
-        subRoutine6(str) {
-          let out = "";
-          const ar = [];
-          const spt = str.split(" ");
-          for (let i = 0; i < spt.length; i++) {
-            if (spt[i] !== "") {
-              ar.push(spt[i]);
-            }
-          }
-          ar.sort();
-          for (let i = 0; i < ar.length; i++) {
-            out += ar[i] + " ";
-          }
-          out = out.substring(0, out.length - 1);
-          return out;
-        }
-
-        // remove all spaces
-        subRoutine7(str) {
-          let o = "";
-          o = str.replace(/ /g, "");
-          return o;
-        }
-
-        hashCode(str) {
-          let hash = 0;
-          let i;
-          let chr;
-          if (str.length === 0) return hash;
-          for (i = 0; i < str.length; i++) {
-            chr = str.charCodeAt(i);
-            hash = (hash << 5) - hash + chr;
-            hash |= 0;
-          }
-          return hash;
-        }
-
-        attributeNameMap(str) {
-          if (str === "nodeType") {
-            return "NT";
-          } else if (str === "childCount") {
-            return "CC";
-          } else if (str === "tagName") {
-            return "TN";
-          } else if (str === "textValue") {
-            return "TV";
-          } else if (str === "href") {
-            return "HF";
-          } else if (str === "src") {
-            return "SC";
-          } else if (str === "class") {
-            return "CL";
-          } else if (str === "type") {
-            return "TY";
-          } else if (str === "style") {
-            return "ST";
-          } else if (str === "left") {
-            return "LT";
-          } else if (str === "right") {
-            return "RT";
-          } else if (str === "top") {
-            return "TP";
-          } else if (str === "bottom") {
-            return "BM";
-          } else if (str === "height") {
-            return "HT";
-          } else if (str === "width") {
-            return "WH";
-          } else if (str === "color") {
-            return "CR";
-          } else if (str === "backgroundColor") {
-            return "BC";
-          } else if (str === "display") {
-            return "DY";
-          } else if (str === "fill") {
-            return "FL";
-          } else if (str === "title") {
-            return "TT";
-          } else if (str === "onclick") {
-            return "OC";
-          } else if (str === "alt") {
-            return "AT";
-          } else if (str === "viewBox") {
-            return "VB";
-          } else if (str === "hidden") {
-            return "HD";
-          } else if (str === "aria-hidden") {
-            return "AH";
-          } else if (str === "placeholder") {
-            return "PH";
-          } else if (str === "pixelVisible") {
-            return "PV";
-          } else if (str === "functi0nize-selected") {
-            return "XX";
-          } else if (str === "z-index") {
-            return "ZI";
-          } else {
-            return str;
-          }
-        }
-
-        reversedAttributeNameMap(str) {
-          if (str === "NT") {
-            return "nodeType";
-          } else if (str === "CC") {
-            return "childCount";
-          } else if (str === "TN") {
-            return "tagName";
-          } else if (str === "TV") {
-            return "textValue";
-          } else if (str === "HF") {
-            return "href";
-          } else if (str === "SC") {
-            return "src";
-          } else if (str === "CL") {
-            return "class";
-          } else if (str === "TY") {
-            return "type";
-          } else if (str === "ST") {
-            return "style";
-          } else if (str === "LT") {
-            return "left";
-          } else if (str === "RT") {
-            return "right";
-          } else if (str === "TP") {
-            return "top";
-          } else if (str === "BM") {
-            return "bottom";
-          } else if (str === "HT") {
-            return "height";
-          } else if (str === "WH") {
-            return "width";
-          } else if (str === "CR") {
-            return "color";
-          } else if (str === "BC") {
-            return "backgroundColor";
-          } else if (str === "DY") {
-            return "display";
-          } else if (str === "FL") {
-            return "fill";
-          } else if (str === "TT") {
-            return "title";
-          } else if (str === "OC") {
-            return "onclick";
-          } else if (str === "AT") {
-            return "alt";
-          } else if (str === "VB") {
-            return "viewBox";
-          } else if (str === "HD") {
-            return "hidden";
-          } else if (str === "AH") {
-            return "aria-hidden";
-          } else if (str === "PH") {
-            return "placeholder";
-          } else if (str === "PV") {
-            return "pixelVisible";
-          } else if (str === "XX") {
-            return "functi0nize-selected";
-          } else if (str === "ZI") {
-            return "z-index";
-          } else {
-            return str;
-          }
-        }
-
-        skipNodeCriteria(o) {
-          let skip = false;
-          if (o.nodeType === "3") {
-            let text = this.subRoutine5(o.data + "");
-            // remove all whitespace character
-            text = text.replace(/\s/g, "");
-            // after all whitespace being removed, if empty means skip
-            if (text === "") {
-              skip = true;
-            }
-          }
-          return skip;
-        }
-
-        getCookieKeys(cookie) {
-          try {
-            if (cookie == null || cookie === undefined || cookie === "") {
-              return [];
-            }
-
-            const keys = [];
-            const cookieKeyValueList = cookie.replace(/ /g, "").split(";");
-            for (const kv of cookieKeyValueList) {
-              keys.push(kv.split("=")[0]);
-            }
-            return keys;
-          } catch (e) {
-            console.log(e);
-            return [];
-          }
-        }
-
-        /// /////////////////////////////////////////////////////////////////
-        // THIS IS FOR ALTERNATIVE TRAVERSE ////////////////////////////////
-
-        getSelection3(element) {
-          // DO NOT CORRECT THE SPELLING
-          // IT IS MEANT TO BE THIS WAY
-          if (document.readyState === "complete") {
-            element.setAttribute("functi0nize-selected", true);
-            this.nodeId = 0;
-            const tmp = this.generateTree3(element);
-            element.setAttribute("functi0nize-selected", false);
-            return tmp;
-          } else {
-            return "document not loaded completely";
-          }
-        }
-
-        generateTree3(e) {
-          const start = new Date().getTime();
-          const out = {};
-          try {
-            let similarNodes = [];
-            if (e == null || e.nodeType === undefined) {
-              // this means that e is not node element
-              similarNodes = this.getSimilarNodesFromAttributes(e);
-            } else {
-              similarNodes = this.getSimilarNodes(e);
-            }
-
-            console.log("Number of similarNodes:" + similarNodes.length);
-            // this.traverseFromSelectedNode(similarNodes);
-            this.traverseFromSimilarNodes(similarNodes);
-            this.buildSmallTree();
-            out.comp = this.allNodes;
-          } catch (err) {
-            console.log(err);
-            console.log("Error collecting ML data");
-          }
-
-          out.url = encodeURI(document.URL);
-          out.cookie = this.getCookieKeys(document.cookie);
-          out.title = document.title;
-          out.iw = window.innerWidth;
-          out.ih = window.innerHeight;
-          const elapsed = new Date().getTime() - start;
-          console.log("Smart Traversal Time to Extract: " + elapsed + "ms");
-          return out;
-        }
-
-        /**
-         * PREREQUISITE
-         * Collect all the shadowRoot in the DOM, so we only need to do once
-         * This needs to be ran once the document loaded
-         * This can improve performance, as we dont have to look for shadowRoot in future operations
-         */
-        collectShadowNodes(start) {
-          let node;
-          const walker = document.createTreeWalker(
-            start,
-            NodeFilter.SHOW_ELEMENT,
-            this.ignoreFilter,
-            false
-          );
-          while ((node = walker.nextNode()) != null) {
-            if (node.shadowRoot !== undefined && node.shadowRoot != null) {
-              this.shadowRootNodes.push(node.shadowRoot);
-              // check if there is nested shadowRoot (valid for shadow DOM v1)
-              this.collectShadowNodes(node.shadowRoot);
-            }
-          }
-          console.log(
-            "collected " + this.shadowRootNodes.length + " shadowRoot so far...."
-          );
-        }
-
-        /**
-         * find elements that matches attributeString, including inside shadow DOM
-         * this will fail if the attributeString is not valid css selector
-         */
-        querySelectorAll(attributeString) {
-          let foundElements = [];
-          try {
-            // query in existing DOM
-            // https://gomakethings.com/converting-a-nodelist-to-an-array-with-vanilla-javascript/
-            foundElements = foundElements.concat(
-              Array.prototype.slice.call(document.querySelectorAll(attributeString))
-            );
-            // query in all shadow roots
-            if (this.shadowRootNodes.length > 0) {
-              console.log(
-                "shadow root count in this DOM: " + this.shadowRootNodes.length
-              );
-              for (const trackedShadowRoot of this.shadowRootNodes) {
-                // https://salesforce.stackexchange.com/questions/288602/jest-test-element-shadowroot-queryselector-not-retrieving-element-when-given
-                const shadowElements = trackedShadowRoot.querySelectorAll(
-                  attributeString
-                );
-                if (shadowElements.length !== 0) {
-                  foundElements = foundElements.concat(
-                    Array.prototype.slice.call(shadowElements)
-                  );
-                }
-              }
-            }
-          } catch (e) {
-            // graceful fail
-            console.log(e);
-          }
-          console.log("Found elements: " + foundElements.length);
-          return foundElements;
-        }
-
-        /**
-         * pass attributes in key value format to find similar nodes in document
-         * it should be in the format of:
-         *         { NT: "1", LT: '1', TP: '1', WH: '1'... }
-         *
-         * returns array of Node
-         */
-        getSimilarNodesFromAttributes(attributesObj) {
-          const startTime = new Date().getTime();
-          let similarNodes = [];
-
-          // TODO: add random nodes from the tree (for extra info), must limit to a number
-
-          // remove PV
-          const attributesToRemove = ["PV"];
-          for (const attr of attributesToRemove) {
-            delete attributesObj[attr];
-          }
-
-          // NT 1 = DY, BC, CR ...
-          if (attributesObj.NT === "1") {
-            // ignore TN because this will cause a lot of nodes being returned
-            delete attributesObj.TN;
-
-            const elementTree = document.createTreeWalker(
-              document,
-              NodeFilter.SHOW_ELEMENT
-            );
-            similarNodes = similarNodes.concat(
-              this.getSimilarNodesWithNodeTypeOne(elementTree, attributesObj)
-            );
-            if (this.shadowRootNodes.length > 0) {
-              for (const shadowRoot of this.shadowRootNodes) {
-                const shadowTree = document.createTreeWalker(
-                  shadowRoot,
-                  NodeFilter.SHOW_ELEMENT
-                );
-                similarNodes = similarNodes.concat(
-                  this.getSimilarNodesWithNodeTypeOne(shadowTree, attributesObj)
-                );
-              }
-            }
-          }
-
-          // NT 3 = TV
-          if (attributesObj.NT === "3") {
-            const textTree = document.createTreeWalker(
-              document,
-              NodeFilter.SHOW_TEXT
-            );
-            similarNodes = similarNodes.concat(
-              this.getSimilarNodesWithNodeTypeThree(textTree, attributesObj)
-            );
-            if (this.shadowRootNodes.length > 0) {
-              for (const shadowRoot of this.shadowRootNodes) {
-                const shadowTree = document.createTreeWalker(
-                  shadowRoot,
-                  NodeFilter.SHOW_TEXT
-                );
-                similarNodes = similarNodes.concat(
-                  this.getSimilarNodesWithNodeTypeThree(shadowTree, attributesObj)
-                );
-              }
-            }
-          }
-
-          // remove duplicates (if any)
-          similarNodes = similarNodes.filter((item, index) => {
-            return similarNodes.indexOf(item) === index;
-          });
-          console.log(
-            "Time taken for getSimilarNodesFromAttributes: " +
-              (new Date().getTime() - startTime) +
-              "ms"
-          );
-          return similarNodes;
-        }
-
-        /**
-         * This method is used to find similar nodes referring to nodeType 1 criteria
-         * involves going through the treewalker once
-         * tweak nodesLimit to limit the number of nodes for each attributes
-         */
-        getSimilarNodesWithNodeTypeOne(tree, attributesObj) {
-          let node;
-          const nodesLimit = 200;
-          let similarNodesForNodeTypeOne = [];
-          const nearbyNodesForNodeTypeOne = [];
-          // keep track of nodes that matches the attribute in { attr: [node1, ..]} as trackedNodes
-          const trackedNodes = { DY: [], BC: [], CR: [], TC: [] };
-          for (const attrKey in attributesObj) {
-            trackedNodes[attrKey] = [];
-          }
-          // remove the attribute from attributesObj and trackedNodes if the trackedNodes is exceeding 200
-          // loop through trackedNodes and only pick up the array that is the smallest but more than 0
-          while ((node = tree.nextNode()) != null) {
-            const nodeCss = window.getComputedStyle(node, null);
-            const nodeAttributes = node.attributes;
-
-            // check if node is within bounding box
-            if (
-              this.isWithinBoundingBox(
-                node.getBoundingClientRect(),
-                (attributesObj.LT + attributesObj.WH) / 2,
-                (attributesObj.TP + attributesObj.HT) / 2
-              )
-            ) {
-              nearbyNodesForNodeTypeOne.push(node);
-            }
-
-            if (Object.prototype.hasOwnProperty.call(attributesObj, "DY")) {
-              if (nodeCss.getPropertyValue("display") === attributesObj.DY) {
-                trackedNodes.DY.push(node);
-                if (trackedNodes.DY.length > nodesLimit) {
-                  delete attributesObj.DY;
-                  delete trackedNodes.DY;
-                }
-              }
-            }
-            if (Object.prototype.hasOwnProperty.call(attributesObj, "BC")) {
-              if (nodeCss.getPropertyValue("background-color") === attributesObj.BC) {
-                trackedNodes.BC.push(node);
-                if (trackedNodes.BC.length > nodesLimit) {
-                  delete attributesObj.BC;
-                  delete trackedNodes.BC;
-                }
-              }
-            }
-            if (Object.prototype.hasOwnProperty.call(attributesObj, "CR")) {
-              if (nodeCss.getPropertyValue("color") === attributesObj.CR) {
-                trackedNodes.CR.push(node);
-                if (trackedNodes.CR.length > nodesLimit) {
-                  delete attributesObj.CR;
-                  delete trackedNodes.CR;
-                }
-              }
-            }
-            if (Object.prototype.hasOwnProperty.call(attributesObj, "TC")) {
-              if (node.text === attributesObj.TC) {
-                trackedNodes.TC.push(node);
-                if (trackedNodes.TC.length > nodesLimit) {
-                  delete attributesObj.TC;
-                  delete trackedNodes.TC;
-                }
-              }
-            }
-
-            // now only left the node.attributes in attributesObj
-            for (const attributesKey in attributesObj) {
-              const targetKey = this.reversedAttributeNameMap(attributesKey);
-              // if fits one of the attributes, add to similarNodes, then move on
-              if (nodeAttributes[targetKey] !== undefined) {
-                if (
-                  nodeAttributes[targetKey].value === attributesObj[attributesKey]
-                ) {
-                  trackedNodes[attributesKey].push(node);
-                  // https://stackoverflow.com/questions/3463048/is-it-safe-to-delete-an-object-property-while-iterating-over-them
-                  if (trackedNodes[attributesKey].length > nodesLimit) {
-                    delete attributesObj[attributesKey];
-                    delete trackedNodes[attributesKey];
-                  }
-                }
-              }
-            }
-          }
-
-          let chosenAttribute;
-          for (const key in trackedNodes) {
-            if (similarNodesForNodeTypeOne.length === 0) {
-              similarNodesForNodeTypeOne = trackedNodes[key];
-              chosenAttribute = key;
-            } else if (
-              trackedNodes[key].length > 1 &&
-              trackedNodes[key].length < similarNodesForNodeTypeOne.length
-            ) {
-              similarNodesForNodeTypeOne = trackedNodes[key];
-              chosenAttribute = key;
-            }
-          }
-          if (similarNodesForNodeTypeOne.length > 0) {
-            console.log("Chosen attribute for similar nodes: " + chosenAttribute);
-          } else {
-            console.log("Not able to find similar nodes");
-          }
-          console.log("Nearby node found: " + nearbyNodesForNodeTypeOne.length);
-
-          return similarNodesForNodeTypeOne.concat(nearbyNodesForNodeTypeOne);
-        }
-
-        /**
-         * This method is used to find similar nodes referring to nodeType 3 criteria
-         */
-        getSimilarNodesWithNodeTypeThree(tree, attributesObj) {
-          let node;
-          const similarNodesForNodeTypeThree = [];
-          const nearbyNodesForNodeTypeThree = [];
-          const docRange = document.createRange();
-          while ((node = tree.nextNode()) != null) {
-            // check if node is within bounding box
-            docRange.selectNodeContents(node);
-            const rectsTypeThree = docRange.getClientRects();
-            if (
-              rectsTypeThree != null &&
-              rectsTypeThree !== undefined &&
-              rectsTypeThree.length !== 0
-            ) {
+              // if we enable partial node collections
               if (
-                this.isWithinBoundingBox(
-                  rectsTypeThree[0],
-                  (attributesObj.LT + attributesObj.WH) / 2,
-                  (attributesObj.TP + attributesObj.HT) / 2
-                )
+                this.maxNodeCountToTraverse != null &&
+                this.nodeId >= this.maxNodeCountToTraverse
               ) {
-                nearbyNodesForNodeTypeThree.push(node);
+                return nodes;
               }
             }
 
-            if (node.data === attributesObj.TV) {
-              similarNodesForNodeTypeThree.push(node);
-            }
+            return nodes;
           }
 
-          console.log("Nearby node found: " + nearbyNodesForNodeTypeThree.length);
-          return similarNodesForNodeTypeThree.concat(nearbyNodesForNodeTypeThree);
-        }
+          parseStyle(cssText) {
+            const obj = {};
+            const str = cssText.match(/([^:]+: *[^;]+); */g);
+            if (str !== undefined && str != null) {
+              let tem;
+              let k = 0;
+              const L = str.length;
+              while (k < L) {
+                tem = str[k++].split(/: */);
+                // normalize key before assigning
+                const key = this.normalizeAttrKey(tem[0], Object.keys(obj));
+                obj[key] = tem[1].replace(";", "");
+              }
+            }
+            return obj;
+          }
 
-        /**
-         * Check if nodeBox is within the x and y box
-         */
-        isWithinBoundingBox(nodeBox, targetX, targetY) {
-          const nodeCoordinates = [
-            [nodeBox.left, nodeBox.top],
-            [nodeBox.right, nodeBox.top],
-            [nodeBox.left, nodeBox.bottom],
-            [nodeBox.right, nodeBox.bottom],
-          ];
-          // console.log(nodeCoordinates + " | " + targetX + "|" + targetY);
-          for (const coordinate of nodeCoordinates) {
+          isFunctionizeAttribute(name, value) {
+            if (name.indexOf("functionise") > -1 || name.indexOf("functionize") > -1) {
+              return true;
+            }
             if (
-              coordinate[0] >= Math.max(0, targetX - this.boundingBoxPixelLimit) &&
-              coordinate[0] <= targetX + this.boundingBoxPixelLimit &&
-              coordinate[1] >= Math.max(0, targetY - this.boundingBoxPixelLimit) &&
-              coordinate[1] <= targetY + this.boundingBoxPixelLimit
+              value.indexOf("functionise") > -1 ||
+              value.indexOf("functionize") > -1
             ) {
               return true;
             }
-          }
-          return false;
-        }
-
-        /**
-         * Handle box rect for nodeType 1
-         */
-        getBoxRect(selected) {
-          const range = document.createRange();
-          const cssStyle = window.getComputedStyle(selected, null);
-          // handle display:contents, using child rect, else fallback to parent
-          if (cssStyle.getPropertyValue("display") === "contents") {
-            // access children node from node
-            let referenceNode = selected.firstChild;
-
-            // handle more edge cases
-            if (referenceNode == null) {
-              if (selected.tagName === "SLOT") {
-                // handle node is <slot>
-                const referenceNodes = selected.assignedElements();
-                if (referenceNodes != null && referenceNodes.length > 0) {
-                  referenceNode = referenceNodes[0];
-                } else {
-                  referenceNode = selected.getRootNode().host;
-                }
-              } else if (selected.getRootNode().nodeType === 11) {
-                // handle if the node is inside shadowDOM but not <slot>
-                referenceNode = selected.getRootNode().host;
-              } else {
-                // fallback to parent
-                referenceNode = selected.parentNode;
-              }
-            }
-
-            if (referenceNode != null) {
-              range.selectNodeContents(referenceNode);
-              const rects = range.getClientRects();
-              if (rects.length > 0) {
-                return rects[0];
-              }
-            }
-          }
-          return selected.getBoundingClientRect();
-        }
-
-        /**
-         * Find similar nodes using selected Element
-         */
-        getSimilarNodes(selected) {
-          const criteria = {};
-          criteria.NT = selected.nodeType + "";
-          if (selected.nodeType === 1) {
-            criteria.TN = selected.tagName;
-
-            // selected node normally won't pick nodeType 3, so we need to get text
-            criteria.TC = selected.text;
-
-            // Get the nodes attributes
-            const attributes = selected.attributes;
-            for (let i = 0; i < attributes.length; i++) {
-              criteria[this.attributeNameMap(attributes[i].name)] =
-                attributes[i].value;
-            }
-          }
-
-          if (selected.nodeType === 3) {
-            criteria.TV = selected.data;
-          }
-
-          // Get the CSS properties tied to the element
-          const cssStyle = window.getComputedStyle(selected, null);
-          criteria.DY = cssStyle.getPropertyValue("display");
-          criteria.BC = cssStyle.getPropertyValue("background-color");
-          criteria.CR = cssStyle.getPropertyValue("color");
-
-          // Get the bounding box data tied to the element
-          if (selected.nodeType === 1) {
-            const box = this.getBoxRect(selected);
-            // console.log(box);
-            criteria.LT = box.left;
-            criteria.TP = box.top;
-            criteria.WH = box.width;
-            criteria.HT = box.height;
-          } else if (selected.nodeType === 3) {
-            const range = document.createRange();
-            range.selectNodeContents(selected);
-            const rects = range.getClientRects();
-            // console.log(rects);
-            if (rects == null || rects === undefined || rects.length === 0) {
-              criteria.LT = 0;
-              criteria.TP = 0;
-              criteria.WH = 0;
-              criteria.HT = 0;
-            } else {
-              criteria.LT = rects[0].left;
-              criteria.TP = rects[0].top;
-              criteria.WH = rects[0].width;
-              criteria.HT = rects[0].height;
-            }
-          }
-
-          const similarNodes = this.getSimilarNodesFromAttributes(criteria);
-          if (similarNodes.length === 0) {
-            similarNodes.push(selected);
-          }
-          return similarNodes;
-        }
-
-        /*
-         * The root node is at the last element of this.parentNodesMovingToRoot
-         */
-        buildSmallTree() {
-          if (this.parentNodesMovingToRoot.length === 0) {
-            return "Not able to buildSmallTree because missing parentNodes";
-          }
-
-          // starting from root node, traverse down the tree
-          // if node matches what is in historyQueue, add to the tree
-          // continue to traverse down until cannot traverse anymore
-          // the root node is at the end of the parentNodesMovingToRoot
-          const rootNode = this.parentNodesMovingToRoot[
-            this.parentNodesMovingToRoot.length - 1
-          ];
-          this.traverseForNewTree(rootNode, this.allNodes, this.newTree);
-          return this.newTree;
-        }
-
-        /**
-         * Build tree and node records
-         * starting from root node, traverse down until there is no more children
-         */
-        traverseForNewTree(start, nodes, tree) {
-          // 1. if start is null return tree back
-          if (
-            start == null ||
-            start === undefined ||
-            start.tagName === "SCRIPT" ||
-            start.tagName === "STYLE"
-          ) {
-            return tree;
-          }
-
-          // 2. Add current node to nodes record
-          if (start.nodeType === 1 || start.nodeType === 3) {
-            nodes.push(this.computeNodeRecord(start));
-          }
-          // 3. if current node does not have children, add current node to tree and return
-          if (start.childNodes.length === 0) {
-            // console.log("dont have children, node: " + start);
-            if (start.nodeType === 1) {
-              start.setAttribute("functionizeID", this.nodeId);
-            }
-            tree.push({ i: this.nodeId });
-            this.nodeId++;
-            return tree;
-          }
-
-          // 4. if there is children in current node, repeat this method with children
-          const childNodes = start.childNodes;
-          const selectedChildSubTree = [];
-          const currentNodeId = this.nodeId;
-          if (start.nodeType === 1) {
-            start.setAttribute("functionizeID", currentNodeId);
-          }
-          this.nodeId++;
-          for (let i = 0; i < childNodes.length; i++) {
-            if (this.isNodeFoundInNewTraverse(childNodes[i])) {
-              const subtree = this.traverseForNewTree(childNodes[i], nodes, []);
-              // prevent null from appearing in tree
-              if (subtree != null && subtree !== undefined && subtree.length > 0) {
-                selectedChildSubTree.push(subtree[0]);
-              }
-            }
-          }
-          // once finish traverse all the children, add those children to tree, then return
-          if (selectedChildSubTree.length > 0) {
-            tree.push({ i: currentNodeId, c: selectedChildSubTree });
-          } else {
-            tree.push({ i: currentNodeId });
-          }
-          return tree;
-        }
-
-        /**
-         * Create node record in according to traverseNodes2 format
-         */
-        computeNodeRecord(node) {
-          let parentID = null;
-          try {
-            parentID = this.getParentFromNode(node, null);
-          } catch (e) {
-            console.log("no parentID found for node: " + node);
-            parentID = null;
-          }
-
-          const nodeType = node.nodeType;
-          if (nodeType === 1) {
-            const tn = node.tagName;
-            const box = this.getBoxRect(node);
-            const cs = window.getComputedStyle(node, null);
-            const attr = node.attributes;
-            const a = {};
-            for (let i = 0; i < attr.length; i++) {
-              a[attr[i].name] = attr[i].value;
-            }
-
-            return [
-              parentID,
-              this.nodeId + "",
-              nodeType + "",
-              box.left,
-              box.top,
-              box.width,
-              box.height,
-              cs.getPropertyValue("display"),
-              cs.getPropertyValue("background-color"),
-              cs.getPropertyValue("color"),
-              cs.getPropertyValue("z-index"),
-              tn,
-              a,
-            ];
-          } else if (nodeType === 3) {
-            const range = document.createRange();
-            range.selectNodeContents(node);
-            const rects = range.getClientRects();
-            // if rects is empty, set all to 0
-            if (rects == null || rects === undefined || rects.length === 0) {
-              return [
-                parentID,
-                this.nodeId + "",
-                nodeType + "",
-                0,
-                0,
-                0,
-                0,
-                node.data,
-              ];
-            } else {
-              return [
-                parentID,
-                this.nodeId + "",
-                nodeType + "",
-                rects[0].left,
-                rects[0].top,
-                rects[0].width,
-                rects[0].height,
-                node.data,
-              ];
-            }
-          }
-        }
-
-        /**
-         * Check if the node is part of the traversed nodes
-         */
-        isNodeFoundInNewTraverse(node) {
-          return this.historyQueue.some((prevNode) => prevNode === node);
-        }
-
-        /*
-         * This is based on the new traversal v2
-         */
-        traverseFromSimilarNodes(similarNodes) {
-          const startTime = new Date().getTime();
-          const parentNodesMap = {};
-          this.traverseUpwardUntilRootFromNodes(similarNodes, parentNodesMap);
-
-          // Generate the routes for each similar nodes up to root
-          let rootNode;
-          let allParentNodesFromSimilarNodes = [];
-          for (const depth in parentNodesMap) {
-            const route = parentNodesMap[depth];
-            // all the root nodes should be the same
-            if (rootNode != null) {
-              if (rootNode !== route[route.length - 1]) {
-                console.log("Root node is different among routes");
-                console.log(parentNodesMap);
-              }
-            }
-            rootNode = route[route.length - 1];
-
-            // Add non-duplicate nodes to the front of the array
-            // we retain the root node, which is the last node
-            const uniqueNodes = route.filter(
-              (x) => !allParentNodesFromSimilarNodes.includes(x)
-            );
-            allParentNodesFromSimilarNodes = uniqueNodes.concat(
-              allParentNodesFromSimilarNodes
-            );
-          }
-          this.parentNodesMovingToRoot = allParentNodesFromSimilarNodes;
-
-          // Now we have the tree, we want to traverse outward
-          let currentLevel = 0;
-          this.fifoQueue = similarNodes.concat(allParentNodesFromSimilarNodes);
-          while (currentLevel <= this.traverseOutwardLimit) {
-            // traverse to children from nodes at existing level
-            // pop the fifo until it emptied, to ensure we done with current level
-            const childrenNodesFifo = [];
-            while (this.fifoQueue.length > 0) {
-              const currentNode = this.popFromFifoQueue();
-              const childNodes = currentNode.childNodes;
-              for (let i = 0; i < childNodes.length; i++) {
-                childrenNodesFifo.push(childNodes[i]);
-              }
-            }
-            // add child nodes to fifo for next level to traverse
-            for (const childNode of childrenNodesFifo) {
-              this.pushIntoFifoQueue(childNode);
-            }
-            currentLevel = currentLevel + 1;
-          }
-
-          console.log(
-            "Complete traverseFromSimilarNodes in : " +
-              (new Date().getTime() - startTime) +
-              "ms"
-          );
-          return this.historyQueue;
-        }
-
-        /*
-         * DEPRECATED - new traversal v1
-         * start is the starting node (can be array of nodes or single node)
-         * if hit the time limit, we return the nodes we reach so far
-         * return: list of nodes that being traverse from XX
-         */
-        traverseFromSelectedNode(start) {
-          const startTime = new Date().getTime();
-          const traverseTimeLimit = 25000; // 25seconds
-          let currentLevel = 0;
-          let levelBetweenSelectedAndRoot = 0;
-          this.parentNodesMovingToRoot = [];
-          // if start is an array of nodes, we enqueue all of them
-          // else we enqueue start as single node
-          if (Array.isArray(start)) {
-            levelBetweenSelectedAndRoot = this.traverseUpwardUntilRootFromNodes(
-              start,
-              {}
-            );
-            this.fifoQueue = this.fifoQueue.concat(start);
-          } else {
-            levelBetweenSelectedAndRoot = this.traverseUpwardUntilRoot(
-              start,
-              this.parentNodesMovingToRoot
-            );
-            this.fifoQueue.push(start);
-          }
-
-          while (this.fifoQueue.length !== 0) {
-            if (new Date().getTime() - startTime > traverseTimeLimit) {
-              console.log(
-                "Traverse from selected node exceeding time limit of " +
-                  traverseTimeLimit +
-                  "ms"
-              );
-              console.log(
-                "history size: " +
-                  this.historyQueue.length +
-                  ", fifo size: " +
-                  this.fifoQueue.length +
-                  ", current loop: " +
-                  currentLevel
-              );
-              const mergedQueue = this.historyQueue.concat(
-                this.parentNodesMovingToRoot
-              );
-              this.historyQueue = mergedQueue.filter((item, index) => {
-                return mergedQueue.indexOf(item) === index;
-              });
-              return this.historyQueue;
-            } else if (this.historyQueue.length > 5000) {
-              console.log("Traverse from selected node exceeding size of 5000");
-              console.log(
-                "history size: " +
-                  this.historyQueue.length +
-                  ", fifo size: " +
-                  this.fifoQueue.length +
-                  ", current loop: " +
-                  currentLevel
-              );
-              const mergedQueue = this.historyQueue.concat(
-                this.parentNodesMovingToRoot
-              );
-              this.historyQueue = mergedQueue.filter((item, index) => {
-                return mergedQueue.indexOf(item) === index;
-              });
-              return this.historyQueue;
-            }
-            const currentNode = this.popFromFifoQueue();
-
-            // stop traverse outward if hit min level to reach root from selected
-            if (currentLevel < levelBetweenSelectedAndRoot) {
-              this.traverseOutwardFromNode(currentNode);
-              // Get the current level by using the intersection of parent nodes from
-              // traverseUpwardUntilRoot() and historyQueue
-              const intersection = this.parentNodesMovingToRoot.filter((x) =>
-                this.historyQueue.includes(x)
-              );
-              if (intersection != null) {
-                currentLevel = intersection.length;
-                // console.log("level limit is: " + levelBetweenSelectedAndRoot + "; current level is: " + currentLevel);
-              }
-            }
-          }
-
-          return this.historyQueue;
-        }
-
-        /*
-         * BFS from start node
-         */
-        traverseOutwardFromNode(start) {
-          if (start == null) {
-            return;
-          }
-
-          this.pushIntoFifoQueue(start.parentNode);
-          let sibling = start;
-          while (sibling.nextSibling !== null) {
-            // console.log("nextSibling: " + sibling.nextSibling);
-            this.pushIntoFifoQueue(sibling.nextSibling);
-            sibling = sibling.nextSibling;
-          }
-          const childNodes = start.childNodes;
-          for (let i = 0; i < childNodes.length; i++) {
-            this.pushIntoFifoQueue(childNodes[i]);
-          }
-
-          // handle shadow DOM
-          if (start.shadowRoot !== undefined && start.shadowRoot != null) {
-            this.pushIntoFifoQueue(start.shadowRoot);
-          }
-        }
-
-        /*
-         * pop the first node from FIFO queue
-         * then push into history queue
-         */
-        popFromFifoQueue() {
-          if (this.fifoQueue.length === 0) {
-            return null;
-          }
-          const node = this.fifoQueue.shift();
-          this.historyQueue.push(node);
-          return node;
-        }
-
-        /*
-         * push node into FIFO queue, after check on history queue to prevent double visit
-         */
-        pushIntoFifoQueue(node) {
-          if (
-            node !== null &&
-            !this.historyQueue.some((prevNode) => prevNode === node) &&
-            !this.fifoQueue.some((fifoNode) => fifoNode === node)
-          ) {
-            this.fifoQueue.push(node);
-          }
-        }
-
-        /**
-         * This is to handle traverse upward to root with multiple
-         * nodes as starting point
-         */
-        traverseUpwardUntilRootFromNodes(nodes, parentNodesMap) {
-          const startTime = new Date().getTime();
-          // loop all the nodes and traverse traverse upward
-          for (const node of nodes) {
-            const parentNodesFromNode = [];
-            const depth = this.traverseUpwardUntilRoot(node, parentNodesFromNode);
-            parentNodesMap[depth] = parentNodesFromNode.slice();
-          }
-          // pick the routes that is the most depth
-          let deepestRoute = 0;
-          for (const depth in parentNodesMap) {
-            if (depth > deepestRoute) {
-              deepestRoute = depth;
-            }
-          }
-          // set parentNodesMovingToRoot to the selected depth route
-          this.parentNodesMovingToRoot = parentNodesMap[deepestRoute].slice();
-          console.log(
-            "Time taken for traverseUpwardUntilRootFromNodes: " +
-              (new Date().getTime() - startTime) +
-              "ms"
-          );
-          return deepestRoute;
-        }
-
-        /* traverse from XX node to root
-         *   return: number of level to reach root
-         */
-        traverseUpwardUntilRoot(start, parentNodes) {
-          let levelToReachRoot = 0;
-          if (start == null) {
-            return levelToReachRoot;
-          }
-          while (start.parentNode != null) {
-            start = start.parentNode;
-            parentNodes.push(start);
-            levelToReachRoot = levelToReachRoot + 1;
-          }
-          // If start is shadow root, go to the host
-          if (start.host != null && start.host !== undefined) {
-            parentNodes.push(start);
-            levelToReachRoot =
-              levelToReachRoot +
-              this.traverseUpwardUntilRoot(start.host, parentNodes);
-          }
-          return levelToReachRoot;
-        }
-
-        /*
-         * check if the traverseFromSelectedNode is equal as the result from traverseNodes
-         */
-        isCompletedData(data) {
-          if (data == null || data.comp == null) {
             return false;
           }
-          return this.historyQueue.length === data.comp.length;
-        }
 
-        /// ///////////////////////////////////////////////////////////
+          findElementByFunctionizeId(start, functionizeID) {
+            let node;
+            const walker = document.createTreeWalker(start, 5, null, false);
+            while ((node = walker.nextNode()) != null) {
+              const nt = node.nodeType;
+              if (nt === 1) {
+                const tn = node.tagName;
+                if (tn !== "SCRIPT" && tn !== "STYLE") {
+                  // backward support for site-statistics 1.6.x and earlier
+                  // get the node if matches the functionize ID
+                  if (node.getAttribute("functionizeID") === functionizeID + "") {
+                    break;
+                  } else if (node.functionizeID === functionizeID + "") {
+                    break;
+                  }
+
+                  if (node.shadowRoot !== undefined && node.shadowRoot != null) {
+                    node = this.findElementByFunctionizeId(
+                      node.shadowRoot,
+                      functionizeID
+                    );
+                    if (node != null) {
+                      return node;
+                    }
+                  }
+                }
+              }
+            }
+            return node;
+          }
+
+          removeElementXX(start) {
+            let node;
+            const walker = document.createTreeWalker(start, 5, null, false);
+            while ((node = walker.nextNode()) != null) {
+              const nt = node.nodeType;
+              if (nt === 1) {
+                const tn = node.tagName;
+                if (tn !== "SCRIPT" && tn !== "STYLE") {
+                  if (node.shadowRoot !== undefined && node.shadowRoot != null) {
+                    this.removeElementXX(node.shadowRoot);
+                  }
+                  try {
+                    // backward support for site-statistics 1.6.x and earlier
+                    if (node.hasAttribute("functi0nize-selected")) {
+                      node.removeAttribute("functi0nize-selected");
+                    }
+                    if (node.functi0nizeSelected === true) {
+                      node.functi0nizeSelected = false;
+                    }
+                  } catch (e) {}
+                }
+              }
+            }
+            return node;
+          }
+
+          // remove \n and space in front and back
+          subRoutine5(str) {
+            let o = "";
+            o = str.replace(/\n/g, "");
+            o = o.replace(/\t/g, "");
+            // trim leading and trailing spaces
+            o = o.replace(/(^\s+|\s+$)/g, "");
+            // replace double spaces
+            let done = false;
+            while (done === false) {
+              const temp = o.replace(/ {2}/g, " ");
+              if (temp.length === o.length) {
+                done = true;
+              }
+              o = temp;
+            }
+            // hash value if longer that 256
+            if (o.length > 256) {
+              o = "hash" + this.hashCode(o);
+            }
+            return o;
+          }
+
+          // split string and sort alphabetical
+          subRoutine6(str) {
+            let out = "";
+            const ar = [];
+            const spt = str.split(" ");
+            for (let i = 0; i < spt.length; i++) {
+              if (spt[i] !== "") {
+                ar.push(spt[i]);
+              }
+            }
+            ar.sort();
+            for (let i = 0; i < ar.length; i++) {
+              out += ar[i] + " ";
+            }
+            out = out.substring(0, out.length - 1);
+            return out;
+          }
+
+          // remove all spaces
+          subRoutine7(str) {
+            let o = "";
+            o = str.replace(/\s/g, "");
+            return o;
+          }
+
+          hashCode(str) {
+            let hash = 0;
+            let i;
+            let chr;
+            if (str.length === 0) return hash;
+            for (i = 0; i < str.length; i++) {
+              chr = str.charCodeAt(i);
+              hash = (hash << 5) - hash + chr;
+              hash |= 0;
+            }
+            return hash;
+          }
+
+          attributeNameMap(str) {
+            if (str === "nodeType") {
+              return "NT";
+            } else if (str === "childCount") {
+              return "CC";
+            } else if (str === "tagName") {
+              return "TN";
+            } else if (str === "textValue") {
+              return "TV";
+            } else if (str === "href") {
+              return "HF";
+            } else if (str === "src") {
+              return "SC";
+            } else if (str === "class") {
+              return "CL";
+            } else if (str === "type") {
+              return "TY";
+            } else if (str === "style") {
+              return "ST";
+            } else if (str === "left") {
+              return "LT";
+            } else if (str === "right") {
+              return "RT";
+            } else if (str === "top") {
+              return "TP";
+            } else if (str === "bottom") {
+              return "BM";
+            } else if (str === "height") {
+              return "HT";
+            } else if (str === "width") {
+              return "WH";
+            } else if (str === "color") {
+              return "CR";
+            } else if (str === "backgroundColor") {
+              return "BC";
+            } else if (str === "display") {
+              return "DY";
+            } else if (str === "fill") {
+              return "FL";
+            } else if (str === "title") {
+              return "TT";
+            } else if (str === "onclick") {
+              return "OC";
+            } else if (str === "alt") {
+              return "AT";
+            } else if (str === "viewBox") {
+              return "VB";
+            } else if (str === "hidden") {
+              return "HD";
+            } else if (str === "aria-hidden") {
+              return "AH";
+            } else if (str === "placeholder") {
+              return "PH";
+            } else if (str === "pixelVisible") {
+              return "PV";
+            } else if (str === "functi0nize-selected") {
+              return "XX";
+            } else if (str === "z-index") {
+              return "ZI";
+            } else {
+              return str;
+            }
+          }
+
+          skipNodeCriteria(o) {
+            let skip = false;
+            if (o.nodeType === "3") {
+              let text = this.subRoutine5(o.data + "");
+              // remove all whitespace character
+              text = text.replace(/\s/g, "");
+              // after all whitespace being removed, if empty means skip
+              if (text === "") {
+                skip = true;
+              }
+            }
+            return skip;
+          }
+
+          getCookieKeys(cookie) {
+            try {
+              if (cookie == null || cookie === undefined || cookie === "") {
+                return [];
+              }
+
+              const keys = [];
+              const cookieKeyValueList = cookie.replace(/ /g, "").split(";");
+              for (const kv of cookieKeyValueList) {
+                keys.push(kv.split("=")[0]);
+              }
+              return keys;
+            } catch (e) {
+              console.log(e);
+              return [];
+            }
+          }
+
+          // Get full text using functionize ID
+          getFullTextFromFunctionizeId(selectedId) {
+            const subTree = this.getSubTreeOfSelectedId(this.tree, selectedId);
+            if (subTree) {
+              const wordList = this.getTextFromSubTree(subTree);
+              if (wordList != null) {
+                return wordList.join(" ");
+              } else {
+                return "";
+              }
+            } else {
+              return "";
+            }
+          }
+
+          // loop through the tree and get the subtree of selected functionizeId
+          // return a list
+          getSubTreeOfSelectedId(tree, selectedId) {
+            if (tree == null) {
+              return null;
+            }
+
+            for (const node of tree) {
+              if (node.i === selectedId) {
+                return [node];
+              }
+              const found = this.getSubTreeOfSelectedId(node.c, selectedId);
+              if (found) {
+                return found;
+              }
+            }
+            return null;
+          }
+
+          // pick up text node in list using child branch
+          // return a list of text
+          getTextFromSubTree(subtreeList) {
+            const listOfText = [];
+            for (const e of subtreeList) {
+              if (e.c == null) {
+                if (this.textMap[e.i]) {
+                  listOfText.push(this.textMap[e.i]);
+                }
+              } else {
+                listOfText.push(this.getTextFromSubTree(e.c));
+              }
+            }
+            return listOfText.flat();
+          }
+
+          getFullTextFromJson(jsonString, nodeId) {
+            try {
+              const mldata = JSON.parse(jsonString);
+              this.tree = mldata.elementStatistics.tree;
+              // construct text map from nodes
+              for (const node of mldata.elementStatistics.nodes) {
+                if (node.a.NT === "3") {
+                  this.textMap[node.i] = node.a.TV;
+                }
+                if (node.a.NT === "1") {
+                  if (
+                    node.a.TN === "INPUT" &&
+                    node.a.type === "submit" &&
+                    node.a.value
+                  ) {
+                    const valueText = this.subRoutine5(node.a.value + "");
+                    // only add to text map if the value contains characters
+                    if (valueText.replace(/\s/g, "").length > 0) {
+                      this.textMap[node.i] = valueText;
+                    }
+                  }
+                }
+              }
+              return this.getFullTextFromFunctionizeId(nodeId);
+            } catch (e) {
+              return e;
+            }
+          }
+
+          // ============= Usage on iframe traversal ================
+          getAllCurrentFrames(start) {
+            let node;
+            const allFrames = [];
+            const walker = document.createTreeWalker(start, 1, null, false);
+            while ((node = walker.nextNode()) != null) {
+              const tn = node.tagName;
+              if (tn === "IFRAME" || tn === "FRAME") {
+                allFrames.push(node);
+              }
+
+              if (node.shadowRoot !== undefined && node.shadowRoot != null) {
+                allFrames.push(this.getAllCurrentFrames(node.shadowRoot));
+              }
+            }
+            return allFrames.flat();
+          }
+
+          traverseIframe(parentFrameId, currentNodeId) {
+            let nodes = [];
+            const cachedIframes = {};
+            const iframeUrls = {};
+            let allFrames = [];
+            this.nodeId = currentNodeId;
+
+            // set the parent ID referring to parent/outer frame
+            const parentId = parentFrameId;
+
+            // get a bit node data of current context
+            if (document.body != null) {
+              this.maxNodeCountToTraverse = currentNodeId + 30;
+              nodes = this.traverseNodes2(document.body, parentId, nodes, true);
+              allFrames = this.getAllCurrentFrames(document.body);
+            } else if (document.childElementCount > 0) {
+              this.maxNodeCountToTraverse = currentNodeId + 30;
+              nodes = this.traverseNodes2(document.children[0], parentId, nodes, true);
+              allFrames = this.getAllCurrentFrames(document.children[0]);
+            }
+
+            // link iframes to root of this context
+            for (const frame of allFrames) {
+              const tn = frame.tagName;
+              const box = frame.getBoundingClientRect();
+              const cs = window.getComputedStyle(frame, null);
+              const attr = frame.attributes;
+              const a = {};
+              for (let i = 0; i < attr.length; i++) {
+                a[attr[i].name] = attr[i].value;
+              }
+
+              // skip if display is node
+              if (cs.getPropertyValue("display") === "none") {
+                continue;
+              }
+
+              frame.iFunctionizeID = this.nodeId + "";
+              cachedIframes[frame.iFunctionizeID] = frame;
+              iframeUrls[frame.iFunctionizeID] = frame.getAttribute("src");
+              nodes.push([
+                parentId,
+                frame.iFunctionizeID,
+                "1",
+                box.left,
+                box.top,
+                box.width,
+                box.height,
+                cs.getPropertyValue("display"),
+                cs.getPropertyValue("background-color"),
+                cs.getPropertyValue("color"),
+                cs.getPropertyValue("z-index"),
+                tn,
+                a,
+              ]);
+              this.nodeId++;
+            }
+
+            this.maxNodeCountToTraverse = null;
+            return {
+              comp: JSON.stringify(nodes),
+              cached: cachedIframes,
+              iframeUrls: iframeUrls,
+              nextNodeId: this.nodeId,
+            };
+          }
+
+          // we expect input format [[["1", "2"], ["1", "3"]], [], [["2", "4"], ["2", "5"]]]
+          // then we can pass the output to parseToJson
+          translateIFrameComp(rawIframeComp) {
+            return this.translateIFrameCompAndSelectIframe(rawIframeComp, -1);
+          }
+
+          // translate the comp and select iframe (use by architect)
+          translateIFrameCompAndSelectIframe(rawIframeComp, selectedIframeId) {
+            const out = {};
+            try {
+              out.comp = rawIframeComp.flat();
+
+              if (selectedIframeId != null && selectedIframeId > 0) {
+                for (const nodeRecord of out.comp) {
+                  if (nodeRecord[1] === selectedIframeId + "") {
+                    const attributes = nodeRecord[12];
+                    attributes["functi0nize-selected"] = "true";
+                  }
+                }
+              }
+            } catch (err) {
+              console.log(err);
+              console.log("Error translate iframe comp");
+            }
+
+            out.url = encodeURI(document.URL);
+            out.cookie = this.getCookieKeys(document.cookie);
+            out.title = document.title;
+            out.iw = window.innerWidth;
+            out.ih = window.innerHeight;
+
+            return out;
+          }
+          // ============== end of usage =============================
+
+          // check if json contains XX:true
+          isJsonContainsXXTrue(jsonStr) {
+            const count = (jsonStr.match(/"XX"(\W)?:(\W)?"true"/g) || []).length;
+            if (count === 1) {
+              return true;
+            } else {
+              console.log("XX true is missing or more than 1");
+              return false;
+            }
+          }
+
+          // check if the json is in the correct format
+          isCorrectMLFormat(jsonStr) {
+            const mldata = JSON.parse(jsonStr);
+
+            if (
+              mldata.elementStatistics == null ||
+              mldata.elementStatistics.nodes == null ||
+              mldata.elementStatistics.tree == null ||
+              mldata.elementStatistics.nodes.length === 0 ||
+              mldata.elementStatistics.tree.length === 0
+            ) {
+              console.log("Site-statistics json is in wrong format!");
+              return false;
+            }
+
+            return true;
+          }
+
+          /// /////////////////////////////////////////////////////////////////
+          // THIS IS FOR ALTERNATIVE TRAVERSE ////////////////////////////////
+
+          /**
+           * Getting the node that is being selected (XX)
+           **/
+          getSelectedNode(start) {
+            const selectedNodes = document.querySelectorAll(
+              "[functi0nize-selected=true]"
+            );
+            if (selectedNodes != null && selectedNodes.length > 0) {
+              return selectedNodes[0];
+            } else {
+              return null;
+            }
+          }
+
+          /*
+           * start must be selected element XX
+           * if hit the time limit, we return the nodes we reach so far
+           * return: list of nodes that being traverse from XX
+           */
+          traverseFromSelectedNode(start) {
+            const startTime = new Date().getTime();
+            const traverseTimeLimit = 25000; // 25seconds
+            let currentLevel = 0;
+            const levelBetweenSelectedAndRoot = this.traverseUpwardUntilRoot(start);
+            this.fifoQueue.push(start);
+
+            while (this.fifoQueue.length !== 0) {
+              if (new Date().getTime() - startTime > traverseTimeLimit) {
+                console.log(
+                  "Traverse from selected node exceeding time limit of " +
+                    traverseTimeLimit +
+                    "ms"
+                );
+                return this.historyQueue;
+              }
+
+              const currentNode = this.popFromFifoQueue();
+
+              // stop traverse outward if hit min level to reach root from selected
+              if (currentLevel < levelBetweenSelectedAndRoot) {
+                this.traverseOutwardFromNode(currentNode);
+                // Get the current level by using the intersection of parent nodes from
+                // traverseUpwardUntilRoot() and historyQueue
+                const intersection = this.parentNodesMovingToRoot.filter((x) =>
+                  this.historyQueue.includes(x)
+                );
+                if (intersection != null) {
+                  currentLevel = intersection.length;
+                  // console.log("level limit is: " + levelBetweenSelectedAndRoot + "; current level is: " + currentLevel);
+                }
+              }
+            }
+
+            return this.historyQueue;
+          }
+
+          /*
+           * BFS from start node
+           */
+          traverseOutwardFromNode(start) {
+            if (start == null) {
+              return;
+            }
+
+            this.pushIntoFifoQueue(start.parentNode);
+            let sibling = start;
+            while (sibling.nextSibling !== null) {
+              console.log("nextSibling: " + sibling.nextSibling);
+              this.pushIntoFifoQueue(sibling.nextSibling);
+              sibling = sibling.nextSibling;
+            }
+            const childNodes = start.childNodes;
+            for (let i = 0; i < childNodes.length; i++) {
+              this.pushIntoFifoQueue(childNodes[i]);
+            }
+          }
+
+          /*
+           * pop the first node from FIFO queue
+           * then push into history queue
+           */
+          popFromFifoQueue() {
+            if (this.fifoQueue.length === 0) {
+              return null;
+            }
+            const node = this.fifoQueue.shift();
+            this.historyQueue.push(node);
+            return node;
+          }
+
+          /*
+           * push node into FIFO queue, after check on history queue to prevent double visit
+           */
+          pushIntoFifoQueue(node) {
+            if (
+              node !== null &&
+              !this.historyQueue.some((prevNode) => prevNode === node) &&
+              !this.fifoQueue.some((fifoNode) => fifoNode === node)
+            ) {
+              this.fifoQueue.push(node);
+            }
+          }
+
+          /* traverse from XX node to root
+           *   return: number of level to reach root
+           */
+          traverseUpwardUntilRoot(start) {
+            let levelToReachRoot = 0;
+            this.parentNodesMovingToRoot = [];
+            if (start == null) {
+              return levelToReachRoot;
+            }
+            while (start.parentNode != null) {
+              start = start.parentNode;
+              this.parentNodesMovingToRoot.push(start);
+              levelToReachRoot = levelToReachRoot + 1;
+            }
+            return levelToReachRoot;
+          }
+
+          /*
+           * check if the traverseFromSelectedNode is equal as the result from traverseNodes
+           */
+          isCompletedData(data) {
+            if (data == null || data.comp == null) {
+              return false;
+            }
+            return this.historyQueue.length === data.comp.length;
+          }
+
+          /// ///////////////////////////////////////////////////////////
     }
     (function(global, factory) {
         typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : (global = global || self, global.html2canvas = factory());
