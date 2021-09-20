@@ -4519,6 +4519,22 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
     function AccessibilityIngestor(){
 
         var PIIJson = [];
+        var nodeId = 0;
+        var iframeList = [];
+        var outOfScreenPosition = -1294753;
+        var maxNodeCountToTraverse = null;
+        function hashCode(str) {
+            let hash = 0;
+            let i;
+            let chr;
+            if (str.length === 0) return hash;
+            for (i = 0; i < str.length; i++) {
+              chr = str.charCodeAt(i);
+              hash = (hash << 5) - hash + chr;
+              hash |= 0;
+            }
+            return hash;
+          }
         // remove \n and space in front and back
         function subRoutine5(str) {
             let o = "";
@@ -4537,15 +4553,23 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             }
             // hash value if longer that 256
             if (o.length > 256) {
-              o = "hash" + this.hashCode(o);
+              o = "hash" + hashCode(o);
             }
             return o;
           }
 
+          // remove all spaces
+          function subRoutine7(str) {
+            let o = "";
+            o = str.replace(/\s/g, "");
+            return o;
+          }
+
+
           function skipNodeCriteria(o) {
             let skip = false;
             if (o.nodeType === "3") {
-                let text = this.subRoutine5(o.data + "");
+                let text = subRoutine5(o.data + "");
                 // remove all whitespace character
                 text = text.replace(/\s/g, "");
                 // after all whitespace being removed, if empty means skip
@@ -4605,7 +4629,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     node.removeAttribute("functionizeID");
                 }
 
-                const currentFunctionizeID = this.nodeId + "";
+                const currentFunctionizeID = nodeId + "";
                 if (isIframe) {
                     node.iFunctionizeID = currentFunctionizeID;
                 } else {
@@ -4613,7 +4637,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 }
 
                 if (tn === "IFRAME" || tn === "FRAME") {
-                    this.iframeList.push(node);
+                    iframeList.push(node);
                 }
 
                 let box = node.getBoundingClientRect();
@@ -4642,7 +4666,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 }
 
                 // handle shadowDOM parent
-                const parent = this.getParentFromNode(node, parentId, isIframe);
+                const parent = getParentFromNode(node, parentId, isIframe);
 
                 // handle display:content, using child rect
                 // handle display:contents, using child rect, else fallback to parent
@@ -4693,11 +4717,11 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     tn,
                     a,
                 ]);
-                this.nodeId++;
+                nodeId++;
 
                 // handle shadowDOM with open mode
                 if (node.shadowRoot !== undefined && node.shadowRoot != null) {
-                    nodes = this.traverseNodes2(
+                    nodes = traverseNodes2(
                     node.shadowRoot,
                     currentFunctionizeID,
                     nodes,
@@ -4730,8 +4754,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 const rects = range.getClientRects();
 
                 const textNodeRect = {
-                LT: this.outOfScreenPosition,
-                TP: this.outOfScreenPosition,
+                LT: outOfScreenPosition,
+                TP: outOfScreenPosition,
                 WH: 0,
                 HT: 0,
                 };
@@ -4744,17 +4768,17 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 }
 
                 if (node.data !== undefined && node.data !== null) {
-                const trimmedText = this.subRoutine7(node.data);
+                const trimmedText = subRoutine7(node.data);
                 // include the node if
                 // 1. non-empty string outside and inside of viewport
                 if (trimmedText !== "") {
-                    const currentFunctionizeID = this.nodeId + "";
+                    const currentFunctionizeID = nodeId + "";
                     if (isIframe) {
                     node.iFunctionizeID = currentFunctionizeID;
                     } else {
                     node.functionizeID = currentFunctionizeID;
                     }
-                    const parent = this.getParentFromNode(node, parentId, isIframe);
+                    const parent = getParentFromNode(node, parentId, isIframe);
                     nodes.push([
                     parent,
                     currentFunctionizeID,
@@ -4766,7 +4790,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                     // if the text is all whitespaces, then trim all whitespaces
                     trimmedText === "" ? trimmedText : node.data,
                     ]);
-                    this.nodeId++;
+                    nodeId++;
                 }
                 }
             } else {
@@ -4775,8 +4799,8 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
             // if we enable partial node collections
             if (
-                this.maxNodeCountToTraverse != null &&
-                this.nodeId >= this.maxNodeCountToTraverse
+                maxNodeCountToTraverse != null &&
+                nodeId >= this.maxNodeCountToTraverse
             ) {
                 return nodes;
             }
