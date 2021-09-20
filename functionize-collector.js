@@ -4610,7 +4610,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
             return parent;
           }
 
-          function traverseNodes2(start, parentId, nodes) {
+          function traverseNodes2(start, parentId, nodes, isIframe) {
             let node;
             const walker = document.createTreeWalker(start, 5, null, false);
             const range = document.createRange();
@@ -4808,7 +4808,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
 
             return nodes;
           }
-          traverseNodes2(document.body, null, []);
+          traverseNodes2(document.body, null, [], false);
         console.log("Accessibility Ingestor initialized");
         // window.addEventListener('load', async function() {
             function sleep(ms) {
