@@ -4624,10 +4624,13 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
                 if (nt === 1) {
                     const tn = node.tagName;
                     if (tn !== "SCRIPT" && tn !== "STYLE") {
+
                     // clear functionzieID to prevent old data
                     if (node.getAttribute("functionizeID") != null) {
                         node.removeAttribute("functionizeID");
                     }
+                    // Added by Kit
+                    node.setAttribute("functionizeID", nodeId);
 
                     const currentFunctionizeID = nodeId + "";
                     if (isIframe) {
