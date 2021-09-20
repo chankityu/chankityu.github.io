@@ -4581,7 +4581,7 @@ if (typeof window.functionizePluginInstalled == "undefined" || !window.functioni
           }
 
 
-        function getParentFromNode(node, defaultParentId) {
+        function getParentFromNode(node, defaultParentId, isIframe) {
             let parent;
             try {
               if (node.parentNode.nodeType === 11) {
